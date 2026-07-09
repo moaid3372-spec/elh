@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تحدي Nova المبتكرة - Prep 3</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+    * {
+        font-family: 'Cairo', sans-serif;
+    }
+    body {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+        min-height: 100vh;
+    }
+    .tech-gradient {
+        background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 50%, #8b5cf6 100%);
+    }
+    .glass-card {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .question-card {
+        display: none;
+        animation: slideIn 0.4s ease-out;
+    }
+    .question-card.active {
+        display: block;
+    }
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    .timer-pulse {
+        animation: pulse 1s infinite;
+    }
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.05); opacity: 0.8; }
+    }
+    .option-btn {
+        transition: all 0.3s ease;
+    }
+    .option-btn:hover {
+        transform: translateX(-5px);
+        box-shadow: 0 4px 20px rgba(6, 182, 212, 0.3);
+    }
+    .option-btn.selected {
+        background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+        border-color: #06b6d4;
+        color: white;
+    }
+    .progress-bar {
+        transition: width 0.5s ease;
+    }
+    .star-animate {
+        animation: starPop 0.6s ease-out;
+    }
+    @keyframes starPop {
+        0% { transform: scale(0) rotate(0deg); }
+        50% { transform: scale(1.2) rotate(180deg); }
+        100% { transform: scale(1) rotate(360deg); }
+    }
+    input[type="radio"]:checked + label {
+        background: linear-gradient(135deg, #06b6d4 0%, #3b82f6 100%);
+        color: white;
+        border-color: #06b6d4;
+    }
+    .recording {
+        animation: recordingPulse 1.5s infinite;
+    }
+    @keyframes recordingPulse {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+        50% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+    }
+</style>
+</head>
+<body class="text-white">
+    <!-- Welcome Screen -->
+    <div id="welcomeScreen" class="min-h-screen flex items-center justify-center p-4">
+        <div class="glass-card rounded-3xl p-6 md:p-12 max-w-2xl w-full shadow-2xl">
+            <div class="text-center space-y-6">
+                <div class="inline-block tech-gradient p-4 rounded-2xl mb-4">
+                    <i class="fas fa-lightbulb text-5xl md:text-6xl text-white"></i>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+                    تحدي Nova المبتكرة
+                </h1>
+                <p class="text-2xl md:text-3xl font-bold text-cyan-300">جاهزة تبتكري؟</p>
+                <div class="flex flex-wrap gap-4 justify-center items-center text-sm md:text-base text-gray-300 my-6">
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-clock text-cyan-400"></i>
+                        <span>3 دقائق</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-star text-yellow-400"></i>
+                        <span>10 مهام إبداعية</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <i class="fas fa-rocket text-purple-400"></i>
+                        <span>مستوى B1+</span>
+                    </div>
+                </div>
+                <p class="text-gray-400 text-sm md:text-base leading-relaxed">
+                    مغامرة تفاعلية لتطوير مهاراتك في اللغة الإنجليزية من خلال الابتكار والتكنولوجيا
+                </p>
+                <button id="startBtn" class="tech-gradient text-white font-bold text-lg md:text-xl px-10 py-4 rounded-full hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 transform hover:scale-105">
+                    <i class="fas fa-play ml-2"></i>
+                    ابدئي التحدي
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Challenge Screen -->
+    <div id="challengeScreen" class="hidden min-h-screen p-4 md:p-8">
+        <div class="max-w-4xl mx-auto">
+            <!-- Header with Timer & Progress -->
+            <div class="glass-card rounded-2xl p-4 md:p-6 mb-6 sticky top-4 z-10">
+                <div class="flex flex-wrap items-center justify-between gap-4 mb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="tech-gradient p-2 rounded-lg">
+                            <i class="fas fa-flask text-xl text-white"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-lg md:text-xl font-bold">تحدي Nova</h2>
+                            <p class="text-xs text-gray-400"> المهمة <span id="currentQ">1</span> من 10</p>
+                        </div>
+                    </div>
+                    <div id="timerBox" class="flex items-center gap-2 bg-slate-800 px-4 py-2 rounded-full">
+                        <i class="fas fa-clock text-cyan-400"></i>
+                        <span id="timer" class="font-bold text-lg">3:00</span>
+                    </div>
+                </div>
+                <div class="w-full bg-slate-700 rounded-full h-2.5 overflow-hidden">
+                    <div id="progressBar" class="progress-bar tech-gradient h-full rounded-full" style="width: 10%"></div>
+                </div>
+            </div>
+
+            <!-- Questions Container -->
+            <div class="glass-card rounded-2xl p-6 md:p-8">
+                <!-- Q1: Grammar -->
+                <div class="question-card active" data-question="1">
+                    <div class="mb-6">
+                        <span class="inline-block bg-cyan-500/20 text-cyan-300 px-4 py-1 rounded-full text-sm font-semibold mb-4">
+                            <i class="fas fa-code ml-1"></i> القواعد
+                        </span>
+                        <h3 class="text-xl md:text-2xl font-bold mb-4">أكملي الجملة الشرطية:</h3>
+                        <p class="text-lg md:text-xl text-gray-300 leading-relaxed mb-6">
+                            "If I <span class="text-cyan-400 font-bold">___</span> a robot, I would help people"
+                        </p>
+                    </div>
+                    <div class="space-y-3">
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="had">
+                            <span class="font-bold text-lg">had</span>
+                        </button>
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="have">
+                            <span class="font-bold text-lg">have</span>
+                        </button>
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="has">
+                            <span class="font-bold text-lg">has</span>
+                        </button>
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="having">
+                            <span class="font-bold text-lg">having</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Q2: Reading -->
+                <div class="question-card" data-question="2">
+                    <div class="mb-6">
+                        <span class="inline-block bg-blue-500/20 text-blue-300 px-4 py-1 rounded-full text-sm font-semibold mb-4">
+                            <i class="fas fa-book-open ml-1"></i> القراءة
+                        </span>
+                        <h3 class="text-xl md:text-2xl font-bold mb-4">اقرئي النص وأجيبي:</h3>
+                        <div class="bg-slate-800/70 p-4 md:p-6 rounded-xl mb-6 text-gray-300 leading-loose text-sm md:text-base border-r-4 border-cyan-500">
+                            <p class="mb-3">
+                                Sarah is a 15-year-old student from Alexandria. Last year, she noticed that many elderly people in her neighborhood couldn't order medicine online because they don't know how to use smartphones. She decided to create a simple mobile app called "CareConnect". The app has large buttons and voice commands to help seniors order medicine and book doctor appointments easily. Sarah worked with her IT teacher for six months. Now, over 200 families use her app. She won first place in the National Youth Innovation Competition. Sarah says, "Technology should help everyone, not just young people."
+                            </p>
+                        </div>
+                        <h4 class="text-lg font-bold mb-4 text-cyan-300">What problem did Sarah want to solve?</h4>
+                    </div>
+                    <div class="space-y-3">
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="correct">
+                            <span class="text-base">Elderly people couldn't order medicine online</span>
+                        </button>
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="wrong1">
+                            <span class="text-base">Young people needed more apps</span>
+                        </button>
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="wrong2">
+                            <span class="text-base">Doctors couldn't use smartphones</span>
+                        </button>
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="wrong3">
+                            <span class="text-base">Families didn't have internet</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Q3: Writing -->
+                <div class="question-card" data-question="3">
+                    <div class="mb-6">
+                        <span class="inline-block bg-purple-500/20 text-purple-300 px-4 py-1 rounded-full text-sm font-semibold mb-4">
+                            <i class="fas fa-pen-fancy ml-1"></i> الكتابة
+                        </span>
+                        <h3 class="text-xl md:text-2xl font-bold mb-4">اكتبي مقترح ابتكار:</h3>
+                        <p class="text-gray-300 mb-4">Write proposal: "An invention to solve a problem in Egypt"</p>
+                        <p class="text-sm text-gray-400 mb-4">اختاري المشكلة التي يعالجها ابتكارك:</p>
+                    </div>
+                    <div class="space-y-3">
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="traffic">
+                            <i class="fas fa-traffic-light text-cyan-400 ml-2"></i>
+                            <span class="text-base">Smart traffic system to reduce congestion</span>
+                        </button>
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="water">
+                            <i class="fas fa-droplet text-blue-400 ml-2"></i>
+                            <span class="text-base">Water-saving device for household use</span>
+                        </button>
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="education">
+                            <i class="fas fa-graduation-cap text-purple-400 ml-2"></i>
+                            <span class="text-base">Educational app for rural students</span>
+                        </button>
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="waste">
+                            <i class="fas fa-recycle text-green-400 ml-2"></i>
+                            <span class="text-base">Recycling robot for communities</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Q4: Listening -->
+                <div class="question-card" data-question="4">
+                    <div class="mb-6">
+                        <span class="inline-block bg-green-500/20 text-green-300 px-4 py-1 rounded-full text-sm font-semibold mb-4">
+                            <i class="fas fa-headphones ml-1"></i> الاستماع
+                        </span>
+                        <h3 class="text-xl md:text-2xl font-bold mb-4">Nova تقول: "Innovation changes lives"</h3>
+                        <p class="text-gray-300 mb-6">اختاري الصورة التي تناسب الجملة:</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button class="option-btn p-6 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50 flex flex-col items-center gap-3" data-answer="correct">
+                            <i class="fas fa-hands-holding-circle text-5xl text-cyan-400"></i>
+                            <span class="text-sm text-center">مجتمع يستفيد من تكنولوجيا</span>
+                        </button>
+                        <button class="option-btn p-6 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50 flex flex-col items-center gap-3" data-answer="wrong1">
+                            <i class="fas fa-bed text-5xl text-gray-500"></i>
+                            <span class="text-sm text-center">شخص نائم</span>
+                        </button>
+                        <button class="option-btn p-6 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50 flex flex-col items-center gap-3" data-answer="wrong2">
+                            <i class="fas fa-burger text-5xl text-gray-500"></i>
+                            <span class="text-sm text-center">طعام</span>
+                        </button>
+                        <button class="option-btn p-6 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50 flex flex-col items-center gap-3" data-answer="wrong3">
+                            <i class="fas fa-tv text-5xl text-gray-500"></i>
+                            <span class="text-sm text-center">مشاهدة تلفاز</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Q5: Vocabulary -->
+                <div class="question-card" data-question="5">
+                    <div class="mb-6">
+                        <span class="inline-block bg-yellow-500/20 text-yellow-300 px-4 py-1 rounded-full text-sm font-semibold mb-4">
+                            <i class="fas fa-brain ml-1"></i> المفردات
+                        </span>
+                        <h3 class="text-xl md:text-2xl font-bold mb-4">اختر الكلمة الصحيحة:</h3>
+                        <p class="text-gray-300 mb-6">كلمة تعني "حل لمشكلة" باستخدام التكنولوجيا:</p>
+                    </div>
+                    <div class="space-y-3">
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="correct">
+                            <i class="fas fa-lightbulb text-yellow-400 ml-2"></i>
+                            <span class="font-bold text-lg">Solution</span>
+                        </button>
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="wrong1">
+                            <i class="fas fa-question text-gray-400 ml-2"></i>
+                            <span class="font-bold text-lg">Problem</span>
+                        </button>
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="wrong2">
+                            <i class="fas fa-tools text-gray-400 ml-2"></i>
+                            <span class="font-bold text-lg">Tool</span>
+                        </button>
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="wrong3">
+                            <i class="fas fa-user text-gray-400 ml-2"></i>
+                            <span class="font-bold text-lg">Person</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Q6: Speaking -->
+                <div class="question-card" data-question="6">
+                    <div class="mb-6">
+                        <span class="inline-block bg-red-500/20 text-red-300 px-4 py-1 rounded-full text-sm font-semibold mb-4">
+                            <i class="fas fa-microphone ml-1"></i> التحدث
+                        </span>
+                        <h3 class="text-xl md:text-2xl font-bold mb-4">سجلي الجملة التالية:</h3>
+                        <div class="bg-slate-800/70 p-6 rounded-xl mb-6 text-center border-2 border-cyan-500/30">
+                            <p class="text-2xl md:text-3xl font-bold text-cyan-300">"I want to create something useful"</p>
+                        </div>
+                        <p class="text-sm text-gray-400 mb-4 text-center">اضغطي على الزر للتسجيل (محاكاة)</p>
+                    </div>
+                    <div class="flex justify-center">
+                        <button id="recordBtn" class="tech-gradient p-6 rounded-full hover:shadow-2xl hover:shadow-cyan-500/50 transition-all">
+                            <i class="fas fa-microphone text-3xl"></i>
+                        </button>
+                    </div>
+                    <div id="recordingStatus" class="hidden text-center mt-4">
+                        <p class="text-green-400 font-bold"><i class="fas fa-check-circle ml-2"></i>تم التسجيل بنجاح</p>
+                    </div>
+                </div>
+
+                <!-- Q7: Function -->
+                <div class="question-card" data-question="7">
+                    <div class="mb-6">
+                        <span class="inline-block bg-pink-500/20 text-pink-300 px-4 py-1 rounded-full text-sm font-semibold mb-4">
+                            <i class="fas fa-comment-dots ml-1"></i> الوظائف اللغوية
+                        </span>
+                        <h3 class="text-xl md:text-2xl font-bold mb-4">عبري عن رأيك مع السبب:</h3>
+                        <p class="text-gray-300 mb-6">اختاري الصيغة الصحيحة لـ "Express opinion with reasons":</p>
+                    </div>
+                    <div class="space-y-3">
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="correct">
+                            <span class="text-base">"I believe that technology helps students because it makes learning easier"</span>
+                        </button>
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="wrong1">
+                            <span class="text-base">"I like technology yes"</span>
+                        </button>
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="wrong2">
+                            <span class="text-base">"Technology good"</span>
+                        </button>
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="wrong3">
+                            <span class="text-base">"Maybe technology"</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Q8: Conversation -->
+                <div class="question-card" data-question="8">
+                    <div class="mb-6">
+                        <span class="inline-block bg-indigo-500/20 text-indigo-300 px-4 py-1 rounded-full text-sm font-semibold mb-4">
+                            <i class="fas fa-users ml-1"></i> المحادثة
+                        </span>
+                        <h3 class="text-xl md:text-2xl font-bold mb-4">موقف: مشروع فريق يحتاج قائد</h3>
+                        <div class="bg-slate-800/70 p-4 rounded-xl mb-6">
+                            <p class="text-gray-300 text-sm mb-2">زميلك يقول:</p>
+                            <p class="text-lg font-bold text-cyan-300">"Team project needs a leader"</p>
+                        </div>
+                        <p class="text-gray-300 mb-4">كيف تردين؟</p>
+                    </div>
+                    <div class="space-y-3">
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="correct">
+                            <span class="text-base">"I can lead and organize us"</span>
+                        </button>
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="wrong1">
+                            <span class="text-base">"I don't know"</span>
+                        </button>
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="wrong2">
+                            <span class="text-base">"No thanks"</span>
+                        </button>
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="wrong3">
+                            <span class="text-base">"Maybe later"</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Q9: Phonics -->
+                <div class="question-card" data-question="9">
+                    <div class="mb-6">
+                        <span class="inline-block bg-teal-500/20 text-teal-300 px-4 py-1 rounded-full text-sm font-semibold mb-4">
+                            <i class="fas fa-spell-check ml-1"></i> الصوتيات
+                        </span>
+                        <h3 class="text-xl md:text-2xl font-bold mb-4">اللواحق Suffixes</h3>
+                        <p class="text-gray-300 mb-6">ما معنى كلمة "inventor" من "invent"?</p>
+                    </div>
+                    <div class="space-y-3">
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="correct">
+                            <span class="text-base">الشخص الذي يخترع - person who invents</span>
+                        </button>
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="wrong1">
+                            <span class="text-base">عملية الاختراع - the act of inventing</span>
+                        </button>
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="wrong2">
+                            <span class="text-base">المكان - the place</span>
+                        </button>
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="wrong3">
+                            <span class="text-base">الأداة - the tool</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Q10: Culture -->
+                <div class="question-card" data-question="10">
+                    <div class="mb-6">
+                        <span class="inline-block bg-orange-500/20 text-orange-300 px-4 py-1 rounded-full text-sm font-semibold mb-4">
+                            <i class="fas fa-trophy ml-1"></i> الثقافة والابتكار
+                        </span>
+                        <h3 class="text-xl md:text-2xl font-bold mb-4">مسابقات التكنولوجيا للشباب المصري</h3>
+                        <p class="text-gray-300 mb-6">صورة: "شباب مصري في مسابقة تكنولوجيا" تمثل قيم:</p>
+                    </div>
+                    <div class="grid grid-cols-1 gap-3">
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="correct">
+                            <i class="fas fa-lightbulb text-yellow-400 ml-2"></i>
+                            <span class="text-base font-bold">الابتكار + القيادة + خدمة المجتمع</span>
+                        </button>
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="wrong1">
+                            <span class="text-base">المنافسة فقط</span>
+                        </button>
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="wrong2">
+                            <span class="text-base">الربح المادي</span>
+                        </button>
+                        <button class="option-btn w-full text-right p-4 rounded-xl border-2 border-slate-600 hover:border-cyan-400 bg-slate-800/50" data-answer="wrong3">
+                            <span class="text-base">الشهرة</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Next Button -->
+                <div class="mt-8 flex justify-between items-center">
+                    <button id="prevBtn" class="hidden px-6 py-3 rounded-full bg-slate-700 hover:bg-slate-600 transition-all font-bold">
+                        <i class="fas fa-arrow-right ml-2"></i>السابق
+                    </button>
+                    <button id="nextBtn" class="tech-gradient px-8 py-3 rounded-full hover:shadow-2xl hover:shadow-cyan-500/50 transition-all font-bold mr-auto">
+                        التالي<i class="fas fa-arrow-left mr-2"></i>
+                    </button>
+                    <button id="submitBtn" class="hidden tech-gradient px-8 py-3 rounded-full hover:shadow-2xl hover:shadow-cyan-500/50 transition-all font-bold mr-auto">
+                        <i class="fas fa-check ml-2"></i>إنهاء التحدي
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Completion Screen -->
+    <div id="completionScreen" class="hidden min-h-screen flex items-center justify-center p-4">
+        <div class="glass-card rounded-3xl p-8 md:p-12 max-w-2xl w-full shadow-2xl text-center">
+            <div class="space-y-6">
+                <div class="flex justify-center gap-2 mb-6">
+                    <i class="fas fa-star text-5xl text-yellow-400 star-animate"></i>
+                    <i class="fas fa-star text-5xl text-yellow-400 star-animate" style="animation-delay: 0.2s"></i>
+                    <i class="fas fa-star text-5xl text-yellow-400 star-animate" style="animation-delay: 0.4s"></i>
+                </div>
+                <h1 class="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent">
+                    ابتكار مبهر يا Nova!
+                </h1>
+                <div class="tech-gradient p-6 rounded-2xl">
+                    <i class="fas fa-rocket text-6xl text-white mb-4"></i>
+                    <p class="text-xl md:text-2xl font-bold">أنهيت التحدي بنجاح</p>
+                </div>
+                <p class="text-gray-300 text-lg">
+                    رحلتك في عالم الابتكار مستمرة! جاري الانتقال...
+                </p>
+                <div class="flex justify-center">
+                    <div class="w-16 h-16 border-4 border-cyan-400 border-t-transparent rounded-full animate-spin"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script>
+    // State Management
+    let currentQuestion = 1;
+    let answers = {};
+    let timerInterval;
+    let timeLeft = 180; // 3 minutes
+    let timerStarted = false;
+
+    // DOM Elements
+    const welcomeScreen = document.getElementById('welcomeScreen');
+    const challengeScreen = document.getElementById('challengeScreen');
+    const completionScreen = document.getElementById('completionScreen');
+    const startBtn = document.getElementById('startBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const timerEl = document.getElementById('timer');
+    const timerBox = document.getElementById('timerBox');
+    const progressBar = document.getElementById('progressBar');
+    const currentQEl = document.getElementById('currentQ');
+    const recordBtn = document.getElementById('recordBtn');
+    const recordingStatus = document.getElementById('recordingStatus');
+
+    // Start Challenge
+    startBtn.addEventListener('click', () => {
+        welcomeScreen.classList.add('hidden');
+        challengeScreen.classList.remove('hidden');
+        startTimer();
+    });
+
+    // Timer Function
+    function startTimer() {
+        if (timerStarted) return;
+        timerStarted = true;
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (timeLeft <= 30) {
+                timerBox.classList.add('timer-pulse', 'bg-red-900/50');
+                timerBox.classList.remove('bg-slate-800');
+            }
+            
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                autoSubmit();
+            }
+        }, 1000);
+    }
+
+    // Question Navigation
+    function showQuestion(num) {
+        document.querySelectorAll('.question-card').forEach(card => {
+            card.classList.remove('active');
+        });
+        document.querySelector(`[data-question="${num}"]`).classList.add('active');
+        
+        currentQEl.textContent = num;
+        progressBar.style.width = `${(num / 10) * 100}%`;
+        
+        // Button visibility
+        prevBtn.classList.toggle('hidden', num === 1);
+        nextBtn.classList.toggle('hidden', num === 10);
+        submitBtn.classList.toggle('hidden', num !== 10);
+    }
+
+    nextBtn.addEventListener('click', () => {
+        if (currentQuestion < 10) {
+            currentQuestion++;
+            showQuestion(currentQuestion);
+        }
+    });
+
+    prevBtn.addEventListener('click', () => {
+        if (currentQuestion > 1) {
+            currentQuestion--;
+            showQuestion(currentQuestion);
+        }
+    });
+
+    // Answer Selection
+    document.querySelectorAll('.option-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const questionCard = this.closest('.question-card');
+            const questionNum = questionCard.dataset.question;
+            
+            // Remove previous selection
+            questionCard.querySelectorAll('.option-btn').forEach(b => {
+                b.classList.remove('selected');
+            });
+            
+            // Add selection
+            this.classList.add('selected');
+            answers[questionNum] = this.dataset.answer;
+            
+            // Auto advance after 300ms
+            setTimeout(() => {
+                if (currentQuestion < 10) {
+                    currentQuestion++;
+                    showQuestion(currentQuestion);
+                }
+            }, 400);
+        });
+    });
+
+    // Recording Simulation
+    recordBtn.addEventListener('click', function() {
+        this.classList.add('recording');
+        this.disabled = true;
+        
+        setTimeout(() => {
+            this.classList.remove('recording');
+            this.disabled = false;
+            recordingStatus.classList.remove('hidden');
+            answers[6] = 'recorded';
+            
+            setTimeout(() => {
+                if (currentQuestion < 10) {
+                    currentQuestion++;
+                    showQuestion(currentQuestion);
+                }
+            }, 1000);
+        }, 2000);
+    });
+
+    // Submit & Calculate
+    submitBtn.addEventListener('click', () => {
+        autoSubmit();
+    });
+
+    function autoSubmit() {
+        clearInterval(timerInterval);
+        
+        // Calculate score
+        const correctAnswers = {
+            1: 'had',
+            2: 'correct',
+            3: ['traffic', 'water', 'education', 'waste'], // any answer acceptable
+            4: 'correct',
+            5: 'correct',
+            6: 'recorded',
+            7: 'correct',
+            8: 'correct',
+            9: 'correct',
+            10: 'correct'
+        };
+        
+        let score = 0;
+        Object.keys(answers).forEach(q => {
+            if (q == 3) {
+                if (correctAnswers[3].includes(answers[q])) score++;
+            } else if (answers[q] === correctAnswers[q]) {
+                score++;
+            }
+        });
+        
+        const percentage = (score / 10) * 100;
+        const level = percentage >= 70 ? 'proficient' : 'developing';
+        
+        // Store in localStorage
+        const resultData = {
+            challenge: 'Nova_Innovator_Prep3',
+            score: score,
+            total: 10,
+            percentage: percentage,
+            level: level,
+            timestamp: new Date().toISOString(),
+            answers: answers
+        };
+        localStorage.setItem('novaChallengeResult', JSON.stringify(resultData));
+        
+        // Parent WhatsApp notification simulation
+        sendParentNotification(resultData);
+        
+        // Show completion
+        challengeScreen.classList.add('hidden');
+        completionScreen.classList.remove('hidden');
+        
+        // Redirect after 3s
+        setTimeout(() => {
+            window.location.href = `grades/prep3.html?level=${level}&stars=${score}`;
+        }, 3000);
+    }
+
+    // Parent WhatsApp Notification
+    function sendParentNotification(data) {
+        const message = `🌟 إشعار من تحدي Nova المبتكرة 🌟\n\nأكملت ابنتك مغامرة الابتكار!\nالمهام المكتملة: ${data.score}/10\nالمستوى: ${data.level === 'proficient' ? 'متقن' : 'قيد التطوير'}\n\nنواصل رحلة التعلم معاً! 🚀`;
+        console.log('WhatsApp Parent Notification:', message);
+        // In production: integrate with WhatsApp Business API
+        localStorage.setItem('parentNotification', message);
+    }
+</script>
+<script>(function(){document.addEventListener("click",function(e){var a=e.target.closest("[data-product-id]");if(!a)return;e.preventDefault();var pid=a.getAttribute("data-product-id");if(pid)parent.postMessage({type:"ecto-artifact-link-click",productId:pid},"*")})})();</script>
+</body>
+</html>
