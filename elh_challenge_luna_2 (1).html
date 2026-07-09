@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحدي ELH | لونا رائدة الفضاء - الصف السادس</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1a3e 50%, #2d1b4e 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        /* Animated Stars Background */
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #ffffff;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+        
+        .shooting-star {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, #ffffff, transparent);
+            animation: shoot 3s linear infinite;
+            opacity: 0;
+        }
+        
+        @keyframes shoot {
+            0% {
+                transform: translateX(0) translateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-500px) translateY(300px);
+                opacity: 0;
+            }
+        }
+        
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* Glass Card Effect */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 2px solid #8b5cf6;
+            box-shadow: 0 8px 32px 0 rgba(139, 92, 246, 0.37);
+        }
+        
+        /* Button Styles */
+        .btn-gradient {
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            color: #ffffff;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+        }
+        
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(139, 92, 246, 0.6);
+        }
+        
+        .btn-gradient:active {
+            transform: translateY(0);
+        }
+        
+        .btn-gradient:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        /* Option Styles */
+        .option-card {
+            background: rgba(255, 255, 255, 0.12);
+            border: 2px solid rgba(139, 92, 246, 0.5);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .option-card:hover {
+            background: rgba(255, 255, 255, 0.18);
+            border-color: #8b5cf6;
+            transform: translateX(-5px);
+        }
+        
+        .option-card.selected {
+            background: rgba(96, 165, 250, 0.3);
+            border-color: #60a5fa;
+            box-shadow: 0 0 20px rgba(96, 165, 250, 0.5);
+        }
+        
+        .option-card.correct {
+            background: rgba(34, 197, 94, 0.3);
+            border-color: #22c55e;
+        }
+        
+        .option-card.incorrect {
+            background: rgba(239, 68, 68, 0.3);
+            border-color: #ef4444;
+        }
+        
+        /* Timer Styles */
+        .timer-normal {
+            color: #fbbf24;
+            text-shadow: 0 0 10px rgba(251, 191, 36, 0.5);
+        }
+        
+        .timer-warning {
+            color: #ef4444;
+            text-shadow: 0 0 10px rgba(239, 68, 68, 0.7);
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+        
+        /* Progress Bar */
+        .progress-glow {
+            box-shadow: 0 0 15px rgba(96, 165, 250, 0.8);
+        }
+        
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        .slide-in {
+            animation: slideIn 0.4s ease-out;
+        }
+        
+        /* Luna Character Animation */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(-5deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+        
+        .luna-float {
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        /* Mobile Optimizations */
+        @media (max-width: 640px) {
+            .glass-card {
+                padding: 1rem !important;
+            }
+            
+            h1 { font-size: 1.75rem !important; }
+            h2 { font-size: 1.5rem !important; }
+            h3 { font-size: 1.25rem !important; }
+        }
+        
+        /* Results Animation */
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .scale-in {
+            animation: scaleIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Stars Background -->
+    <div class="stars" id="starsContainer"></div>
+    
+    <div class="content-wrapper">
+        <!-- Header -->
+        <header class="glass-card mx-4 mt-4 mb-6 p-4 md:p-6 rounded-2xl">
+            <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-4">
+                    <div class="luna-float text-5xl md:text-6xl">👩‍🚀</div>
+                    <div>
+                        <h1 class="text-2xl md:text-3xl font-black text-white mb-1">تحدي ELH مع لونا</h1>
+                        <p class="text-sm md:text-base text-[#60a5fa] font-semibold">الصف السادس الابتدائي - رحلة الفضاء 🚀</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <div class="text-center">
+                        <div class="text-xs text-white mb-1">الوقت المتبقي</div>
+                        <div id="timer" class="text-3xl md:text-4xl font-black timer-normal">
+                            <i class="fas fa-clock ml-2"></i><span id="timeDisplay">03:00</span>
+                        </div>
+                    </div>
+                    <div class="w-px h-12 bg-[#8b5cf6]"></div>
+                    <div class="text-center">
+                        <div class="text-xs text-white mb-1">السؤال</div>
+                        <div class="text-3xl md:text-4xl font-black text-[#fbbf24]">
+                            <span id="currentQuestion">1</span>/10
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="max-w-6xl mx-auto mt-4">
+                <div class="h-3 bg-white/10 rounded-full overflow-hidden border border-[#8b5cf6]">
+                    <div id="progressBar" class="h-full bg-gradient-to-l from-[#3b82f6] to-[#8b5cf6] progress-glow transition-all duration-500" style="width: 10%"></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="max-w-4xl mx-auto px-4 pb-8">
+            <!-- Welcome Screen -->
+            <div id="welcomeScreen" class="glass-card rounded-3xl p-6 md:p-10 text-center fade-in-up">
+                <div class="text-6xl md:text-8xl mb-6 luna-float">👩‍🚀</div>
+                <h2 class="text-3xl md:text-4xl font-black text-white mb-4">أهلاً بك في رحلة لونا الفضائية!</h2>
+                <p class="text-lg md:text-xl text-white mb-6 leading-relaxed">
+                    أنا <span class="text-[#fbbf24] font-bold">لونا رائدة الفضاء</span> وسأساعدك في هذا التحدي الممتع!<br>
+                    لديك <span class="text-[#60a5fa] font-bold">10 أسئلة</span> و <span class="text-[#60a5fa] font-bold">3 دقائق</span> لإكمال المهمة
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+                    <div class="bg-white/10 rounded-2xl p-4 border-2 border-[#8b5cf6]">
+                        <i class="fas fa-brain text-3xl text-[#60a5fa] mb-2"></i>
+                        <p class="text-white font-semibold">اختبر معلوماتك</p>
+                    </div>
+                    <div class="bg-white/10 rounded-2xl p-4 border-2 border-[#8b5cf6]">
+                        <i class="fas fa-rocket text-3xl text-[#fbbf24] mb-2"></i>
+                        <p class="text-white font-semibold">اكسب النجوم</p>
+                    </div>
+                    <div class="bg-white/10 rounded-2xl p-4 border-2 border-[#8b5cf6]">
+                        <i class="fas fa-trophy text-3xl text-[#fbbf24] mb-2"></i>
+                        <p class="text-white font-semibold">احصل على شهادة</p>
+                    </div>
+                </div>
+                <button onclick="startQuiz()" class="btn-gradient px-8 md:px-12 py-4 md:py-5 rounded-2xl text-xl md:text-2xl font-black">
+                    <i class="fas fa-play ml-2"></i>ابدأ التحدي الآن
+                </button>
+            </div>
+
+            <!-- Question Screen -->
+            <div id="questionScreen" class="hidden">
+                <div class="glass-card rounded-3xl p-6 md:p-10 fade-in-up">
+                    <div class="flex items-start gap-4 mb-6">
+                        <div class="text-4xl md:text-5xl">🌟</div>
+                        <div class="flex-1">
+                            <div class="text-sm font-bold text-[#60a5fa] mb-2">السؤال <span id="qNumber">1</span> من 10</div>
+                            <h3 id="questionText" class="text-xl md:text-2xl font-bold text-white leading-relaxed"></h3>
+                        </div>
+                    </div>
+                    
+                    <div id="optionsContainer" class="space-y-3 md:space-y-4"></div>
+                    
+                    <div class="mt-8 flex justify-between items-center gap-4">
+                        <button id="prevBtn" onclick="previousQuestion()" class="px-6 py-3 rounded-xl bg-white/10 text-white font-bold border-2 border-[#8b5cf6] hover:bg-white/20 transition-all disabled:opacity-30 disabled:cursor-not-allowed">
+                            <i class="fas fa-arrow-right ml-2"></i>السابق
+                        </button>
+                        <button id="nextBtn" onclick="nextQuestion()" disabled class="btn-gradient px-8 py-3 rounded-xl text-lg font-black">
+                            التالي<i class="fas fa-arrow-left mr-2"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Results Screen -->
+            <div id="resultsScreen" class="hidden">
+                <div class="glass-card rounded-3xl p-6 md:p-10 text-center scale-in">
+                    <div id="resultIcon" class="text-7xl md:text-9xl mb-6"></div>
+                    <h2 id="resultTitle" class="text-3xl md:text-5xl font-black text-white mb-4"></h2>
+                    <p id="resultMessage" class="text-lg md:text-xl text-white mb-8 leading-relaxed"></p>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                        <div class="bg-white/10 rounded-2xl p-4 md:p-6 border-2 border-[#8b5cf6]">
+                            <div class="text-3xl md:text-4xl font-black text-[#fbbf24] mb-2" id="scoreDisplay">0/10</div>
+                            <div class="text-sm text-white">النتيجة</div>
+                        </div>
+                        <div class="bg-white/10 rounded-2xl p-4 md:p-6 border-2 border-[#8b5cf6]">
+                            <div class="text-3xl md:text-4xl font-black text-[#60a5fa] mb-2" id="percentDisplay">0%</div>
+                            <div class="text-sm text-white">النسبة المئوية</div>
+                        </div>
+                        <div class="bg-white/10 rounded-2xl p-4 md:p-6 border-2 border-[#8b5cf6]">
+                            <div class="text-3xl md:text-4xl font-black text-[#22c55e] mb-2" id="correctDisplay">0</div>
+                            <div class="text-sm text-white">إجابات صحيحة</div>
+                        </div>
+                        <div class="bg-white/10 rounded-2xl p-4 md:p-6 border-2 border-[#8b5cf6]">
+                            <div class="text-3xl md:text-4xl font-black text-[#fbbf24] mb-2" id="starsDisplay">0</div>
+                            <div class="text-sm text-white">نجوم ذهبية ⭐</div>
+                        </div>
+                    </div>
+                    
+                    <div id="classificationBadge" class="mb-8 hidden">
+                        <div class="inline-block bg-gradient-to-l from-[#fbbf24] to-[#f59e0b] px-8 py-4 rounded-2xl">
+                            <p class="text-white font-black text-lg">
+                                <i class="fas fa-award ml-2"></i>تصنيفك: <span id="classificationText"></span>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col md:flex-row gap-4 justify-center">
+                        <button onclick="restartQuiz()" class="btn-gradient px-8 py-4 rounded-xl text-lg font-black">
+                            <i class="fas fa-redo ml-2"></i>إعادة المحاولة
+                        </button>
+                        <button onclick="redirectToGrade6()" class="px-8 py-4 rounded-xl text-lg font-black bg-white/10 text-white border-2 border-[#8b5cf6] hover:bg-white/20 transition-all">
+                            <i class="fas fa-home ml-2"></i>العودة للصفحة الرئيسية
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Quiz Data - 10 Questions for Grade 6
+        const quizQuestions = [
+            {
+                question: "ما هو الكوكب الأقرب إلى الشمس في مجموعتنا الشمسية؟",
+                options: ["عطارد", "الزهرة", "الأرض", "المريخ"],
+                correct: 0
+            },
+            {
+                question: "كم عدد أضلاع المثلث؟",
+                options: ["ضلعان", "ثلاثة أضلاع", "أربعة أضلاع", "خمسة أضلاع"],
+                correct: 1
+            },
+            {
+                question: "ما هو أكبر محيط في العالم؟",
+                options: ["المحيط الأطلسي", "المحيط الهندي", "المحيط المتجمد الشمالي", "المحيط الهادئ"],
+                correct: 3
+            },
+            {
+                question: "إذا كان لديك 5 تفاحات وأعطيت صديقك 2، كم تفاحة تبقى لديك؟",
+                options: ["2", "3", "4", "5"],
+                correct: 1
+            },
+            {
+                question: "ما هي عاصمة جمهورية مصر العربية؟",
+                options: ["الإسكندرية", "القاهرة", "الجيزة", "أسوان"],
+                correct: 1
+            },
+            {
+                question: "أي من هذه الحيوانات يعتبر من الثدييات؟",
+                options: ["السمكة", "الضفدع", "الحوت", "السحلية"],
+                correct: 2
+            },
+            {
+                question: "ما هو ناتج 12 × 8؟",
+                options: ["84", "96", "108", "88"],
+                correct: 1
+            },
+            {
+                question: "في أي قارة تقع مصر؟",
+                options: ["آسيا", "أوروبا", "أفريقيا", "أمريكا الجنوبية"],
+                correct: 2
+            },
+            {
+                question: "ما هو الغاز الذي نتنفسه للحياة؟",
+                options: ["ثاني أكسيد الكربون", "النيتروجين", "الأكسجين", "الهيليوم"],
+                correct: 2
+            },
+            {
+                question: "كم عدد دقائق الساعة الكاملة؟",
+                options: ["30", "45", "60", "90"],
+                correct: 2
+            }
+        ];
+
+        // Quiz State
+        let currentQuestionIndex = 0;
+        let userAnswers = new Array(quizQuestions.length).fill(null);
+        let timeRemaining = 180; // 3 minutes in seconds
+        let timerInterval = null;
+        let quizStarted = false;
+
+        // Initialize Stars Background
+        function initStars() {
+            const container = document.getElementById('starsContainer');
+            
+            // Create static stars
+            for (let i = 0; i < 150; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.animationDelay = Math.random() * 3 + 's';
+                star.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                container.appendChild(star);
+            }
+            
+            // Create shooting stars
+            setInterval(() => {
+                const shootingStar = document.createElement('div');
+                shootingStar.className = 'shooting-star';
+                shootingStar.style.left = Math.random() * 100 + '%';
+                shootingStar.style.top = Math.random() * 50 + '%';
+                shootingStar.style.width = (Math.random() * 100 + 50) + 'px';
+                container.appendChild(shootingStar);
+                setTimeout(() => shootingStar.remove(), 3000);
+            }, 2000);
+        }
+
+        // Timer Functions
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+                
+                if (timeRemaining <= 0) {
+                    endQuiz();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = timeRemaining % 60;
+            const timeStr = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            const timerEl = document.getElementById('timer');
+            document.getElementById('timeDisplay').textContent = timeStr;
+            
+            if (timeRemaining < 30) {
+                timerEl.classList.remove('timer-normal');
+                timerEl.classList.add('timer-warning');
+            }
+        }
+
+        function stopTimer() {
+            if (timerInterval) {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            }
+        }
+
+        // Quiz Functions
+        function startQuiz() {
+            document.getElementById('welcomeScreen').classList.add('hidden');
+            document.getElementById('questionScreen').classList.remove('hidden');
+            quizStarted = true;
+            startTimer();
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            const question = quizQuestions[currentQuestionIndex];
+            document.getElementById('qNumber').textContent = currentQuestionIndex + 1;
+            document.getElementById('currentQuestion').textContent = currentQuestionIndex + 1;
+            document.getElementById('questionText').textContent = question.question;
+            
+            // Update progress bar
+            const progress = ((currentQuestionIndex + 1) / quizQuestions.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+            
+            // Display options
+            const container = document.getElementById('optionsContainer');
+            container.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const optionDiv = document.createElement('div');
+                optionDiv.className = 'option-card rounded-2xl p-4 md:p-5 slide-in';
+                optionDiv.style.animationDelay = (index * 0.1) + 's';
+                
+                const isSelected = userAnswers[currentQuestionIndex] === index;
+                if (isSelected) {
+                    optionDiv.classList.add('selected');
+                }
+                
+                optionDiv.innerHTML = `
+                    <div class="flex items-center gap-4">
+                        <div class="w-8 h-8 rounded-full border-2 border-[#60a5fa] flex items-center justify-center text-white font-bold ${isSelected ? 'bg-[#60a5fa]' : ''}">
+                            ${isSelected ? '<i class="fas fa-check text-sm"></i>' : String.fromCharCode(65 + index)}
+                        </div>
+                        <span class="text-white text-lg md:text-xl font-semibold flex-1">${option}</span>
+                    </div>
+                `;
+                
+                optionDiv.onclick = () => selectOption(index);
+                container.appendChild(optionDiv);
+            });
+            
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentQuestionIndex === 0;
+            const nextBtn = document.getElementById('nextBtn');
+            nextBtn.disabled = userAnswers[currentQuestionIndex] === null;
+            
+            if (currentQuestionIndex === quizQuestions.length - 1) {
+                nextBtn.innerHTML = 'إنهاء التحدي<i class="fas fa-flag-checkered mr-2"></i>';
+            } else {
+                nextBtn.innerHTML = 'التالي<i class="fas fa-arrow-left mr-2"></i>';
+            }
+        }
+
+        function selectOption(index) {
+            userAnswers[currentQuestionIndex] = index;
+            displayQuestion();
+        }
+
+        function previousQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion();
+            }
+        }
+
+        function nextQuestion() {
+            if (userAnswers[currentQuestionIndex] === null) return;
+            
+            if (currentQuestionIndex < quizQuestions.length - 1) {
+                currentQuestionIndex++;
+                displayQuestion();
+            } else {
+                endQuiz();
+            }
+        }
+
+        function calculateScore() {
+            let correct = 0;
+            userAnswers.forEach((answer, index) => {
+                if (answer === quizQuestions[index].correct) {
+                    correct++;
+                }
+            });
+            return correct;
+        }
+
+        function getClassification(score) {
+            const percentage = (score / quizQuestions.length) * 100;
+            if (percentage >= 90) return { text: "رائدة فضاء متميزة 🌟", level: "ممتاز" };
+            if (percentage >= 75) return { text: "رائدة فضاء بارعة 🚀", level: "جيد جداً" };
+            if (percentage >= 60) return { text: "رائدة فضاء نشيطة ⭐", level: "جيد" };
+            if (percentage >= 50) return { text: "رائدة فضاء واعدة 🌙", level: "مقبول" };
+            return { text: "رائدة فضاء متدربة 💫", level: "يحتاج تحسين" };
+        }
+
+        function endQuiz() {
+            stopTimer();
+            const score = calculateScore();
+            const percentage = Math.round((score / quizQuestions.length) * 100);
+            const classification = getClassification(score);
+            const stars = Math.floor(score / 2);
+            
+            // Hide question screen, show results
+            document.getElementById('questionScreen').classList.add('hidden');
+            document.getElementById('resultsScreen').classList.remove('hidden');
+            
+            // Update results
+            document.getElementById('scoreDisplay').textContent = `${score}/10`;
+            document.getElementById('percentDisplay').textContent = `${percentage}%`;
+            document.getElementById('correctDisplay').textContent = score;
+            document.getElementById('starsDisplay').textContent = stars;
+            
+            // Set result icon and message based on performance
+            const resultIcon = document.getElementById('resultIcon');
+            const resultTitle = document.getElementById('resultTitle');
+            const resultMessage = document.getElementById('resultMessage');
+            
+            if (percentage >= 90) {
+                resultIcon.textContent = '🏆';
+                resultTitle.textContent = 'مذهل! أنت نجمة ساطعة!';
+                resultMessage.textContent = 'أداء رائع يا لونا! لقد أثبتِ أنكِ رائدة فضاء حقيقية. واصلي التألق!';
+            } else if (percentage >= 75) {
+                resultIcon.textContent = '🌟';
+                resultTitle.textContent = 'عمل رائع!';
+                resultMessage.textContent = 'أحسنتِ يا لونا! مهاراتك الفضائية في تطور مستمر. استمري في التعلم!';
+            } else if (percentage >= 60) {
+                resultIcon.textContent = '🚀';
+                resultTitle.textContent = 'بداية جيدة!';
+                resultMessage.textContent = 'أداء جيد يا لونا! مع المزيد من التدريب ستصبحين رائدة فضاء محترفة!';
+            } else {
+                resultIcon.textContent = '💫';
+                resultTitle.textContent = 'لا تستسلمي!';
+                resultMessage.textContent = 'كل رائدة فضاء بدأت من هنا يا لونا! تدربي أكثر وستصلين للنجوم!';
+            }
+            
+            // Show classification badge
+            document.getElementById('classificationBadge').classList.remove('hidden');
+            document.getElementById('classificationText').textContent = classification.text;
+            
+            // Internal classification for system tracking
+            console.log('Classification Data:', {
+                score: score,
+                total: quizQuestions.length,
+                percentage: percentage,
+                classification: classification.level,
+                timeUsed: 180 - timeRemaining,
+                timestamp: new Date().toISOString()
+            });
+        }
+
+        function restartQuiz() {
+            currentQuestionIndex = 0;
+            userAnswers = new Array(quizQuestions.length).fill(null);
+            timeRemaining = 180;
+            quizStarted = false;
+            
+            document.getElementById('resultsScreen').classList.add('hidden');
+            document.getElementById('welcomeScreen').classList.remove('hidden');
+            
+            // Reset timer display
+            document.getElementById('timer').classList.remove('timer-warning');
+            document.getElementById('timer').classList.add('timer-normal');
+            document.getElementById('timeDisplay').textContent = '03:00';
+        }
+
+        function redirectToGrade6() {
+            window.location.href = 'grade6.html';
+        }
+
+        // Keyboard Navigation
+        document.addEventListener('keydown', (e) => {
+            if (!quizStarted) return;
+            
+            if (e.key >= '1' && e.key <= '4') {
+                const index = parseInt(e.key) - 1;
+                if (index < quizQuestions[currentQuestionIndex].options.length) {
+                    selectOption(index);
+                }
+            } else if (e.key === 'ArrowRight' && currentQuestionIndex > 0) {
+                previousQuestion();
+            } else if (e.key === 'ArrowLeft' && userAnswers[currentQuestionIndex] !== null) {
+                nextQuestion();
+            }
+        });
+
+        // Initialize on load
+        window.addEventListener('load', () => {
+            initStars();
+        });
+    </script>
+<script>(function(){document.addEventListener("click",function(e){var a=e.target.closest("[data-product-id]");if(!a)return;e.preventDefault();var pid=a.getAttribute("data-product-id");if(pid)parent.postMessage({type:"ecto-artifact-link-click",productId:pid},"*")})})();</script>
+</body>
+</html>
