@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pixel the Artist - Prep 1</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  * {
+    font-family: 'Cairo', sans-serif;
+  }
+  body {
+    background: #FFF8F3;
+  }
+  .gradient-bg {
+    background: linear-gradient(135deg, #FF6B6B 0%, #FFA06B 50%, #FFD93D 100%);
+  }
+  .gradient-text {
+    background: linear-gradient(135deg, #FF6B6B 0%, #C44569 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .card-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .card-hover:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+  .pixel-bounce {
+    animation: bounce 2s infinite;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  .paint-splash {
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.15;
+    pointer-events: none;
+  }
+  .splash-1 {
+    width: 300px;
+    height: 300px;
+    background: #FF6B6B;
+    top: -100px;
+    left: -100px;
+  }
+  .splash-2 {
+    width: 200px;
+    height: 200px;
+    background: #4ECDC4;
+    bottom: -50px;
+    right: -50px;
+  }
+  .splash-3 {
+    width: 250px;
+    height: 250px;
+    background: #FFD93D;
+    top: 40%;
+    right: -100px;
+  }
+  .badge-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .7; }
+  }
+  .modal-backdrop {
+    backdrop-filter: blur(8px);
+  }
+</style>
+</head>
+<body class="min-h-screen overflow-x-hidden">
+  <!-- Decorative Paint Splashes -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none">
+    <div class="paint-splash splash-1"></div>
+    <div class="paint-splash splash-2"></div>
+    <div class="paint-splash splash-3"></div>
+  </div>
+
+  <!-- Header -->
+  <header class="gradient-bg text-white shadow-lg relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+        <div class="flex items-center gap-4">
+          <div class="w-16 h-16 md:w-20 md:h-20 bg-white rounded-2xl flex items-center justify-center shadow-xl pixel-bounce">
+            <span class="text-4xl md:text-5xl">🎨</span>
+          </div>
+          <div class="text-center md:text-right">
+            <h1 class="text-2xl md:text-4xl font-extrabold">Pixel the Artist</h1>
+            <p class="text-sm md:text-lg opacity-90 mt-1">الصف الأول الإعدادي - رحلة الفن والإبداع</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <div id="levelBadge" class="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full border border-white/30">
+            <span class="text-sm md:text-base font-semibold">جارٍ التحميل...</span>
+          </div>
+          <button id="parentBtn" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full shadow-lg transition-all hover:scale-105 flex items-center gap-2">
+            <i class="fab fa-whatsapp text-xl"></i>
+            <span class="hidden sm:inline font-semibold">ولي الأمر</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Welcome Section -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12 relative z-10">
+    <div class="bg-white rounded-3xl shadow-xl p-6 md:p-10 border-2 border-orange-100">
+      <div class="flex flex-col md:flex-row items-center gap-6">
+        <div class="flex-shrink-0">
+          <div class="w-24 h-24 md:w-32 md:h-32 gradient-bg rounded-full flex items-center justify-center shadow-2xl">
+            <span class="text-6xl md:text-7xl">👨‍🎨</span>
+          </div>
+        </div>
+        <div class="flex-1 text-center md:text-right">
+          <h2 class="text-2xl md:text-3xl font-bold gradient-text mb-3">أهلاً بك يا فنان المستقبل!</h2>
+          <p class="text-gray-700 text-base md:text-lg leading-relaxed">
+            مع Pixel هتتعلم إنجليزي بطريقة ممتعة من خلال الفن والألوان والإبداع. 
+            كل درس هو لوحة جديدة ترسمها بإيدك وتتعلم كلمات وتعبيرات جديدة!
+          </p>
+          <div class="flex flex-wrap gap-2 mt-4 justify-center md:justify-start">
+            <span class="bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-sm font-semibold">
+              <i class="fas fa-palette ml-1"></i> فن
+            </span>
+            <span class="bg-pink-100 text-pink-700 px-3 py-1 rounded-full text-sm font-semibold">
+              <i class="fas fa-droplet ml-1"></i> ألوان
+            </span>
+            <span class="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-sm font-semibold">
+              <i class="fas fa-lightbulb ml-1"></i> إبداع
+            </span>
+            <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm font-semibold">
+              <i class="fas fa-star ml-1"></i> سن 13 سنة
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Bar -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8 relative z-10">
+    <div class="grid grid-cols-3 gap-3 md:gap-6">
+      <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6 text-center card-hover">
+        <div class="text-3xl md:text-4xl mb-2">📚</div>
+        <div id="lessonsCount" class="text-2xl md:text-3xl font-bold text-gray-800">0</div>
+        <div class="text-sm md:text-base text-gray-600 mt-1">دروس فنية</div>
+      </div>
+      <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6 text-center card-hover">
+        <div class="text-3xl md:text-4xl mb-2">🎬</div>
+        <div id="videosCount" class="text-2xl md:text-3xl font-bold text-gray-800">0</div>
+        <div class="text-sm md:text-base text-gray-600 mt-1">فيديوهات</div>
+      </div>
+      <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6 text-center card-hover">
+        <div class="text-3xl md:text-4xl mb-2">🎮</div>
+        <div id="gamesCount" class="text-2xl md:text-3xl font-bold text-gray-800">0</div>
+        <div class="text-sm md:text-base text-gray-600 mt-1">ألعاب إبداعية</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12 relative z-10">
+    
+    <!-- Lessons Section -->
+    <section class="mb-12">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-2xl md:text-3xl font-bold text-gray-800 flex items-center gap-3">
+          <span class="gradient-bg text-white w-12 h-12 rounded-xl flex items-center justify-center">
+            <i class="fas fa-book-open"></i>
+          </span>
+          الدروس الفنية
+        </h3>
+      </div>
+      <div id="lessonsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+        <!-- Lessons will be injected here -->
+      </div>
+    </section>
+
+    <!-- Videos Section -->
+    <section class="mb-12">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-2xl md:text-3xl font-bold text-gray-800 flex items-center gap-3">
+          <span class="gradient-bg text-white w-12 h-12 rounded-xl flex items-center justify-center">
+            <i class="fas fa-play-circle"></i>
+          </span>
+          فيديوهات الفن
+        </h3>
+      </div>
+      <div id="videosContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+        <!-- Videos will be injected here -->
+      </div>
+    </section>
+
+    <!-- Games Section -->
+    <section class="mb-12">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="text-2xl md:text-3xl font-bold text-gray-800 flex items-center gap-3">
+          <span class="gradient-bg text-white w-12 h-12 rounded-xl flex items-center justify-center">
+            <i class="fas fa-gamepad"></i>
+          </span>
+          ألعاب الإبداع
+        </h3>
+      </div>
+      <div id="gamesContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+        <!-- Games will be injected here -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gradient-to-r from-orange-500 to-pink-500 text-white py-8 mt-12 relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div class="mb-4">
+        <span class="text-5xl">🎨</span>
+      </div>
+      <p class="text-xl md:text-2xl font-bold mb-2">إبداع Pixel مستمر! 🎨</p>
+      <p class="text-sm md:text-base opacity-90">كل يوم لوحة جديدة، كل درس فكرة جديدة</p>
+      <div class="mt-6 flex flex-wrap justify-center gap-4 text-sm">
+        <span class="bg-white/20 px-4 py-2 rounded-full">Prep 1 - المرحلة الإعدادية</span>
+        <span class="bg-white/20 px-4 py-2 rounded-full">تعلم بالفن</span>
+        <span class="bg-white/20 px-4 py-2 rounded-full">الثقافة المصرية</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal -->
+  <div id="contentModal" class="hidden fixed inset-0 z-50 overflow-y-auto">
+    <div class="modal-backdrop fixed inset-0 bg-black/50" onclick="closeModal()"></div>
+    <div class="flex items-center justify-center min-h-screen p-4">
+      <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-6 md:p-8 relative z-10 transform transition-all">
+        <button onclick="closeModal()" class="absolute top-4 left-4 text-gray-400 hover:text-gray-600 text-2xl">
+          <i class="fas fa-times-circle"></i>
+        </button>
+        <div id="modalContent">
+          <!-- Modal content will be injected here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Get level from URL parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  const level = urlParams.get('level') || 'developing';
+  
+  // Content data based on level
+  const contentData = {
+    developing: {
+      levelName: 'مستوى الإبداع - Developing',
+      levelIcon: '🌱',
+      lessons: [
+        { id: 1, title: 'مفردات الفن الأساسية', desc: 'تعلم أسماء الأدوات الفنية بالألوان', icon: '🖌️', color: 'from-red-400 to-orange-400' },
+        { id: 2, title: 'الألوان المتقدمة', desc: 'Primary, Secondary & Tertiary Colors', icon: '🎨', color: 'from-purple-400 to-pink-400' },
+        { id: 3, title: 'Present Perfect في الفن', desc: 'I have painted, I have drawn...', icon: '✏️', color: 'from-blue-400 to-cyan-400' },
+        { id: 4, title: 'وصف اللوحات', desc: 'كيف تصف لوحة فنية بالإنجليزي', icon: '🖼️', color: 'from-green-400 to-teal-400' },
+        { id: 5, title: 'الأشكال الهندسية في الفن', desc: 'Circle, Triangle, Abstract shapes', icon: '🔷', color: 'from-yellow-400 to-orange-400' },
+        { id: 6, title: 'التعبير عن المشاعر', desc: 'الفن والمشاعر: Happy, Sad, Calm', icon: '😊', color: 'from-pink-400 to-rose-400' },
+        { id: 7, title: 'أدوات الرسم', desc: 'Brush, Canvas, Palette & More', icon: '🎭', color: 'from-indigo-400 to-purple-400' },
+        { id: 8, title: 'أنواع الفنون', desc: 'Painting, Sculpture, Digital Art', icon: '🏛️', color: 'from-amber-400 to-yellow-400' }
+      ],
+      videos: [
+        { id: 1, title: 'تاريخ الفن', desc: 'رحلة عبر عصور الفن المختلفة', duration: '8 دقائق', icon: '🏺' },
+        { id: 2, title: 'خلط الألوان', desc: 'تعلم كيف تخلط الألوان الأساسية', duration: '6 دقائق', icon: '🌈' }
+      ],
+      games: [
+        { id: 1, title: 'مطابقة الألوان', desc: 'طابق اسم اللون مع درجته الصحيحة', icon: '🎯', difficulty: 'ممتع' },
+        { id: 2, title: 'جملة فنية', desc: 'كون جمل عن اللوحات والفن', icon: '🧩', difficulty: 'إبداعي' }
+      ]
+    },
+    proficient: {
+      levelName: 'مستوى الاحتراف - Proficient',
+      levelIcon: '⭐',
+      lessons: [
+        { id: 1, title: 'مفردات الفن الأساسية', desc: 'تعلم أسماء الأدوات الفنية بالألوان', icon: '🖌️', color: 'from-red-400 to-orange-400' },
+        { id: 2, title: 'الألوان المتقدمة', desc: 'Primary, Secondary & Tertiary Colors', icon: '🎨', color: 'from-purple-400 to-pink-400' },
+        { id: 3, title: 'Present Perfect في الفن', desc: 'I have painted, I have drawn...', icon: '✏️', color: 'from-blue-400 to-cyan-400' },
+        { id: 4, title: 'وصف اللوحات', desc: 'كيف تصف لوحة فنية بالإنجليزي', icon: '🖼️', color: 'from-green-400 to-teal-400' },
+        { id: 5, title: 'كتابة مراجعات فنية', desc: 'Art Reviews: كيف تكتب نقد فني', icon: '📝', color: 'from-cyan-400 to-blue-400' },
+        { id: 6, title: 'الجمل المعقدة', desc: 'Complex Sentences في وصف الفن', icon: '📜', color: 'from-violet-400 to-purple-400' },
+        { id: 7, title: 'الأشكال الهندسية في الفن', desc: 'Circle, Triangle, Abstract shapes', icon: '🔷', color: 'from-yellow-400 to-orange-400' },
+        { id: 8, title: 'التعبير عن المشاعر', desc: 'الفن والمشاعر: Happy, Sad, Calm', icon: '😊', color: 'from-pink-400 to-rose-400' },
+        { id: 9, title: 'أدوات الرسم', desc: 'Brush, Canvas, Palette & More', icon: '🎭', color: 'from-indigo-400 to-purple-400' },
+        { id: 10, title: 'أنواع الفنون', desc: 'Painting, Sculpture, Digital Art', icon: '🏛️', color: 'from-amber-400 to-yellow-400' }
+      ],
+      videos: [
+        { id: 1, title: 'تاريخ الفن', desc: 'رحلة عبر عصور الفن المختلفة', duration: '8 دقائق', icon: '🏺' },
+        { id: 2, title: 'خلط الألوان', desc: 'تعلم كيف تخلط الألوان الأساسية', duration: '6 دقائق', icon: '🌈' },
+        { id: 3, title: 'فنانون مصريون', desc: 'تعرف على أشهر الفنانين في مصر', duration: '10 دقائق', icon: '🇪🇬' }
+      ],
+      games: [
+        { id: 1, title: 'مطابقة الألوان', desc: 'طابق اسم اللون مع درجته الصحيحة', icon: '🎯', difficulty: 'ممتع' },
+        { id: 2, title: 'جملة فنية', desc: 'كون جمل عن اللوحات والفن', icon: '🧩', difficulty: 'إبداعي' }
+      ]
+    }
+  };
+
+  const currentContent = contentData[level] || contentData.developing;
+
+  // Initialize page
+  function initPage() {
+    // Update level badge
+    document.getElementById('levelBadge').innerHTML = `
+      <span class="text-sm md:text-base font-semibold flex items-center gap-2">
+        <span>${currentContent.levelIcon}</span>
+        <span>${currentContent.levelName}</span>
+      </span>
+    `;
+
+    // Update stats
+    document.getElementById('lessonsCount').textContent = currentContent.lessons.length;
+    document.getElementById('videosCount').textContent = currentContent.videos.length;
+    document.getElementById('gamesCount').textContent = currentContent.games.length;
+
+    // Render lessons
+    const lessonsContainer = document.getElementById('lessonsContainer');
+    lessonsContainer.innerHTML = currentContent.lessons.map(lesson => `
+      <div class="bg-white rounded-2xl shadow-lg p-5 md:p-6 card-hover cursor-pointer border-2 border-gray-100" onclick="openModal('lesson', ${lesson.id})">
+        <div class="flex items-start gap-4">
+          <div class="bg-gradient-to-br ${lesson.color} w-14 h-14 md:w-16 md:h-16 rounded-xl flex items-center justify-center text-2xl md:text-3xl flex-shrink-0 shadow-md">
+            ${lesson.icon}
+          </div>
+          <div class="flex-1 min-w-0">
+            <h4 class="text-lg md:text-xl font-bold text-gray-800 mb-1">${lesson.title}</h4>
+            <p class="text-sm md:text-base text-gray-600 leading-relaxed">${lesson.desc}</p>
+            <div class="mt-3 flex items-center text-orange-500 font-semibold text-sm">
+              <span>ابدأ الإبداع</span>
+              <i class="fas fa-arrow-left mr-2"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    // Render videos
+    const videosContainer = document.getElementById('videosContainer');
+    videosContainer.innerHTML = currentContent.videos.map(video => `
+      <div class="bg-white rounded-2xl shadow-lg overflow-hidden card-hover cursor-pointer" onclick="openModal('video', ${video.id})">
+        <div class="bg-gradient-to-br from-orange-400 to-pink-400 h-40 flex items-center justify-center relative">
+          <div class="text-6xl">${video.icon}</div>
+          <div class="absolute bottom-3 right-3 bg-black/70 text-white px-3 py-1 rounded-full text-xs font-semibold">
+            <i class="fas fa-play ml-1"></i> ${video.duration}
+          </div>
+        </div>
+        <div class="p-5">
+          <h4 class="text-lg md:text-xl font-bold text-gray-800 mb-2">${video.title}</h4>
+          <p class="text-sm md:text-base text-gray-600">${video.desc}</p>
+          <div class="mt-3 flex items-center text-pink-500 font-semibold text-sm">
+            <span>شاهد الآن</span>
+            <i class="fas fa-arrow-left mr-2"></i>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    // Render games
+    const gamesContainer = document.getElementById('gamesContainer');
+    gamesContainer.innerHTML = currentContent.games.map(game => `
+      <div class="bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl shadow-xl p-6 md:p-8 text-white card-hover cursor-pointer" onclick="openModal('game', ${game.id})">
+        <div class="flex items-center justify-between mb-4">
+          <div class="text-5xl md:text-6xl">${game.icon}</div>
+          <span class="bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs md:text-sm font-semibold">${game.difficulty}</span>
+        </div>
+        <h4 class="text-xl md:text-2xl font-bold mb-2">${game.title}</h4>
+        <p class="text-sm md:text-base opacity-90 mb-4">${game.desc}</p>
+        <div class="flex items-center font-bold">
+          <span>العب الآن</span>
+          <i class="fas fa-arrow-left mr-2"></i>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Modal functions
+  function openModal(type, id) {
+    const modal = document.getElementById('contentModal');
+    const modalContent = document.getElementById('modalContent');
+    
+    let content = '';
+    if (type === 'lesson') {
+      const lesson = currentContent.lessons.find(l => l.id === id);
+      content = `
+        <div class="text-center">
+          <div class="bg-gradient-to-br ${lesson.color} w-20 h-20 rounded-2xl flex items-center justify-center text-4xl mx-auto mb-4 shadow-lg">
+            ${lesson.icon}
+          </div>
+          <h3 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">${lesson.title}</h3>
+          <p class="text-gray-600 text-base md:text-lg mb-6">${lesson.desc}</p>
+          <div class="bg-orange-50 border-2 border-orange-200 rounded-xl p-4 mb-6">
+            <p class="text-orange-800 font-semibold flex items-center justify-center gap-2">
+              <i class="fas fa-palette"></i>
+              <span>درس تفاعلي - استخدم ألوانك وإبداعك!</span>
+            </p>
+          </div>
+          <button onclick="startActivity()" class="gradient-bg text-white px-8 py-3 rounded-full font-bold text-lg shadow-lg hover:scale-105 transition-all">
+            ابدأ الدرس <i class="fas fa-arrow-left mr-2"></i>
+          </button>
+        </div>
+      `;
+    } else if (type === 'video') {
+      const video = currentContent.videos.find(v => v.id === id);
+      content = `
+        <div class="text-center">
+          <div class="text-7xl mb-4">${video.icon}</div>
+          <h3 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">${video.title}</h3>
+          <p class="text-gray-600 text-base md:text-lg mb-4">${video.desc}</p>
+          <div class="bg-pink-50 border-2 border-pink-200 rounded-xl p-4 mb-6">
+            <p class="text-pink-800 font-semibold">
+              <i class="fas fa-clock ml-2"></i> المدة: ${video.duration}
+            </p>
+          </div>
+          <button onclick="startActivity()" class="gradient-bg text-white px-8 py-3 rounded-full font-bold text-lg shadow-lg hover:scale-105 transition-all">
+            <i class="fas fa-play ml-2"></i> تشغيل الفيديو
+          </button>
+        </div>
+      `;
+    } else if (type === 'game') {
+      const game = currentContent.games.find(g => g.id === id);
+      content = `
+        <div class="text-center">
+          <div class="text-7xl mb-4">${game.icon}</div>
+          <h3 class="text-2xl md:text-3xl font-bold text-gray-800 mb-3">${game.title}</h3>
+          <p class="text-gray-600 text-base md:text-lg mb-4">${game.desc}</p>
+          <div class="bg-purple-50 border-2 border-purple-200 rounded-xl p-4 mb-6">
+            <p class="text-purple-800 font-semibold">
+              <i class="fas fa-star ml-2"></i> المستوى: ${game.difficulty}
+            </p>
+          </div>
+          <button onclick="startActivity()" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-3 rounded-full font-bold text-lg shadow-lg hover:scale-105 transition-all">
+            <i class="fas fa-gamepad ml-2"></i> ابدأ اللعبة
+          </button>
+        </div>
+      `;
+    }
+    
+    modalContent.innerHTML = content;
+    modal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('contentModal').classList.add('hidden');
+    document.body.style.overflow = 'auto';
+  }
+
+  function startActivity() {
+    closeModal();
+    // Show success message
+    const toast = document.createElement('div');
+    toast.className = 'fixed top-20 right-4 bg-green-500 text-white px-6 py-3 rounded-full shadow-2xl z-50 font-bold flex items-center gap-2';
+    toast.innerHTML = '<i class="fas fa-check-circle"></i> رائع! واصل إبداعك 🎨';
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 3000);
+  }
+
+  // WhatsApp parent button
+  document.getElementById('parentBtn').addEventListener('click', () => {
+    const message = encodeURIComponent('مرحباً، أريد متابعة تقدم ابني/ابنتي في برنامج Pixel the Artist للصف الأول الإعدادي 🎨');
+    window.open(`https://wa.me/?text=${message}`, '_blank');
+  });
+
+  // Initialize on load
+  document.addEventListener('DOMContentLoaded', initPage);
+
+  // Close modal on escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeModal();
+  });
+</script>
+<script>(function(){document.addEventListener("click",function(e){var a=e.target.closest("[data-product-id]");if(!a)return;e.preventDefault();var pid=a.getAttribute("data-product-id");if(pid)parent.postMessage({type:"ecto-artifact-link-click",productId:pid},"*")})})();</script>
+</body>
+</html>
