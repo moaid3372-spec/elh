@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تحدي Leo الأسد - الصف الأول</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap');
+  
+  * {
+    font-family: 'Tajawal', sans-serif;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  body {
+    background: linear-gradient(135deg, #FDE68A 0%, #FDBA74 50%, #FCA5A5 100%);
+    min-height: 100vh;
+  }
+  
+  .btn-primary {
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 20px rgba(251, 146, 60, 0.4);
+  }
+  
+  .btn-primary:active {
+    transform: scale(0.95);
+    box-shadow: 0 4px 10px rgba(251, 146, 60, 0.3);
+  }
+  
+  .card {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+    animation: slideUp 0.4s ease-out;
+  }
+  
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+  
+  .lion-bounce {
+    animation: bounce 2s infinite;
+  }
+  
+  .timer-pulse {
+    animation: pulse 1s infinite;
+  }
+  
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.6; }
+  }
+  
+  .option-btn {
+    transition: all 0.2s ease;
+  }
+  
+  .option-btn:active {
+    transform: scale(0.97);
+  }
+  
+  .option-selected {
+    background: #FDBA74 !important;
+    border-color: #FB923C !important;
+    transform: scale(1.02);
+  }
+  
+  .trace-letter {
+    font-size: 4rem;
+    color: #E5E7EB;
+    text-shadow: 2px 2px 0 #9CA3AF, -2px -2px 0 #9CA3AF, 2px -2px 0 #9CA3AF, -2px 2px 0 #9CA3AF;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  
+  .trace-letter.traced {
+    color: #FB923C;
+    text-shadow: 2px 2px 0 #EA580C, -2px -2px 0 #EA580C, 2px -2px 0 #EA580C, -2px 2px 0 #EA580C;
+  }
+  
+  .color-circle {
+    width: 80px;
+    height: 80px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .color-circle:active {
+    transform: scale(0.9);
+  }
+  
+  .color-selected {
+    outline: 6px solid #FB923C;
+    outline-offset: 4px;
+  }
+  
+  .recording {
+    animation: recordingPulse 1.5s infinite;
+  }
+  
+  @keyframes recordingPulse {
+    0%, 100% { box-shadow: 0 0 rgba(239, 68, 68, 0.7); }
+    50% { box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); }
+  }
+  
+  .progress-bar {
+    transition: width 0.5s ease;
+  }
+  
+  .star-pop {
+    animation: starPop 0.6s ease-out;
+  }
+  
+  @keyframes starPop {
+    0% { transform: scale(0) rotate(0deg); }
+    50% { transform: scale(1.3) rotate(180deg); }
+    100% { transform: scale(1) rotate(360deg); }
+  }
+  
+  @media (max-width: 390px) {
+    .trace-letter { font-size: 3rem; }
+    .color-circle { width: 70px; height: 70px; }
+  }
+</style>
+</head>
+<body class="p-4 md:p-8">
+  
+  <!-- Hidden audio for Q4 -->
+  <audio id="lionRoar" preload="auto">
+    <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBtZGqvrq+qv8fKzM3MzM3MzM3MzM3KzM3MzM3MzM3MzM3MzM3KzM3MzM3MzM3MzM3MzM3=" type="audio/wav">
+  </audio>
+
+  <div class="max-w-3xl mx-auto">
+    
+    <!-- Welcome Screen -->
+    <div id="welcomeScreen" class="card rounded-3xl p-6 md:p-10 text-center">
+      <div class="lion-bounce text-8xl md:text-9xl mb-6">🦁</div>
+      <h1 class="text-4xl md:text-6xl font-black text-orange-600 mb-4">تحدي Leo الأسد</h1>
+      <p class="text-3xl md:text-4xl font-bold text-amber-700 mb-8">يلا نزأر؟</p>
+      
+      <div class="bg-amber-50 rounded-2xl p-6 mb-8 border-4 border-amber-300">
+        <div class="flex items-center justify-center gap-3 mb-3">
+          <i class="fas fa-clock text-3xl text-orange-500"></i>
+          <span class="text-2xl font-bold text-gray-700">الوقت: 3 دقائق</span>
+        </div>
+        <div class="flex items-center justify-center gap-3">
+          <i class="fas fa-star text-3xl text-yellow-500"></i>
+          <span class="text-2xl font-bold text-gray-700">10 مغامرات ممتعة</span>
+        </div>
+      </div>
+      
+      <button id="startBtn" class="btn-primary w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white text-3xl md:text-4xl font-black py-6 px-8 rounded-2xl">
+        <i class="fas fa-play ml-3"></i>
+        ابدأ المغامرة
+      </button>
+    </div>
+
+    <!-- Challenge Screen -->
+    <div id="challengeScreen" class="hidden">
+      <!-- Header with Timer & Progress -->
+      <div class="card rounded-3xl p-4 md:p-6 mb-4">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-3">
+            <div class="text-5xl">🦁</div>
+            <div>
+              <div class="text-lg font-bold text-orange-600">تحدي Leo</div>
+              <div class="text-sm text-gray-600">مغامرة <span id="currentQ">1</span> من 10</div>
+            </div>
+          </div>
+          <div id="timerBox" class="bg-gradient-to-r from-red-500 to-orange-500 text-white px-6 py-3 rounded-2xl">
+            <div class="flex items-center gap-2">
+              <i class="fas fa-clock text-2xl"></i>
+              <span id="timer" class="text-3xl font-black">3:00</span>
+            </div>
+          </div>
+        <div class="bg-gray-200 rounded-full h-4 overflow-hidden">
+          <div id="progressBar" class="progress-bar bg-gradient-to-r from-orange-400 to-amber-400 h-full rounded-full" style="width: 10%"></div>
+        </div>
+      </div>
+
+      <!-- Questions Container -->
+      <div id="questionsContainer" class="space-y-4">
+        
+        <!-- Q1: Grammar -->
+        <div class="question card rounded-3xl p-6 md:p-8" data-q="1">
+          <div class="bg-orange-100 rounded-2xl p-4 mb-6">
+            <h3 class="text-2xl md:text-3xl font-bold text-orange-700 mb-2">المغامرة الأولى 🎯</h3>
+            <p class="text-xl text-gray-700">اختر الكلمة الصحيحة</p>
+          </div>
+          <div class="text-3xl md:text-4xl font-bold text-center mb-8 text-gray-800">
+            I ___ a lion
+          </div>
+          <div class="grid gap-4">
+            <button class="option-btn bg-white border-4 border-gray-300 text-2xl md:text-3xl font-bold py-6 rounded-2xl hover:border-orange-400" data-answer="am">am</button>
+            <button class="option-btn bg-white border-4 border-gray-300 text-2xl md:text-3xl font-bold py-6 rounded-2xl hover:border-orange-400" data-answer="is">is</button>
+            <button class="option-btn bg-white border-4 border-gray-300 text-2xl md:text-3xl font-bold py-6 rounded-2xl hover:border-orange-400" data-answer="are">are</button>
+          </div>
+        </div>
+
+        <!-- Q2: Reading -->
+        <div class="question card rounded-3xl p-6 md:p-8 hidden" data-q="2">
+          <div class="bg-amber-100 rounded-2xl p-4 mb-6">
+            <h3 class="text-2xl md:text-3xl font-bold text-amber-700 mb-2">المغامرة الثانية 📖</h3>
+            <p class="text-xl text-gray-700">اقرأ واختر الصورة الصحيحة</p>
+          </div>
+          <div class="bg-white rounded-2xl p-6 mb-6 border-4 border-amber-300">
+            <p class="text-xl md:text-2xl text-gray-800 leading-relaxed mb-4">
+              Leo is a big lion. Leo lives in the zoo in Egypt. Leo is brown and strong. Leo likes to roar!
+            </p>
+            <p class="text-lg md:text-xl font-bold text-orange-600">Where does Leo live?</p>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <button class="option-btn bg-white border-4 border-gray-300 p-4 rounded-2xl hover:border-orange-400" data-answer="zoo">
+              <div class="text-7xl mb-2">🏞️</div>
+              <div class="text-xl font-bold">Zoo</div>
+            </button>
+            <button class="option-btn bg-white border-4 border-gray-300 p-4 rounded-2xl hover:border-orange-400" data-answer="school">
+              <div class="text-7xl mb-2">🏫</div>
+              <div class="text-xl font-bold">School</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Q3: Writing/Tracing -->
+        <div class="question card rounded-3xl p-6 md:p-8 hidden" data-q="3">
+          <div class="bg-yellow-100 rounded-2xl p-4 mb-6">
+            <h3 class="text-2xl md:text-3xl font-bold text-yellow-700 mb-2">المغامرة الثالثة ✏️</h3>
+            <p class="text-xl text-gray-700">اضغط على الحروف لتتبعها</p>
+          </div>
+          <div class="bg-white rounded-2xl p-8 border-4 border-yellow-300">
+            <div class="flex justify-center items-center gap-2 md:gap-4 flex-wrap mb-6">
+              <span class="trace-letter" data-letter="L">L</span>
+              <span class="trace-letter" data-letter="I">I</span>
+              <span class="trace-letter" data-letter="O">O</span>
+              <span class="trace-letter" data-letter="N">N</span>
+            </div>
+            <p class="text-2xl text-center font-bold text-gray-600">L-I-O-N = أسد</p>
+          </div>
+          <button id="traceNext" class="btn-primary w-full bg-gradient-to-r from-yellow-500 to-orange-500 text-white text-2xl md:text-3xl font-black py-5 px-8 rounded-2xl mt-6 opacity-50 cursor-not-allowed" disabled>
+            التالي <i class="fas fa-arrow-left mr-2"></i>
+          </button>
+        </div>
+
+        <!-- Q4: Listening -->
+        <div class="question card rounded-3xl p-6 md:p-8 hidden" data-q="4">
+          <div class="bg-red-100 rounded-2xl p-4 mb-6">
+            <h3 class="text-2xl md:text-3xl font-bold text-red-700 mb-2">المغامرة الرابعة 👂</h3>
+            <p class="text-xl text-gray-700">اسمع واختر الصورة</p>
+          </div>
+          <div class="text-center mb-8">
+            <button id="playRoar" class="bg-gradient-to-r from-red-500 to-orange-500 text-white text-3xl p-8 rounded-full shadow-lg hover:scale-110 transition">
+              <i class="fas fa-volume-up"></i>
+            </button>
+            <p class="text-xl text-gray-600 mt-4">اضغط لسماع صوت Leo</p>
+          </div>
+          <div class="grid grid-cols-3 gap-3">
+            <button class="option-btn bg-white border-4 border-gray-300 p-4 rounded-2xl hover:border-orange-400" data-answer="lion">
+              <div class="text-6xl">🦁</div>
+            </button>
+            <button class="option-btn bg-white border-4 border-gray-300 p-4 rounded-2xl hover:border-orange-400" data-answer="cat">
+              <div class="text-6xl">🐱</div>
+            </button>
+            <button class="option-btn bg-white border-4 border-gray-300 p-4 rounded-2xl hover:border-orange-400" data-answer="dog">
+              <div class="text-6xl">🐶</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Q5: Vocabulary Colors -->
+        <div class="question card rounded-3xl p-6 md:p-8 hidden" data-q="5">
+          <div class="bg-pink-100 rounded-2xl p-4 mb-6">
+            <h3 class="text-2xl md:text-3xl font-bold text-pink-700 mb-2">المغامرة الخامسة 🎨</h3>
+            <p class="text-xl text-gray-700">اختر اللون الأحمر</p>
+          </div>
+          <div class="flex justify-center gap-4 md:gap-6 flex-wrap">
+            <div class="color-circle rounded-full bg-red-500 shadow-lg" data-color="red"></div>
+            <div class="color-circle rounded-full bg-blue-500 shadow-lg" data-color="blue"></div>
+            <div class="color-circle rounded-full bg-yellow-400 shadow-lg" data-color="yellow"></div>
+          </div>
+        </div>
+
+        <!-- Q6: Speaking -->
+        <div class="question card rounded-3xl p-6 md:p-8 hidden" data-q="6">
+          <div class="bg-purple-100 rounded-2xl p-4 mb-6">
+            <h3 class="text-2xl md:text-3xl font-bold text-purple-700 mb-2">المغامرة السادسة 🎤</h3>
+            <p class="text-xl text-gray-700">قل "Hello Leo"</p>
+          </div>
+          <div class="text-center">
+            <button id="recordBtn" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white text-2xl md:text-3xl font-bold py-8 px-12 rounded-full shadow-lg mb-4">
+              <i class="fas fa-microphone text-4xl"></i>
+              <div class="mt-2">اضغط للتسجيل</div>
+            </button>
+            <p id="recordStatus" class="text-xl text-gray-600"></p>
+          </div>
+        </div>
+
+        <!-- Q7: Function -->
+        <div class="question card rounded-3xl p-6 md:p-8 hidden" data-q="7">
+          <div class="bg-green-100 rounded-2xl p-4 mb-6">
+            <h3 class="text-2xl md:text-3xl font-bold text-green-700 mb-2">المغامرة السابعة 👋</h3>
+            <p class="text-xl text-gray-700">كيف تعرف نفسك؟</p>
+          </div>
+          <div class="text-center mb-6">
+            <div class="text-8xl mb-4">👦</div>
+            <p class="text-2xl font-bold text-gray-700">Point to yourself and say...</p>
+          </div>
+          <div class="grid gap-4">
+            <button class="option-btn bg-white border-4 border-gray-300 text-xl md:text-2xl font-bold py-5 rounded-2xl hover:border-orange-400" data-answer="I am [name]">I am [your name]</button>
+            <button class="option-btn bg-white border-4 border-gray-300 text-xl md:text-2xl font-bold py-5 rounded-2xl hover:border-orange-400" data-answer="You are">You are</button>
+            <button class="option-btn bg-white border-4 border-gray-300 text-xl md:text-2xl font-bold py-5 rounded-2xl hover:border-orange-400" data-answer="He is">He is</button>
+          </div>
+        </div>
+
+        <!-- Q8: Conversation -->
+        <div class="question card rounded-3xl p-6 md:p-8 hidden" data-q="8">
+          <div class="bg-blue-100 rounded-2xl p-4 mb-6">
+            <h3 class="text-2xl md:text-3xl font-bold text-blue-700 mb-2">المغامرة الثامنة 💬</h3>
+            <p class="text-xl text-gray-700">ماذا تجيب؟</p>
+          </div>
+          <div class="bg-white rounded-2xl p-6 mb-6 border-4 border-blue-300">
+            <div class="flex items-center gap-4 mb-4">
+              <div class="text-6xl">🦁</div>
+              <div class="bg-blue-100 rounded-2xl p-4 flex-1">
+                <p class="text-2xl font-bold text-blue-800">"What's your name?"</p>
+              </div>
+            </div>
+          <div class="grid gap-4">
+            <button class="option-btn bg-white border-4 border-gray-300 text-xl md:text-2xl font-bold py-5 rounded-2xl hover:border-orange-400" data-answer="I am Leo">I am Leo</button>
+            <button class="option-btn bg-white border-4 border-gray-300 text-xl md:text-2xl font-bold py-5 rounded-2xl hover:border-orange-400" data-answer="I am fine">I am fine</button>
+            <button class="option-btn bg-white border-4 border-gray-300 text-xl md:text-2xl font-bold py-5 rounded-2xl hover:border-orange-400" data-answer="Goodbye">Goodbye</button>
+          </div>
+        </div>
+
+        <!-- Q9: Phonics -->
+        <div class="question card rounded-3xl p-6 md:p-8 hidden" data-q="9">
+          <div class="bg-indigo-100 rounded-2xl p-4 mb-6">
+            <h3 class="text-2xl md:text-3xl font-bold text-indigo-700 mb-2">المغامرة التاسعة 🔊</h3>
+            <p class="text-xl text-gray-700">أي كلمة تبدأ بصوت 'l'؟</p>
+          </div>
+          <div class="text-center mb-6">
+            <div class="text-7xl font-black text-indigo-600 mb-2">L l</div>
+            <p class="text-xl text-gray-600">صوت /l/ مثل Lion</p>
+          </div>
+          <div class="grid grid-cols-3 gap-3">
+            <button class="option-btn bg-white border-4 border-gray-300 p-4 rounded-2xl hover:border-orange-400" data-answer="lion">
+              <div class="text-5xl mb-2">🦁</div>
+              <div class="text-lg font-bold">Lion</div>
+            </button>
+            <button class="option-btn bg-white border-4 border-gray-300 p-4 rounded-2xl hover:border-orange-400" data-answer="sun">
+              <div class="text-5xl mb-2">☀️</div>
+              <div class="text-lg font-bold">Sun</div>
+            </button>
+            <button class="option-btn bg-white border-4 border-gray-300 p-4 rounded-2xl hover:border-orange-400" data-answer="apple">
+              <div class="text-5xl mb-2">🍎</div>
+              <div class="text-lg font-bold">Apple</div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Q10: Culture -->
+        <div class="question card rounded-3xl p-6 md:p-8 hidden" data-q="10">
+          <div class="bg-teal-100 rounded-2xl p-4 mb-6">
+            <h3 class="text-2xl md:text-3xl font-bold text-teal-700 mb-2">المغامرة الأخيرة 🌟</h3>
+            <p class="text-xl text-gray-700">ماذا نتعلم من هذه الصورة؟</p>
+          </div>
+          <div class="bg-white rounded-2xl p-4 mb-6 border-4 border-teal-300">
+            <div class="text-8xl text-center mb-4">👧👦🦁</div>
+            <p class="text-center text-lg text-gray-600">أطفال يلعبون بأمان في الحديقة</p>
+          </div>
+          <div class="grid gap-3">
+            <button class="option-btn bg-white border-4 border-gray-300 text-lg md:text-xl font-bold py-4 px-4 rounded-2xl hover:border-orange-400 text-right" data-answer="correct">
+              الرفق بالحيوان + اتباع التعليمات
+            </button>
+            <button class="option-btn bg-white border-4 border-gray-300 text-lg md:text-xl font-bold py-4 px-4 rounded-2xl hover:border-orange-400 text-right" data-answer="wrong1">
+              اللعب مع الأسد وحده
+            </button>
+            <button class="option-btn bg-white border-4 border-gray-300 text-lg md:text-xl font-bold py-4 px-4 rounded-2xl hover:border-orange-400 text-right" data-answer="wrong2">
+              إطعام الأسد طعامنا
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Completion Screen -->
+    <div id="completionScreen" class="hidden card rounded-3xl p-6 md:p-10 text-center">
+      <div class="text-9xl mb-6 lion-bounce">🦁</div>
+      <h2 class="text-4xl md:text-6xl font-black text-orange-600 mb-4">زئير قوي يا Leo!</h2>
+      <div class="flex justify-center gap-3 mb-8">
+        <span class="text-6xl star-pop">⭐</span>
+        <span class="text-6xl star-pop" style="animation-delay: 0.2s">⭐</span>
+        <span class="text-6xl star-pop" style="animation-delay: 0.4s">⭐</span>
+      </div>
+      
+      <div class="bg-gradient-to-r from-amber-100 to-orange-100 rounded-2xl p-6 mb-6 border-4 border-amber-300">
+        <p class="text-2xl md:text-3xl font-bold text-gray-800 mb-2">أنهيت جميع المغامرات!</p>
+        <p class="text-xl text-gray-600">أنت بطل سفاري رائع 🌴</p>
+      </div>
+
+      <div id="whatsappSection" class="bg-green-50 rounded-2xl p-6 border-4 border-green-300">
+        <i class="fab fa-whatsapp text-5xl text-green-600 mb-3"></i>
+        <p class="text-xl font-bold text-gray-700 mb-4">إشعار لولي الأمر</p>
+        <button id="whatsappBtn" class="btn-primary w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white text-xl md:text-2xl font-bold py-4 px-6 rounded-2xl">
+          <i class="fab fa-whatsapp ml-2"></i>
+          إرسال الإشعار
+        </button>
+        <p class="text-sm text-gray-600 mt-3">سيتم التوجيه خلال <span id="countdown">3</span> ثواني...</p>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+  // State Management
+  let currentQuestion = 0;
+  let timeLeft = 180; // 3 minutes in seconds
+  let timerInterval;
+  let answers = {};
+  let score = 0;
+  let mediaRecorder;
+  let audioChunks = [];
+
+  const correctAnswers = {
+    1: 'am',
+    2: 'zoo',
+    3: 'traced',
+    4: 'lion',
+    5: 'red',
+    6: 'recorded',
+    7: 'I am [name]',
+    8: 'I am Leo',
+    9: 'lion',
+    10: 'correct'
+  };
+
+  // Start Challenge
+  document.getElementById('startBtn').addEventListener('click', () => {
+    document.getElementById('welcomeScreen').classList.add('hidden');
+    document.getElementById('challengeScreen').classList.remove('hidden');
+    startTimer();
+    showQuestion(1);
+  });
+
+  // Timer
+  function startTimer() {
+    timerInterval = setInterval(() => {
+      timeLeft--;
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+      const timerEl = document.getElementById('timer');
+      timerEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+      
+      if (timeLeft <= 30) {
+        document.getElementById('timerBox').classList.add('timer-pulse');
+      }
+      
+      if (timeLeft <= 0) {
+        clearInterval(timerInterval);
+        autoSubmit();
+      }
+    }, 1000);
+  }
+
+  // Show Question
+  function showQuestion(num) {
+    currentQuestion = num;
+    document.getElementById('currentQ').textContent = num;
+    document.getElementById('progressBar').style.width = `${num * 10}%`;
+    
+    document.querySelectorAll('.question').forEach(q => q.classList.add('hidden'));
+    const qEl = document.querySelector(`[data-q="${num}"]`);
+    if (qEl) qEl.classList.remove('hidden');
+  }
+
+  // Auto Submit
+  function autoSubmit() {
+    calculateResults();
+    showCompletion();
+  }
+
+  // Handle Option Selection
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.option-btn');
+    if (btn) {
+      const question = btn.closest('.question');
+      const qNum = parseInt(question.dataset.q);
+      
+      // Remove previous selection
+      question.querySelectorAll('.option-btn').forEach(b => b.classList.remove('option-selected'));
+      btn.classList.add('option-selected');
+      
+      answers[qNum] = btn.dataset.answer;
+      
+      // Auto advance after short delay
+      setTimeout(() => {
+        if (qNum < 10) {
+          showQuestion(qNum + 1);
+        } else {
+          calculateResults();
+          showCompletion();
+        }
+      }, 600);
+    }
+  });
+
+  // Q3: Tracing
+  document.querySelectorAll('.trace-letter').forEach(letter => {
+    letter.addEventListener('click', () => {
+      letter.classList.add('traced');
+      const allTraced = Array.from(document.querySelectorAll('.trace-letter')).every(l => l.classList.contains('traced'));
+      if (allTraced) {
+        answers[3] = 'traced';
+        const nextBtn = document.getElementById('traceNext');
+        nextBtn.disabled = false;
+        nextBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+      }
+    });
+  });
+
+  document.getElementById('traceNext').addEventListener('click', () => {
+    if (answers[3] === 'traced') {
+      showQuestion(4);
+    }
+  });
+
+  // Q4: Play Roar
+  document.getElementById('playRoar').addEventListener('click', () => {
+    const audio = document.getElementById('lionRoar');
+    // Safari fallback sound
+    audio.play().catch(() => {
+      // If audio fails, show visual feedback
+      document.getElementById('playRoar').classList.add('scale-125');
+      setTimeout(() => {
+        document.getElementById('playRoar').classList.remove('scale-125');
+      }, 300);
+    });
+  });
+
+  // Q5: Color Selection
+  document.querySelectorAll('.color-circle').forEach(circle => {
+    circle.addEventListener('click', () => {
+      document.querySelectorAll('.color-circle').forEach(c => c.classList.remove('color-selected'));
+      circle.classList.add('color-selected');
+      answers[5] = circle.dataset.color;
+      
+      setTimeout(() => {
+        showQuestion(6);
+      }, 600);
+    });
+  });
+
+  // Q6: Recording
+  document.getElementById('recordBtn').addEventListener('click', async () => {
+    const btn = document.getElementById('recordBtn');
+    const status = document.getElementById('recordStatus');
+    
+    if (!mediaRecorder || mediaRecorder.state === 'inactive') {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+        
+        mediaRecorder.ondataavailable = (e) => audioChunks.push(e.data);
+        mediaRecorder.onstop = () => {
+          answers[6] = 'recorded';
+          status.textContent = '✓ تم التسجيل بنجاح!';
+          status.className = 'text-xl text-green-600 font-bold';
+          btn.classList.remove('recording');
+          btn.innerHTML = '<i class="fas fa-check text-4xl"></i><div class="mt-2">تم التسجيل</div>';
+          
+          setTimeout(() => {
+            showQuestion(7);
+          }, 1000);
+        };
+        
+        mediaRecorder.start();
+        btn.classList.add('recording');
+        btn.innerHTML = '<i class="fas fa-stop text-4xl"></i><div class="mt-2">اضغط للإيقاف</div>';
+        status.textContent = '🎤 جاري التسجيل...';
+        status.className = 'text-xl text-red-600 font-bold';
+        
+      } catch (err) {
+        status.textContent = 'لا يمكن الوصول للميكروفون. اضغط للتخطي';
+        status.className = 'text-xl text-orange-600 font-bold';
+        answers[6] = 'skipped';
+        setTimeout(() => showQuestion(7), 1500);
+      }
+    } else if (mediaRecorder.state === 'recording') {
+      mediaRecorder.stop();
+      mediaRecorder.stream.getTracks().forEach(track => track.stop());
+    }
+  });
+
+  // Calculate Results
+  function calculateResults() {
+    score = 0;
+    Object.keys(correctAnswers).forEach(q => {
+      if (answers[q] === correctAnswers[q]) score++;
+    });
+    
+    let level = score >= 7 ? 'proficient' : 'developing';
+    const stars = score >= 8 ? 3 : score >= 5 ? 2 : 1;
+    
+    const resultData = {
+      challenge: 'Leo the Lion',
+      grade: 'Primary 1',
+      score: score,
+      total: 10,
+      level: level,
+      stars: stars,
+      answers: answers,
+      completedAt: new Date().toISOString(),
+      timeSpent: 180 - timeLeft
+    };
+    
+    localStorage.setItem('leoChallenge_P1', JSON.stringify(resultData));
+  }
+
+  // Show Completion
+  function showCompletion() {
+    clearInterval(timerInterval);
+    document.getElementById('challengeScreen').classList.add('hidden');
+    document.getElementById('completionScreen').classList.remove('hidden');
+    
+    // Start countdown for redirect
+    let count = 3;
+    const countdownEl = document.getElementById('countdown');
+    const countdownInterval = setInterval(() => {
+      count--;
+      countdownEl.textContent = count;
+      if (count <= 0) {
+        clearInterval(countdownInterval);
+        const resultData = JSON.parse(localStorage.getItem('leoChallenge_P1'));
+        window.location.href = `grades/primary1.html?level=${resultData.level}`;
+      }
+    }, 1000);
+  }
+
+  // WhatsApp Notification
+  document.getElementById('whatsappBtn').addEventListener('click', () => {
+    const resultData = JSON.parse(localStorage.getItem('leoChallenge_P1')) || {};
+    const message = `🦁 تحدي Leo الأسد - الصف الأول\n\n` +
+                   `✅ أكمل الطفل جميع المغامرات بنجاح!\n` +
+                   `⭐ النجوم المكتسبة: ${resultData.stars || 3} من 3\n` +
+                   `🎯 النتائج: ${resultData.score || 0} من 10\n` +
+                   `📚 المستوى: ${resultData.level === 'proficient' ? 'متقن' : 'قيد التطوير'}\n\n` +
+                   `زئير قوي يا Leo! 🌟`;
+    
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  });
+
+</script>
+<script>(function(){document.addEventListener("click",function(e){var a=e.target.closest("[data-product-id]");if(!a)return;e.preventDefault();var pid=a.getAttribute("data-product-id");if(pid)parent.postMessage({type:"ecto-artifact-link-click",productId:pid},"*")})})();</script>
+</body>
+</html>
