@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>رحلة Leo التعليمية - الصف الأول الابتدائي</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<style>
+    body {
+        font-family: 'Cairo', sans-serif;
+        background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 50%, #FDBA74 100%);
+        min-height: 100vh;
+    }
+    
+    .safari-pattern {
+        background-image: 
+            radial-gradient(circle at 20% 50%, rgba(251, 146, 60, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(34, 197, 94, 0.1) 0%, transparent 50%);
+    }
+    
+    .card-hover {
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .card-hover:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(251, 146, 60, 0.3);
+    }
+    
+    .btn-bounce:active {
+        transform: scale(0.95);
+    }
+    
+    .star-float {
+        animation: float 3s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+    }
+    
+    .lion-wave {
+        animation: wave 2s ease-in-out infinite;
+        transform-origin: bottom center;
+    }
+    
+    @keyframes wave {
+        0%, 100% { transform: rotate(0deg); }
+        25% { transform: rotate(-10deg); }
+        75% { transform: rotate(10deg); }
+    }
+    
+    .draggable {
+        cursor: grab;
+        touch-action: none;
+    }
+    
+    .draggable:active {
+        cursor: grabbing;
+    }
+    
+    .drop-zone {
+        transition: all 0.3s ease;
+    }
+    
+    .drop-zone.active {
+        background-color: #86EFAC !important;
+        transform: scale(1.05);
+    }
+    
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0,0,0,0.6);
+        backdrop-filter: blur(4px);
+    }
+    
+    .modal.active {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.3s ease;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    
+    .sound-btn {
+        transition: all 0.2s ease;
+    }
+    
+    .sound-btn:active {
+        transform: scale(0.9);
+    }
+    
+    @media (max-width: 390px) {
+        .lesson-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+</head>
+<body class="safari-pattern">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-amber-500 to-orange-500 shadow-2xl sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 md:py-6">
+            <div class="flex items-center justify-between flex-wrap gap-4">
+                <div class="flex items-center gap-3 md:gap-4">
+                    <div class="lion-wave text-5xl md:text-7xl">🦁</div>
+                    <div>
+                        <h1 class="text-2xl md:text-4xl font-black text-white drop-shadow-lg">رحلة Leo</h1>
+                        <p class="text-amber-100 text-sm md:text-lg font-semibold">الصف الأول الابتدائي</p>
+                    </div>
+                <div class="flex items-center gap-2 md:gap-3">
+                    <div class="bg-white/90 rounded-full px-4 py-2 md:px-6 md:py-3 shadow-lg">
+                        <span class="text-orange-600 font-bold text-sm md:text-lg" id="levelBadge">بطل ناشئ ⭐</span>
+                    </div>
+                    <button onclick="goToMenu()" class="bg-white text-orange-600 font-bold px-5 py-2 md:px-8 md:py-4 rounded-full text-base md:text-xl shadow-xl hover:bg-orange-50 transition btn-bounce">
+                        🏠 القائمة
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Welcome Section -->
+    <section class="container mx-auto px-4 py-6 md:py-10">
+        <div class="bg-white rounded-3xl shadow-2xl p-6 md:p-10 border-4 border-amber-400">
+            <div class="text-center">
+                <div class="text-6xl md:text-8xl mb-4">🌟</div>
+                <h2 class="text-3xl md:text-5xl font-black text-amber-600 mb-4">أهلاً يا بطل!</h2>
+                <p class="text-xl md:text-2xl text-gray-700 font-semibold mb-2">Leo سعيد جداً بوجودك معنا</p>
+                <p class="text-lg md:text-xl text-gray-600" id="levelMessage">هيا نبدأ مغامرتنا معاً!</p>
+                <div class="flex justify-center gap-2 mt-6">
+                    <span class="star-float text-4xl md:text-5xl">⭐</span>
+                    <span class="star-float text-4xl md:text-5xl" style="animation-delay: 0.2s;">⭐</span>
+                    <span class="star-float text-4xl md:text-5xl" style="animation-delay: 0.4s;">⭐</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Lessons Section -->
+    <section class="container mx-auto px-4 py-6">
+        <div class="flex items-center gap-3 mb-6">
+            <span class="text-4xl md:text-5xl">📚</span>
+            <h3 class="text-3xl md:text-4xl font-black text-orange-700">دروس المغامرة</h3>
+        </div>
+        <div class="lesson-grid grid grid-cols-1 md:grid-cols-2 gap-6" id="lessonsContainer">
+            <!-- Lessons will be inserted here by JS -->
+        </div>
+    </section>
+
+    <!-- Videos Section -->
+    <section class="container mx-auto px-4 py-6">
+        <div class="flex items-center gap-3 mb-6">
+            <span class="text-4xl md:text-5xl">🎬</span>
+            <h3 class="text-3xl md:text-4xl font-black text-orange-700">فيديوهات ممتعة</h3>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="videosContainer">
+            <!-- Videos will be inserted here by JS -->
+        </div>
+    </section>
+
+    <!-- Games Section -->
+    <section class="container mx-auto px-4 py-6">
+        <div class="flex items-center gap-3 mb-6">
+            <span class="text-4xl md:text-5xl">🎮</span>
+            <h3 class="text-3xl md:text-4xl font-black text-orange-700">ألعاب الأبطال</h3>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="gamesContainer">
+            <!-- Games will be inserted here by JS -->
+        </div>
+    </section>
+
+    <!-- Parent Notification -->
+    <section class="container mx-auto px-4 py-8">
+        <div class="bg-gradient-to-r from-green-400 to-emerald-500 rounded-3xl shadow-2xl p-6 md:p-10 text-center">
+            <div class="text-5xl md:text-7xl mb-4">📱</div>
+            <h3 class="text-2xl md:text-4xl font-black text-white mb-4">شارك إنجازك مع ماما وبابا!</h3>
+            <p class="text-lg md:text-xl text-green-50 mb-6 font-semibold">دع Leo يخبر ولي الأمر عن مغامرتك اليوم</p>
+            <button onclick="sendParentReport()" class="bg-white text-green-600 font-black px-8 py-4 md:px-12 md:py-6 rounded-full text-xl md:text-2xl shadow-xl hover:bg-green-50 transition btn-bounce w-full md:w-auto">
+                💬 إرسال تقرير لولي الأمر
+            </button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-amber-600 py-8 mt-8">
+        <div class="container mx-auto px-4 text-center">
+            <div class="text-5xl md:text-6xl mb-4">🦁</div>
+            <p class="text-2xl md:text-3xl font-black text-white mb-2">رحلة Leo مستمرة! 🦁</p>
+            <p class="text-amber-100 text-base md:text-lg">نتعلم كل يوم ونصبح أبطال الغابة</p>
+        </div>
+    </footer>
+
+    <!-- Lesson Modal -->
+    <div id="lessonModal" class="modal p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-6 md:p-10 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl md:text-4xl font-black text-orange-600" id="modalTitle">الدرس</h3>
+                <button onclick="closeModal()" class="text-4xl text-gray-400 hover:text-gray-600">✕</button>
+            </div>
+            <div id="modalContent" class="text-center">
+                <!-- Content inserted by JS -->
+            </div>
+            <button onclick="closeModal()" class="bg-orange-500 text-white font-bold px-8 py-4 rounded-full text-xl w-full mt-6 btn-bounce hover:bg-orange-600">
+                أحسنت يا بطل! 🌟
+            </button>
+        </div>
+    </div>
+
+    <!-- Game Modal -->
+    <div id="gameModal" class="modal p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-3xl w-full p-6 md:p-10 max-h-[90vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl md:text-4xl font-black text-purple-600" id="gameModalTitle">لعبة</h3>
+                <button onclick="closeGameModal()" class="text-4xl text-gray-400 hover:text-gray-600">✕</button>
+            </div>
+            <div id="gameModalContent">
+                <!-- Game content inserted by JS -->
+            </div>
+        </div>
+    </div>
+
+<script>
+    // Get level from URL param
+    const urlParams = new URLSearchParams(window.location.search);
+    const level = urlParams.get('level') || 'developing';
+    
+    const isProficient = level === 'proficient';
+    
+    // Update UI based on level
+    document.getElementById('levelBadge').textContent = isProficient ? 'بطل محترف 🌟🌟🌟' : 'بطل ناشئ ⭐';
+    document.getElementById('levelMessage').textContent = isProficient 
+        ? 'لديك مغامرات متقدمة أكثر! هيا ننطلق' 
+        : 'هيا نتعلم معاً خطوة بخطوة';
+    
+    // Lesson Data
+    const developingLessons = [
+        {
+            id: 1,
+            icon: '🎨',
+            title: 'الألوان',
+            subtitle: 'أحمر - أزرق - أصفر',
+            color: 'from-red-400 to-pink-400',
+            content: 'colors'
+        },
+        {
+            id: 2,
+            icon: '🔢',
+            title: 'الأرقام ١-٥',
+            subtitle: 'واحد، اثنان، ثلاثة، أربعة، خمسة',
+            color: 'from-blue-400 to-cyan-400',
+            content: 'numbers'
+        },
+        {
+            id: 3,
+            icon: '🐾',
+            title: 'الحيوانات',
+            subtitle: 'أسد - قطة - كلب',
+            color: 'from-green-400 to-emerald-400',
+            content: 'animals'
+        },
+        {
+            id: 4,
+            icon: '👋',
+            title: 'التحيات',
+            subtitle: 'مرحباً - مع السلامة',
+            color: 'from-purple-400 to-pink-400',
+            content: 'greetings'
+        }
+    ];
+    
+    const proficientLessons = [
+        ...developingLessons,
+        {
+            id: 5,
+            icon: '👨‍👩‍👦',
+            title: 'العائلة',
+            subtitle: 'أمي - أبي',
+            color: 'from-amber-400 to-orange-400',
+            content: 'family'
+        },
+        {
+            id: 6,
+            icon: '💬',
+            title: 'جمل بسيطة',
+            subtitle: 'أنا...',
+            color: 'from-teal-400 to-cyan-400',
+            content: 'sentences'
+        }
+    ];
+    
+    const lessons = isProficient ? proficientLessons : developingLessons;
+    
+    // Render Lessons
+    function renderLessons() {
+        const container = document.getElementById('lessonsContainer');
+        container.innerHTML = lessons.map(lesson => `
+            <div class="card-hover bg-gradient-to-br ${lesson.color} rounded-3xl shadow-xl p-6 md:p-8 cursor-pointer" onclick="openLesson('${lesson.content}', '${lesson.title}')">
+                <div class="text-center">
+                    <div class="text-6xl md:text-8xl mb-4">${lesson.icon}</div>
+                    <h4 class="text-2xl md:text-3xl font-black text-white mb-2 drop-shadow-lg">${lesson.title}</h4>
+                    <p class="text-base md:text-xl text-white/90 font-semibold">${lesson.subtitle}</p>
+                    <div class="bg-white/30 rounded-full py-3 px-6 mt-4 inline-block">
+                        <span class="text-white font-bold text-lg md:text-xl">ابدأ المغامرة →</span>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    // Videos
+    const developingVideos = [
+        { id: 1, icon: '🎵', title: 'أغنية الحروف', desc: 'نتعلم الحروف مع Leo', color: 'from-pink-400 to-rose-400' },
+        { id: 2, icon: '🎨', title: 'كرتون الألوان', desc: 'رحلة ملونة ممتعة', color: 'from-yellow-400 to-amber-400' }
+    ];
+    
+    const proficientVideos = [
+        ...developingVideos,
+        { id: 3, icon: '🦒', title: 'قصة مغامرة الغابة', desc: 'Leo في حديقة الحيوان', color: 'from-lime-400 to-green-400' }
+    ];
+    
+    const videos = isProficient ? proficientVideos : developingVideos;
+    
+    function renderVideos() {
+        const container = document.getElementById('videosContainer');
+        container.innerHTML = videos.map(video => `
+            <div class="card-hover bg-gradient-to-br ${video.color} rounded-3xl shadow-xl p-6 md:p-8 cursor-pointer" onclick="playVideo(${video.id})">
+                <div class="text-center">
+                    <div class="text-5xl md:text-7xl mb-4">${video.icon}</div>
+                    <h4 class="text-xl md:text-2xl font-black text-white mb-2 drop-shadow-lg">${video.title}</h4>
+                    <p class="text-sm md:text-lg text-white/90 font-semibold mb-4">${video.desc}</p>
+                    <div class="bg-white/30 rounded-full py-3 px-6 inline-flex items-center gap-2">
+                        <span class="text-2xl">▶️</span>
+                        <span class="text-white font-bold text-base md:text-lg">شاهد الآن</span>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    // Games
+    const developingGames = [
+        { id: 1, icon: '🎯', title: 'طابق الألوان', desc: 'اسحب وضَع الألوان', color: 'from-indigo-400 to-purple-400' }
+    ];
+    
+    const proficientGames = [
+        ...developingGames,
+        { id: 2, icon: '🧩', title: 'ابنِ الجملة', desc: 'رتب الكلمات لتكوين جمل', color: 'from-cyan-400 to-blue-400' }
+    ];
+    
+    const games = isProficient ? proficientGames : developingGames;
+    
+    function renderGames() {
+        const container = document.getElementById('gamesContainer');
+        container.innerHTML = games.map(game => `
+            <div class="card-hover bg-gradient-to-br ${game.color} rounded-3xl shadow-xl p-6 md:p-8 cursor-pointer" onclick="openGame(${game.id})">
+                <div class="text-center">
+                    <div class="text-6xl md:text-8xl mb-4">${game.icon}</div>
+                    <h4 class="text-2xl md:text-3xl font-black text-white mb-2 drop-shadow-lg">${game.title}</h4>
+                    <p class="text-base md:text-xl text-white/90 font-semibold mb-4">${game.desc}</p>
+                    <div class="bg-white/30 rounded-full py-3 px-6 inline-flex items-center gap-2">
+                        <span class="text-2xl">🎮</span>
+                        <span class="text-white font-bold text-lg md:text-xl">العب الآن</span>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+    }
+    
+    // Lesson Content
+    function openLesson(type, title) {
+        const modal = document.getElementById('lessonModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalContent = document.getElementById('modalContent');
+        
+        modalTitle.textContent = title;
+        
+        let content = '';
+        switch(type) {
+            case 'colors':
+                content = `
+                    <div class="space-y-6">
+                        <p class="text-xl md:text-2xl font-bold text-gray-700 mb-6">تعرّف على الألوان مع Leo!</p>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="bg-red-100 rounded-3xl p-8 sound-btn" onclick="playSound('أحمر')">
+                                <div class="w-24 h-24 md:w-32 md:h-32 bg-red-500 rounded-full mx-auto mb-4 shadow-xl"></div>
+                                <p class="text-2xl md:text-3xl font-black text-red-600">أحمر</p>
+                                <span class="text-4xl">🔴</span>
+                            </div>
+                            <div class="bg-blue-100 rounded-3xl p-8 sound-btn" onclick="playSound('أزرق')">
+                                <div class="w-24 h-24 md:w-32 md:h-32 bg-blue-500 rounded-full mx-auto mb-4 shadow-xl"></div>
+                                <p class="text-2xl md:text-3xl font-black text-blue-600">أزرق</p>
+                                <span class="text-4xl">🔵</span>
+                            </div>
+                            <div class="bg-yellow-100 rounded-3xl p-8 sound-btn" onclick="playSound('أصفر')">
+                                <div class="w-24 h-24 md:w-32 md:h-32 bg-yellow-400 rounded-full mx-auto mb-4 shadow-xl"></div>
+                                <p class="text-2xl md:text-3xl font-black text-yellow-600">أصفر</p>
+                                <span class="text-4xl">🟡</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                break;
+            case 'numbers':
+                content = `
+                    <div class="space-y-6">
+                        <p class="text-xl md:text-2xl font-bold text-gray-700 mb-6">عد مع Leo من ١ إلى ٥!</p>
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            ${[1,2,3,4,5].map(num => `
+                                <div class="bg-gradient-to-br from-sky-100 to-blue-100 rounded-3xl p-6 sound-btn" onclick="playSound('${num}')">
+                                    <div class="text-6xl md:text-7xl font-black text-blue-600 mb-2">${num}</div>
+                                    <div class="text-4xl">${'⭐'.repeat(num)}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+                break;
+            case 'animals':
+                content = `
+                    <div class="space-y-6">
+                        <p class="text-xl md:text-2xl font-bold text-gray-700 mb-6">أصدقاء Leo في الغابة!</p>
+                        <div class="grid grid-cols-1 gap-6">
+                            <div class="bg-orange-100 rounded-3xl p-6 sound-btn" onclick="playSound('أسد')">
+                                <div class="text-7xl md:text-8xl mb-3">🦁</div>
+                                <p class="text-3xl md:text-4xl font-black text-orange-600">أسد</p>
+                                <p class="text-lg text-gray-600 mt-2">صديق Leo الشجاع</p>
+                            </div>
+                            <div class="bg-pink-100 rounded-3xl p-6 sound-btn" onclick="playSound('قطة')">
+                                <div class="text-7xl md:text-8xl mb-3">🐱</div>
+                                <p class="text-3xl md:text-4xl font-black text-pink-600">قطة</p>
+                                <p class="text-lg text-gray-600 mt-2">تموء: مياو مياو</p>
+                            </div>
+                            <div class="bg-amber-100 rounded-3xl p-6 sound-btn" onclick="playSound('كلب')">
+                                <div class="text-7xl md:text-8xl mb-3">🐕</div>
+                                <p class="text-3xl md:text-4xl font-black text-amber-600">كلب</p>
+                                <p class="text-lg text-gray-600 mt-2">ينبح: هو هو</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                break;
+            case 'greetings':
+                content = `
+                    <div class="space-y-6">
+                        <p class="text-xl md:text-2xl font-bold text-gray-700 mb-6">كيف نقول مرحباً؟</p>
+                        <div class="grid grid-cols-1 gap-6">
+                            <div class="bg-green-100 rounded-3xl p-8 sound-btn" onclick="playSound('مرحبا')">
+                                <div class="text-7xl md:text-8xl mb-4">👋</div>
+                                <p class="text-3xl md:text-4xl font-black text-green-600">مرحباً</p>
+                                <p class="text-lg text-gray-600 mt-2">عندما نلتقي بأصدقائنا</p>
+                            </div>
+                            <div class="bg-purple-100 rounded-3xl p-8 sound-btn" onclick="playSound('مع السلامة')">
+                                <div class="text-7xl md:text-8xl mb-4">👋</div>
+                                <p class="text-3xl md:text-4xl font-black text-purple-600">مع السلامة</p>
+                                <p class="text-lg text-gray-600 mt-2">عندما نودع أصدقائنا</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                break;
+            case 'family':
+                content = `
+                    <div class="space-y-6">
+                        <p class="text-xl md:text-2xl font-bold text-gray-700 mb-6">عائلة Leo الجميلة!</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="bg-pink-100 rounded-3xl p-8 sound-btn" onclick="playSound('أمي')">
+                                <div class="text-7xl md:text-8xl mb-4">👩</div>
+                                <p class="text-3xl md:text-4xl font-black text-pink-600">أمي</p>
+                                <p class="text-lg text-gray-600 mt-2">أحبك يا أمي ❤️</p>
+                            </div>
+                            <div class="bg-blue-100 rounded-3xl p-8 sound-btn" onclick="playSound('أبي')">
+                                <div class="text-7xl md:text-8xl mb-4">👨</div>
+                                <p class="text-3xl md:text-4xl font-black text-blue-600">أبي</p>
+                                <p class="text-lg text-gray-600 mt-2">أحبك يا أبي 💙</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                break;
+            case 'sentences':
+                content = `
+                    <div class="space-y-6">
+                        <p class="text-xl md:text-2xl font-bold text-gray-700 mb-6">لنكون جملاً بسيطة!</p>
+                        <div class="space-y-4">
+                            <div class="bg-gradient-to-r from-teal-100 to-cyan-100 rounded-3xl p-6 md:p-8 sound-btn" onclick="playSound('أنا Leo')">
+                                <div class="text-6xl mb-3">🦁</div>
+                                <p class="text-3xl md:text-4xl font-black text-teal-600">أنا Leo</p>
+                            </div>
+                            <div class="bg-gradient-to-r from-cyan-100 to-blue-100 rounded-3xl p-6 md:p-8 sound-btn" onclick="playSound('أنا سعيد')">
+                                <div class="text-6xl mb-3">😊</div>
+                                <p class="text-3xl md:text-4xl font-black text-blue-600">أنا سعيد</p>
+                            </div>
+                            <div class="bg-gradient-to-r from-blue-100 to-indigo-100 rounded-3xl p-6 md:p-8 sound-btn" onclick="playSound('أنا أحب المدرسة')">
+                                <div class="text-6xl mb-3">🏫</div>
+                                <p class="text-3xl md:text-4xl font-black text-indigo-600">أنا أحب المدرسة</p>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                break;
+        }
+        
+        modalContent.innerHTML = content;
+        modal.classList.add('active');
+    }
+    
+    function closeModal() {
+        document.getElementById('lessonModal').classList.remove('active');
+    }
+    
+    function playSound(word) {
+        // Visual feedback for sound
+        const msg = document.createElement('div');
+        msg.className = 'fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-orange-500 text-white px-8 py-6 rounded-3xl shadow-2xl z-[2000] text-3xl font-black';
+        msg.textContent = word + ' 🔊';
+        document.body.appendChild(msg);
+        setTimeout(() => msg.remove(), 1000);
+    }
+    
+    function playVideo(id) {
+        const modal = document.getElementById('lessonModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalContent = document.getElementById('modalContent');
+        
+        const videoData = videos.find(v => v.id === id);
+        modalTitle.textContent = videoData.title;
+        
+        modalContent.innerHTML = `
+            <div class="space-y-6">
+                <div class="bg-gradient-to-br ${videoData.color} rounded-3xl p-12 text-center">
+                    <div class="text-8xl md:text-9xl mb-6">${videoData.icon}</div>
+                    <p class="text-2xl md:text-3xl font-bold text-white mb-4">${videoData.desc}</p>
+                    <div class="bg-white/30 rounded-full py-6 px-8 inline-block">
+                        <span class="text-white font-black text-2xl md:text-3xl">▶️ جاري التشغيل...</span>
+                    </div>
+                </div>
+                <p class="text-lg md:text-xl text-gray-600">استمتع بالمشاهدة مع Leo!</p>
+            </div>
+        `;
+        modal.classList.add('active');
+    }
+    
+    function openGame(id) {
+        const modal = document.getElementById('gameModal');
+        const modalTitle = document.getElementById('gameModalTitle');
+        const modalContent = document.getElementById('gameModalContent');
+        
+        if (id === 1) {
+            // Color Matching Game
+            modalTitle.textContent = 'لعبة مطابقة الألوان';
+            modalContent.innerHTML = `
+                <div class="space-y-6">
+                    <p class="text-xl md:text-2xl font-bold text-gray-700 text-center mb-6">اسحب اللون إلى مكانه الصحيح 🎯</p>
+                    <div class="grid grid-cols-3 gap-4 mb-8">
+                        <div class="draggable bg-red-500 w-full h-24 md:h-32 rounded-3xl shadow-lg flex items-center justify-center text-white text-4xl font-black" draggable="true" data-color="red">🔴</div>
+                        <div class="draggable bg-blue-500 w-full h-24 md:h-32 rounded-3xl shadow-lg flex items-center justify-center text-white text-4xl font-black" draggable="true" data-color="blue">🔵</div>
+                        <div class="draggable bg-yellow-400 w-full h-24 md:h-32 rounded-3xl shadow-lg flex items-center justify-center text-white text-4xl font-black" draggable="true" data-color="yellow">🟡</div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="drop-zone bg-red-100 w-full h-24 md:h-32 rounded-3xl border-4 border-dashed border-red-400 flex items-center justify-center" data-color="red">
+                            <span class="text-2xl md:text-3xl font-black text-red-500">أحمر</span>
+                        </div>
+                        <div class="drop-zone bg-blue-100 w-full h-24 md:h-32 rounded-3xl border-4 border-dashed border-blue-400 flex items-center justify-center" data-color="blue">
+                            <span class="text-2xl md:text-3xl font-black text-blue-500">أزرق</span>
+                        </div>
+                        <div class="drop-zone bg-yellow-100 w-full h-24 md:h-32 rounded-3xl border-4 border-dashed border-yellow-400 flex items-center justify-center" data-color="yellow">
+                            <span class="text-2xl md:text-3xl font-black text-yellow-600">أصفر</span>
+                        </div>
+                    </div>
+                    <div id="gameResult" class="text-center text-2xl font-black text-green-600 min-h-[40px]"></div>
+                </div>
+            `;
+            modal.classList.add('active');
+            initDragDrop();
+        } else if (id === 2) {
+            // Sentence Builder Game
+            modalTitle.textContent = 'لعبة بناء الجمل';
+            modalContent.innerHTML = `
+                <div class="space-y-6">
+                    <p class="text-xl md:text-2xl font-bold text-gray-700 text-center mb-6">رتب الكلمات لتصنع جملة صحيحة 🧩</p>
+                    <div class="bg-amber-50 rounded-3xl p-6 mb-6">
+                        <p class="text-lg md:text-xl font-bold text-amber-700 mb-4 text-center">الجملة: "أنا أحب المدرسة"</p>
+                        <div class="flex flex-wrap gap-3 justify-center" id="wordBank">
+                            <button onclick="selectWord(this, 'المدرسة')" class="word-btn bg-white text-gray-700 font-bold px-6 py-3 rounded-full text-xl shadow-lg hover:bg-amber-100 btn-bounce">المدرسة</button>
+                            <button onclick="selectWord(this, 'أنا')" class="word-btn bg-white text-gray-700 font-bold px-6 py-3 rounded-full text-xl shadow-lg hover:bg-amber-100 btn-bounce">أنا</button>
+                            <button onclick="selectWord(this, 'أحب')" class="word-btn bg-white text-gray-700 font-bold px-6 py-3 rounded-full text-xl shadow-lg hover:bg-amber-100 btn-bounce">أحب</button>
+                        </div>
+                    </div>
+                    <div class="bg-gray-50 rounded-3xl p-6 min-h-[120px]">
+                        <p class="text-base text-gray-500 mb-3 text-center">اضغط على الكلمات بالترتيب:</p>
+                        <div id="builtSentence" class="flex flex-wrap gap-3 justify-center items-center min-h-[60px]"></div>
+                    </div>
+                    <div class="flex gap-3">
+                        <button onclick="checkSentence()" class="flex-1 bg-green-500 text-white font-black px-6 py-4 rounded-full text-xl btn-bounce hover:bg-green-600">
+                            ✓ تحقق
+                        </button>
+                        <button onclick="resetSentence()" class="flex-1 bg-gray-400 text-white font-black px-6 py-4 rounded-full text-xl btn-bounce hover:bg-gray-500">
+                            ↻ إعادة
+                        </button>
+                    </div>
+                    <div id="sentenceResult" class="text-center text-2xl font-black min-h-[40px]"></div>
+                </div>
+            `;
+            modal.classList.add('active');
+            window.selectedWords = [];
+        }
+    }
+    
+    function closeGameModal() {
+        document.getElementById('gameModal').classList.remove('active');
+        window.selectedWords = [];
+    }
+    
+    function initDragDrop() {
+        let draggedElement = null;
+        let matchedCount = 0;
+        
+        document.querySelectorAll('.draggable').forEach(el => {
+            el.addEventListener('dragstart', (e) => {
+                draggedElement = e.target;
+                e.target.style.opacity = '0.5';
+            });
+            
+            el.addEventListener('dragend', (e) => {
+                e.target.style.opacity = '1';
+            });
+            
+            // Touch support
+            el.addEventListener('touchstart', (e) => {
+                draggedElement = e.target;
+                e.target.style.opacity = '0.5';
+            });
+            
+            el.addEventListener('touchend', (e) => {
+                e.target.style.opacity = '1';
+                draggedElement = null;
+            });
+        });
+        
+        document.querySelectorAll('.drop-zone').forEach(zone => {
+            zone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                zone.classList.add('active');
+            });
+            
+            zone.addEventListener('dragleave', () => {
+                zone.classList.remove('active');
+            });
+            
+            zone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                zone.classList.remove('active');
+                
+                if (draggedElement && draggedElement.dataset.color === zone.dataset.color && !zone.classList.contains('matched')) {
+                    zone.innerHTML = `<span class="text-5xl">✅</span>`;
+                    zone.classList.add('matched');
+                    draggedElement.style.visibility = 'hidden';
+                    matchedCount++;
+                    
+                    if (matchedCount === 3) {
+                        document.getElementById('gameResult').textContent = 'ممتاز! أحسنت يا بطل! 🌟🌟🌟';
+                        setTimeout(() => {
+                            playSound('أحسنت');
+                        }, 300);
+                    }
+                }
+            });
+        });
+    }
+    
+    function selectWord(btn, word) {
+        if (!window.selectedWords) window.selectedWords = [];
+        window.selectedWords.push(word);
+        btn.style.display = 'none';
+        
+        const container = document.getElementById('builtSentence');
+        container.innerHTML += `<span class="bg-amber-200 text-amber-800 font-bold px-4 py-2 rounded-full text-lg md:text-xl">${word}</span>`;
+    }
+    
+    function checkSentence() {
+        const correct = ['أنا', 'أحب', 'المدرسة'];
+        const result = document.getElementById('sentenceResult');
+        
+        if (JSON.stringify(window.selectedWords) === JSON.stringify(correct)) {
+            result.textContent = 'رائع! جملة صحيحة! 🌟🌟🌟';
+            result.className = 'text-center text-2xl font-black text-green-600 min-h-[40px]';
+            playSound('ممتاز');
+        } else {
+            result.textContent = 'حاول مرة أخرى يا بطل! 💪';
+            result.className = 'text-center text-2xl font-black text-orange-600 min-h-[40px]';
+        }
+    }
+    
+    function resetSentence() {
+        window.selectedWords = [];
+        document.getElementById('builtSentence').innerHTML = '';
+        document.getElementById('sentenceResult').textContent = '';
+        document.querySelectorAll('.word-btn').forEach(btn => {
+            btn.style.display = 'inline-block';
+        });
+    }
+    
+    function sendParentReport() {
+        const levelText = isProficient ? 'البطل المحترف' : 'البطل الناشئ';
+        const message = `🦁 تقرير رحلة Leo\n\nابنكم ${levelText} أكمل مغامرة تعليمية رائعة اليوم!\n\n✨ الدروس: ${lessons.length} دروس\n🎬 الفيديوهات: ${videos.length} فيديوهات ممتعة\n🎮 الألعاب: ${games.length} ألعاب تفاعلية\n\nرحلة Leo مستمرة! 🌟`;
+        
+        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+    }
+    
+    function goToMenu() {
+        alert('🦁 العودة للقائمة الرئيسية');
+        // window.location.href = '/menu';
+    }
+    
+    // Initialize
+    renderLessons();
+    renderVideos();
+    renderGames();
+    
+    // Close modals on backdrop click
+    document.getElementById('lessonModal').addEventListener('click', (e) => {
+        if (e.target.id === 'lessonModal') closeModal();
+    });
+    
+    document.getElementById('gameModal').addEventListener('click', (e) => {
+        if (e.target.id === 'gameModal') closeGameModal();
+    });
+</script>
+<script>(function(){document.addEventListener("click",function(e){var a=e.target.closest("[data-product-id]");if(!a)return;e.preventDefault();var pid=a.getAttribute("data-product-id");if(pid)parent.postMessage({type:"ecto-artifact-link-click",productId:pid},"*")})})();</script>
+</body>
+</html>
