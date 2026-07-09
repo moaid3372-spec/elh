@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ELH - مغامرات الصف الرابع</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * {
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #fef3c7 100%);
+            min-height: 100vh;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 50%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px -10px rgba(14, 165, 233, 0.25);
+        }
+        
+        .progress-bar {
+            transition: width 1s ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .float-animation {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        
+        .shimmer {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            background-size: 1000px 100%;
+            animation: shimmer 2s infinite;
+        }
+        
+        .star-earned {
+            filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.6));
+        }
+        
+        .btn-pulse:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .btn-pulse:not(:disabled) {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .85; }
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <!-- Header -->
+    <header class="bg-white/80 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-sky-100">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-gradient-to-br from-sky-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
+                        <i class="fas fa-graduation-cap text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-lg sm:text-xl font-bold text-slate-800">ELH</h1>
+                        <p class="text-xs text-slate-500">الصف الرابع الابتدائي</p>
+                    </div>
+                </div>
+                <button id="homeBtn" class="flex items-center gap-2 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl transition-all text-sm sm:text-base font-semibold">
+                    <i class="fa-solid fa-house"></i>
+                    <span class="hidden sm:inline">ارجع للبيت</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+        <!-- Welcome Section -->
+        <section class="mb-8 sm:mb-12">
+            <div class="bg-gradient-to-br from-sky-500 via-indigo-500 to-amber-400 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+                <div class="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2"></div>
+                
+                <div class="relative z-10 flex flex-col sm:flex-row items-center gap-6">
+                    <div class="text-7xl sm:text-8xl float-animation">🦅</div>
+                    <div class="flex-1 text-center sm:text-right">
+                        <h2 id="welcomeMsg" class="text-2xl sm:text-4xl font-extrabold text-white mb-3">
+                            أهلاً يا بطل! Falcon فخور بيك 🦅
+                        </h2>
+                        <p class="text-white/90 text-sm sm:text-lg mb-4">يلا نكمل مغامرتنا سوا ونكتسب قوى جديدة!</p>
+                        
+                        <!-- Stars -->
+                        <div class="flex justify-center sm:justify-start gap-3 mt-4">
+                            <div class="star-earned">
+                                <i class="fas fa-star text-3xl sm:text-4xl text-amber-300"></i>
+                            </div>
+                            <div class="star-earned">
+                                <i class="fas fa-star text-3xl sm:text-4xl text-amber-300"></i>
+                            </div>
+                            <div class="star-earned">
+                                <i class="fas fa-star text-3xl sm:text-4xl text-amber-300"></i>
+                            </div>
+                        </div>
+                        <p class="text-white/80 text-xs sm:text-sm mt-2">كسبت ٣ نجوم من تحدي Falcon!</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Learning Path Section -->
+        <section class="mb-8 sm:mb-12">
+            <div id="pathBanner" class="bg-white rounded-2xl p-5 sm:p-7 shadow-lg border border-sky-100">
+                <div class="flex items-start gap-4">
+                    <div class="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-amber-400 to-orange-500 rounded-2xl flex items-center justify-center shadow-md flex-shrink-0">
+                        <i id="pathIcon" class="fas fa-map text-white text-xl sm:text-2xl"></i>
+                    </div>
+                    <div class="flex-1">
+                        <h3 id="pathTitle" class="text-xl sm:text-2xl font-bold text-slate-800 mb-2">مغامرات التقوية</h3>
+                        <p id="pathDesc" class="text-slate-600 text-sm sm:text-base leading-relaxed">
+                            هنركز النهاردة على القوى اللي محتاجة تطوير عشان نبقى أبطال في الإنجليزي
+                        </p>
+                        <div id="focusAreas" class="flex flex-wrap gap-2 mt-4"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lessons Grid -->
+        <section class="mb-8 sm:mb-12">
+            <div class="flex items-center justify-between mb-5 sm:mb-6">
+                <h3 class="text-xl sm:text-2xl font-bold text-slate-800 flex items-center gap-3">
+                    <i class="fas fa-book-open text-sky-500"></i>
+                    مغامراتك اليوم
+                </h3>
+                <span id="lessonCounter" class="text-sm text-slate-600 bg-sky-50 px-3 py-1 rounded-full font-semibold">
+                    0 / 4 مكتملة
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6" id="lessonsContainer">
+                <!-- Lesson cards will be inserted here by JS -->
+            </div>
+        </section>
+
+        <!-- Challenge Button -->
+        <section class="mb-8 sm:mb-12">
+            <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-6 sm:p-8 shadow-xl text-center">
+                <div class="mb-4">
+                    <i class="fas fa-trophy text-4xl sm:text-5xl text-amber-300 mb-3"></i>
+                    <h3 class="text-xl sm:text-2xl font-bold text-white mb-2">تحدي جديد في انتظارك!</h3>
+                    <p class="text-white/80 text-sm sm:text-base">كمل ٣ مغامرات على الأقل عشان تفتح التحدي</p>
+                </div>
+                <button id="challengeBtn" disabled class="btn-pulse w-full sm:w-auto px-8 py-4 bg-white text-indigo-600 font-bold rounded-xl shadow-lg hover:shadow-xl transition-all text-base sm:text-lg">
+                    <i class="fas fa-lock ml-2"></i>
+                    افتح التحدي الجديد
+                </button>
+            </div>
+        </section>
+
+        <!-- Parent Section -->
+        <section class="bg-white rounded-2xl p-5 sm:p-7 shadow-lg border border-sky-100">
+            <div class="flex items-start justify-between mb-5 flex-wrap gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center shadow-md">
+                        <i class="fas fa-heart text-white"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg sm:text-xl font-bold text-slate-800">إنجازات هذا الأسبوع</h3>
+                        <p class="text-xs sm:text-sm text-slate-500">للمتابع الأكبر - ولي الأمر</p>
+                    </div>
+                </div>
+                <button id="whatsappShare" class="flex items-center gap-2 px-4 py-2 bg-green-500 hover:bg-green-600 text-white rounded-xl transition-all text-sm font-semibold shadow-md">
+                    <i class="fab fa-whatsapp text-lg"></i>
+                    مشاركة
+                </button>
+            </div>
+
+            <div id="achievements" class="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+                <div class="bg-sky-50 rounded-xl p-4 text-center">
+                    <div class="text-2xl sm:text-3xl font-bold text-sky-600 mb-1" id="completedCount">0</div>
+                    <div class="text-xs sm:text-sm text-slate-600">مغامرة مكتملة</div>
+                </div>
+                <div class="bg-amber-50 rounded-xl p-4 text-center">
+                    <div class="text-2xl sm:text-3xl font-bold text-amber-600 mb-1">3</div>
+                    <div class="text-xs sm:text-sm text-slate-600">نجوم مكتسبة</div>
+                </div>
+                <div class="bg-emerald-50 rounded-xl p-4 text-center">
+                    <div class="text-2xl sm:text-3xl font-bold text-emerald-600 mb-1" id="timeSpent">0</div>
+                    <div class="text-xs sm:text-sm text-slate-600">دقيقة تدريب</div>
+                </div>
+                <div class="bg-purple-50 rounded-xl p-4 text-center">
+                    <div class="text-2xl sm:text-3xl font-bold text-purple-600 mb-1" id="streakCount">1</div>
+                    <div class="text-xs sm:text-sm text-slate-600">يوم متتالي</div>
+                </div>
+            </div>
+
+            <div id="completedLessonsList" class="mt-5 space-y-2"></div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-800 text-white py-6 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-sm text-slate-300">© 2024 ELH - منصة تعليمية للصف الرابع الابتدائي</p>
+            <p class="text-xs text-slate-400 mt-2">مصممة خصيصاً للأبطال الصغيرين في مصر 🇪🇬</p>
+        </div>
+    </footer>
+
+    <script>
+        // Initialize student data from localStorage or defaults
+        const studentData = {
+            name: localStorage.getItem('studentName') || 'بطلنا العزيز',
+            level: localStorage.getItem('studentLevel') || 'developing',
+            weakAreas: JSON.parse(localStorage.getItem('weakAreas') || '["grammar", "reading"]'),
+            strongAreas: JSON.parse(localStorage.getItem('strongAreas') || '["speaking"]'),
+            completedLessons: JSON.parse(localStorage.getItem('completedLessons') || '[]'),
+            totalTime: parseInt(localStorage.getItem('totalTime') || '0'),
+            rememberMe: localStorage.getItem('rememberMe') === 'true'
+        };
+
+        // Lesson data for Primary 4 - CEFR A2
+        const allLessons = {
+            reading: {
+                id: 1,
+                title: 'قصة العيلة المصرية',
+                desc: 'اقرا قصة جميلة عن عيلة مصرية وعاداتهم اليومية',
+                icon: 'fa-book-reader',
+                color: 'from-blue-500 to-cyan-600',
+                type: 'reading',
+                duration: '10 دقائق'
+            },
+            grammar_past: {
+                id: 2,
+                title: 'زمن الماضي البسيط',
+                desc: 'اتعلم إزاي تحكي عن اللي حصل امبارح والأسبوع اللي فات',
+                icon: 'fa-clock-rotate-left',
+                color: 'from-purple-500 to-indigo-600',
+                type: 'grammar',
+                duration: '12 دقيقة'
+            },
+            grammar_present_perfect: {
+                id: 2,
+                title: 'زمن المضارع التام',
+                desc: 'اتعلم تربط الماضي بالحاضر في جمل سهلة',
+                icon: 'fa-link',
+                color: 'from-purple-500 to-indigo-600',
+                type: 'grammar',
+                duration: '15 دقيقة'
+            },
+            speaking: {
+                id: 3,
+                title: 'اتكلم عن مدينتي',
+                desc: 'اوصف مدينتك والأماكن اللي بتحبها بصوتك',
+                icon: 'fa-microphone',
+                color: 'from-emerald-500 to-teal-600',
+                type: 'speaking',
+                duration: '8 دقائق'
+            },
+            values: {
+                id: 4,
+                title: 'نساعد بعض',
+                desc: 'اتعلم كلمات وجمل عن التعاون والمساعدة',
+                icon: 'fa-hands-helping',
+                color: 'from-amber-500 to-orange-600',
+                type: 'values',
+                duration: '10 دقائق'
+            },
+            vocab: {
+                id: 5,
+                title: 'كلمات المدرسة',
+                desc: 'كلمات جديدة عن الأدوات والمواد المدرسية',
+                icon: 'fa-pen',
+                color: 'from-rose-500 to-pink-600',
+                type: 'vocab',
+                duration: '7 دقائق'
+            },
+            listening: {
+                id: 6,
+                title: 'اسمع وأفهم',
+                desc: 'استمع لقصة قصيرة وجاوب على الأسئلة',
+                icon: 'fa-headphones',
+                color: 'from-indigo-500 to-violet-600',
+                type: 'listening',
+                duration: '9 دقائق'
+            }
+        };
+
+        // Generate personalized lesson list based on level and weak areas
+        function generateLessons() {
+            const lessons = [allLessons.reading];
+            
+            // Grammar lesson based on level
+            if (studentData.level === 'developing' || studentData.weakAreas.includes('grammar')) {
+                lessons.push(allLessons.grammar_past);
+            } else {
+                lessons.push(allLessons.grammar_present_perfect);
+            }
+            
+            lessons.push(allLessons.speaking);
+            lessons.push(allLessons.values);
+            
+            // Add extra if based on weak areas
+            if (studentData.weakAreas.includes('vocabulary')) {
+                lessons.push(allLessons.vocab);
+            } else if (studentData.weakAreas.includes('listening')) {
+                lessons.push(allLessons.listening);
+            }
+            
+            return lessons.slice(0, 6);
+        }
+
+        const lessons = generateLessons();
+
+        // Arabic labels for areas
+        const areaLabels = {
+            grammar: 'القواعد',
+            reading: 'القراءة',
+            speaking: 'التحدث',
+            listening: 'الاستماع',
+            vocabulary: 'المفردات',
+            writing: 'الكتابة'
+        };
+
+        // Initialize UI
+        function init() {
+            // Welcome message
+            document.getElementById('welcomeMsg').textContent = `أهلاً يا ${studentData.name}! Falcon فخور بيك 🦅`;
+            
+            // Learning path
+            if (studentData.level === 'developing') {
+                document.getElementById('pathTitle').textContent = 'مغامرات التقوية';
+                document.getElementById('pathDesc').textContent = 'هنركز النهاردة على القوى اللي محتاجة تطوير عشان نبقى أبطال في الإنجليزي';
+                document.getElementById('pathIcon').className = 'fas fa-dumbbell text-white text-xl sm:text-2xl';
+            } else {
+                document.getElementById('pathTitle').textContent = 'مغامرات التحدي';
+                document.getElementById('pathDesc').textContent = 'جاهز لمستوى جديد؟ يلا نخوض تحديات أقوى ونكسب قوى متقدمة!';
+                document.getElementById('pathIcon').className = 'fas fa-rocket text-white text-xl sm:text-2xl';
+            }
+            
+            // Focus areas
+            const focusContainer = document.getElementById('focusAreas');
+            const areas = studentData.level === 'developing' ? studentData.weakAreas : studentData.strongAreas;
+            areas.forEach(area => {
+                if (areaLabels[area]) {
+                    const badge = document.createElement('span');
+                    badge.className = 'px-3 py-1 bg-sky-100 text-sky-700 rounded-full text-xs sm:text-sm font-semibold';
+                    badge.textContent = areaLabels[area];
+                    focusContainer.appendChild(badge);
+                }
+            });
+            
+            renderLessons();
+            updateStats();
+        }
+
+        // Render lesson cards
+        function renderLessons() {
+            const container = document.getElementById('lessonsContainer');
+            container.innerHTML = '';
+            
+            lessons.forEach(lesson => {
+                const isCompleted = studentData.completedLessons.includes(lesson.id);
+                const progress = isCompleted ? 100 : Math.floor(Math.random() * 60);
+                
+                const card = document.createElement('div');
+                card.className = 'card-hover bg-white rounded-2xl shadow-md border border-slate-100 overflow-hidden';
+                card.innerHTML = `
+                    <div class="bg-gradient-to-br ${lesson.color} p-5 sm:p-6 relative">
+                        <div class="absolute top-3 left-3">
+                            ${isCompleted ? '<div class="w-8 h-8 bg-white rounded-full flex items-center justify-center"><i class="fas fa-check text-emerald-500"></i></div>' : ''}
+                        </div>
+                        <div class="flex items-start justify-between">
+                            <div class="flex-1">
+                                <div class="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center mb-3">
+                                    <i class="fas ${lesson.icon} text-white text-xl"></i>
+                                </div>
+                                <h4 class="text-lg sm:text-xl font-bold text-white mb-1">${lesson.title}</h4>
+                                <p class="text-white/80 text-xs sm:text-sm">${lesson.duration}</p>
+                            </div>
+                        </div>
+                    <div class="p-4 sm:p-5">
+                        <p class="text-slate-600 text-sm mb-4 leading-relaxed">${lesson.desc}</p>
+                        <div class="mb-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <span class="text-xs text-slate-500 font-semibold">التقدم</span>
+                                <span class="text-xs text-slate-700 font-bold">${progress}%</span>
+                            </div>
+                            <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                                <div class="progress-bar bg-gradient-to-r from-sky-500 to-indigo-600 h-2.5 rounded-full" style="width: ${progress}%"></div>
+                            </div>
+                        </div>
+                        <button onclick="startLesson(${lesson.id})" class="w-full py-3 ${isCompleted ? 'bg-emerald-500 hover:bg-emerald-600' : 'bg-sky-500 hover:bg-sky-600'} text-white font-bold rounded-xl transition-all text-sm sm:text-base shadow-md hover:shadow-lg">
+                            <i class="fas ${isCompleted ? 'fa-redo' : 'fa-play'} ml-2"></i>
+                            ${isCompleted ? 'راجع المغامرة' : 'ابدأ المغامرة'}
+                        </button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Start lesson
+        function startLesson(lessonId) {
+            if (!studentData.completedLessons.includes(lessonId)) {
+                studentData.completedLessons.push(lessonId);
+                studentData.totalTime += 10;
+                localStorage.setItem('completedLessons', JSON.stringify(studentData.completedLessons));
+                localStorage.setItem('totalTime', studentData.totalTime.toString());
+                
+                // Simulate lesson completion with animation
+                setTimeout(() => {
+                    renderLessons();
+                    updateStats();
+                    showCelebration();
+                }, 500);
+            } else {
+                alert('أحسنت! راجعت المغامرة بنجاح 🌟');
+            }
+        }
+
+        // Update statistics
+        function updateStats() {
+            const completed = studentData.completedLessons.length;
+            const total = lessons.length;
+            
+            document.getElementById('lessonCounter').textContent = `${completed} / ${total} مكتملة`;
+            document.getElementById('completedCount').textContent = completed;
+            document.getElementById('timeSpent').textContent = studentData.totalTime;
+            
+            // Update challenge button
+            const challengeBtn = document.getElementById('challengeBtn');
+            if (completed >= 3) {
+                challengeBtn.disabled = false;
+                challengeBtn.innerHTML = '<i class="fas fa-trophy ml-2"></i> ابدأ التحدي الجديد';
+                challengeBtn.onclick = () => alert('مبروك! التحدي الجديد هيفتح قريب 🎉');
+            }
+            
+            // Update parent achievements list
+            const listContainer = document.getElementById('completedLessonsList');
+            listContainer.innerHTML = '';
+            if (completed > 0) {
+                const title = document.createElement('p');
+                title.className = 'text-sm font-semibold text-slate-700 mb-2';
+                title.textContent = 'المغامرات المكتملة:';
+                listContainer.appendChild(title);
+                
+                lessons.forEach(lesson => {
+                    if (studentData.completedLessons.includes(lesson.id)) {
+                        const item = document.createElement('div');
+                        item.className = 'flex items-center gap-2 text-sm text-slate-600 bg-slate-50 px-3 py-2 rounded-lg';
+                        item.innerHTML = `<i class="fas fa-check-circle text-emerald-500"></i> ${lesson.title}`;
+                        listContainer.appendChild(item);
+                    }
+                });
+            }
+        }
+
+        // Celebration animation
+        function showCelebration() {
+            const toast = document.createElement('div');
+            toast.className = 'fixed top-20 left-1/2 -translate-x-1/2 bg-gradient-to-r from-amber-400 to-orange-500 text-white px-6 py-3 rounded-2xl shadow-2xl z-50 font-bold text-sm sm:text-base';
+            toast.innerHTML = '🎉 برافو! كسبت نجمة جديدة';
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        // WhatsApp Share
+        document.getElementById('whatsappShare').addEventListener('click', () => {
+            const completed = studentData.completedLessons.length;
+            const msg = `شوف إنجازات ${studentData.name} اليوم 🌟\n\nكمل ${completed} مغامرات تعليمية وكسب 3 نجوم في ELH!\n\nفخورين بيك يا بطل 🦅`;
+            const url = `https://wa.me/?text=${encodeURIComponent(msg)}`;
+            window.open(url, '_blank');
+        });
+
+        // Home button
+        document.getElementById('homeBtn').addEventListener('click', () => {
+            if (studentData.rememberMe) {
+                localStorage.setItem('rememberMe', 'true');
+            }
+            window.location.href = 'index.html';
+        });
+
+        // Init on load
+        init();
+    </script>
+<script>(function(){document.addEventListener("click",function(e){var a=e.target.closest("[data-product-id]");if(!a)return;e.preventDefault();var pid=a.getAttribute("data-product-id");if(pid)parent.postMessage({type:"ecto-artifact-link-click",productId:pid},"*")})})();</script>
+</body>
+</html>
