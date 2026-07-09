@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحدي Codey الروبوت</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Cairo', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .glass {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .codey-glow {
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 10px rgba(102, 126, 234, 0.6)); }
+            to { filter: drop-shadow(0 0 20px rgba(118, 75, 162, 0.8)); }
+        }
+        
+        .bounce-in {
+            animation: bounceIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
+        .slide-up {
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .pulse-ring {
+            animation: pulseRing 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+        }
+        
+        @keyframes pulseRing {
+            0% { transform: scale(0.8); opacity: 1; }
+            100% { transform: scale(2.4); opacity: 0; }
+        }
+        
+        .question-card {
+            display: none;
+        }
+        
+        .question-card.active {
+            display: block;
+            animation: slideUp 0.4s ease-out;
+        }
+        
+        .option-btn {
+            transition: all 0.3s ease;
+        }
+        
+        .option-btn:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+        }
+        
+        .option-btn.selected {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: scale(1.02);
+        }
+        
+        .star-animation {
+            animation: starPop 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        @keyframes starPop {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            25% { transform: scale(1.3) rotate(-10deg); }
+            75% { transform: scale(1.3) rotate(10deg); }
+        }
+        
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+        
+        textarea:focus, input:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+        }
+        
+        .recording {
+            animation: recordPulse 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes recordPulse {
+            0%, 100% { background-color: rgb(239, 68, 68); }
+            50% { background-color: rgb(220, 38, 38); }
+        }
+        
+        @media (max-width: 390px) {
+            .question-text { font-size: 0.95rem; }
+            .option-btn { font-size: 0.9rem; padding: 0.75rem; }
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center p-4 md:p-6">
+    
+    <!-- Welcome Screen -->
+    <div id="welcomeScreen" class="glass rounded-3xl shadow-2xl p-6 md:p-10 max-w-2xl w-full bounce-in">
+        <div class="text-center">
+            <div class="relative inline-block mb-6">
+                <div class="absolute inset-0 pulse-ring bg-purple-400 rounded-full opacity-75"></div>
+                <div class="relative bg-gradient-to-br from-purple-500 to-indigo-600 rounded-full p-6 codey-glow">
+                    <i class="fas fa-robot text-white text-6xl md:text-7xl"></i>
+                </div>
+            </div>
+            
+            <h1 class="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600 mb-3">
+                تحدي Codey الروبوت
+            </h1>
+            <p class="text-2xl md:text-3xl font-bold text-gray-700 mb-8">مستعد تبرمج؟</p>
+            
+            <div class="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-2xl p-6 mb-8">
+                <div class="flex items-center justify-center gap-4 mb-4">
+                    <i class="fas fa-clock text-3xl text-purple-600"></i>
+                    <span class="text-xl font-bold text-gray-800">الوقت المتاح: 3 دقائق</span>
+                </div>
+                <div class="flex items-center justify-center gap-4 mb-4">
+                    <i class="fas fa-star text-3xl text-yellow-500"></i>
+                    <span class="text-xl font-bold text-gray-800">عدد الأسئلة: 10</span>
+                </div>
+                <div class="flex items-center justify-center gap-4">
+                    <i class="fas fa-trophy text-3xl text-orange-500"></i>
+                    <span class="text-xl font-bold text-gray-800">اكسب 3 نجوم ذهبية</span>
+                </div>
+            </div>
+            
+            <button id="startBtn" class="w-full bg-gradient-to-r from-purple-600 to-indigo-600 text-white text-xl md:text-2xl font-bold py-4 px-8 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300">
+                <i class="fas fa-play-circle ml-2"></i>
+                ابدأ التحدي
+            </button>
+        </div>
+    </div>
+
+    <!-- Challenge Screen -->
+    <div id="challengeScreen" class="hidden w-full max-w-4xl">
+        <!-- Header -->
+        <div class="glass rounded-3xl shadow-xl p-4 md:p-6 mb-4">
+            <div class="flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl p-3">
+                        <i class="fas fa-robot text-white text-2xl"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl md:text-2xl font-bold text-gray-800">Codey الروبوت</h2>
+                        <p class="text-sm text-gray-600">السؤال <span id="currentQ">1</span> من 10</p>
+                    </div>
+                </div>
+                
+                <div class="flex items-center gap-4">
+                    <div class="bg-gradient-to-r from-purple-100 to-indigo-100 rounded-xl px-4 py-2 flex items-center gap-2">
+                        <i class="fas fa-clock text-purple-600"></i>
+                        <span id="timer" class="text-xl md:text-2xl font-bold text-purple-700">3:00</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="mt-4 bg-gray-200 rounded-full h-3 overflow-hidden">
+                <div id="progressBar" class="progress-bar bg-gradient-to-r from-purple-500 to-indigo-600 h-full rounded-full" style="width: 10%"></div>
+            </div>
+        </div>
+
+        <!-- Questions Container -->
+        <div class="glass rounded-3xl shadow-xl p-6 md:p-8">
+            
+            <!-- Q1: Grammar -->
+            <div class="question-card active" data-question="1" data-type="grammar">
+                <div class="mb-6">
+                    <div class="inline-block bg-purple-100 text-purple-700 px-4 py-2 rounded-xl font-bold mb-4">
+                        <i class="fas fa-pen ml-2"></i>اختر الإجابة الصحيحة
+                    </div>
+                    <p class="question-text text-xl md:text-2xl font-semibold text-gray-800 leading-relaxed">
+                        "I ___ this game yesterday"
+                    </p>
+                </div>
+                <div class="grid gap-3">
+                    <button class="option-btn bg-white border-2 border-purple-200 rounded-xl p-4 text-right font-semibold text-gray-800" data-value="play">play</button>
+                    <button class="option-btn bg-white border-2 border-purple-200 rounded-xl p-4 text-right font-semibold text-gray-800" data-value="played">played</button>
+                    <button class="option-btn bg-white border-2 border-purple-200 rounded-xl p-4 text-right font-semibold text-gray-800" data-value="have played">have played</button>
+                </div>
+            </div>
+
+            <!-- Q2: Reading -->
+            <div class="question-card" data-question="2" data-type="reading">
+                <div class="mb-6">
+                    <div class="inline-block bg-indigo-100 text-indigo-700 px-4 py-2 rounded-xl font-bold mb-4">
+                        <i class="fas fa-book-open ml-2"></i>اقرأ النص وأجب
+                    </div>
+                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-5 mb-6 border-r-4 border-indigo-500">
+                        <p class="text-base md:text-lg text-gray-800 leading-relaxed">
+                            أحمد طفل مصري ذكي عمره 11 سنة. كان جده ينسى موعد الدواء دائماً. أحمد تعلم البرمجة وصنع تطبيق على الهاتف. التطبيق يذكر جده بموعد الدواء كل يوم. الآن جده يأخذ الدواء في الوقت المناسب. أحمد سعيد لأنه ساعد عائلته. التكنولوجيا مفيدة عندما نستخدمها للخير.
+                        </p>
+                    </div>
+                </div>
+                <div class="space-y-5">
+                    <div>
+                        <p class="question-text font-semibold text-gray-800 mb-3">1. لماذا صنع أحمد التطبيق؟</p>
+                        <div class="grid gap-2">
+                            <button class="option-btn bg-white border-2 border-indigo-200 rounded-xl p-3 text-right" data-value="a1-1">للعب</button>
+                            <button class="option-btn bg-white border-2 border-indigo-200 rounded-xl p-3 text-right" data-value="a1-2">ليساعد جده</button>
+                            <button class="option-btn bg-white border-2 border-indigo-200 rounded-xl p-3 text-right" data-value="a1-3">للدراسة</button>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="question-text font-semibold text-gray-800 mb-3">2. ماذا يفعل التطبيق؟</p>
+                        <div class="grid gap-2">
+                            <button class="option-btn bg-white border-2 border-indigo-200 rounded-xl p-3 text-right" data-value="a2-1">يذكر بموعد الدواء</button>
+                            <button class="option-btn bg-white border-2 border-indigo-200 rounded-xl p-3 text-right" data-value="a2-2">يعرض صور</button>
+                            <button class="option-btn bg-white border-2 border-indigo-200 rounded-xl p-3 text-right" data-value="a2-3">يشغل موسيقى</button>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="question-text font-semibold text-gray-800 mb-3">3. كيف يشعر أحمد الآن؟</p>
+                        <div class="grid gap-2">
+                            <button class="option-btn bg-white border-2 border-indigo-200 rounded-xl p-3 text-right" data-value="a3-1">حزين</button>
+                            <button class="option-btn bg-white border-2 border-indigo-200 rounded-xl p-3 text-right" data-value="a3-2">سعيد</button>
+                            <button class="option-btn bg-white border-2 border-indigo-200 rounded-xl p-3 text-right" data-value="a3-3">غاضب</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q3: Writing -->
+            <div class="question-card" data-question="3" data-type="writing">
+                <div class="mb-6">
+                    <div class="inline-block bg-green-100 text-green-700 px-4 py-2 rounded-xl font-bold mb-4">
+                        <i class="fas fa-pen-fancy ml-2"></i>اكتب بالإنجليزية
+                    </div>
+                    <p class="question-text text-lg md:text-xl font-semibold text-gray-800 mb-2">
+                        Write 3 sentences: "How technology helps my family"
+                    </p>
+                    <p class="text-sm text-gray-600">اكتب كيف تساعد التكنولوجيا عائلتك - 3 جمل بالإنجليزية</p>
+                </div>
+                <textarea id="writingInput" rows="5" class="w-full border-2 border-green-200 rounded-xl p-4 text-lg focus:border-green-400 transition-all" dir="ltr" placeholder="Example: Technology helps my family. My mother uses..."></textarea>
+                <div class="mt-3 text-sm text-gray-600">
+                    <i class="fas fa-info-circle ml-1"></i>
+                    <span id="wordCount">0</span> كلمة
+                </div>
+            </div>
+
+            <!-- Q4: Listening -->
+            <div class="question-card" data-question="4" data-type="listening">
+                <div class="mb-6">
+                    <div class="inline-block bg-blue-100 text-blue-700 px-4 py-2 rounded-xl font-bold mb-4">
+                        <i class="fas fa-headphones ml-2"></i>استمع واختر
+                    </div>
+                    <p class="question-text text-lg md:text-xl font-semibold text-gray-800 mb-4">
+                        Codey says: "Robots help people" - اختر الصورة المناسبة
+                    </p>
+                </div>
+                <div class="flex justify-center mb-6">
+                    <button id="playAudio" class="bg-gradient-to-r from-blue-500 to-indigo-500 text-white px-8 py-4 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all">
+                        <i class="fas fa-volume-up text-2xl ml-2"></i>
+                        استمع
+                    </button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <button class="option-btn bg-white border-2 border-blue-200 rounded-xl p-6 text-center hover:bg-blue-50" data-value="robot-help">
+                        <i class="fas fa-hand-holding-heart text-5xl text-blue-500 mb-3"></i>
+                        <p class="font-bold text-gray-800">روبوت يساعد إنسان</p>
+                    </button>
+                    <button class="option-btn bg-white border-2 border-blue-200 rounded-xl p-6 text-center hover:bg-blue-50" data-value="robot-play">
+                        <i class="fas fa-gamepad text-5xl text-green-500 mb-3"></i>
+                        <p class="font-bold text-gray-800">روبوت يلعب</p>
+                    </button>
+                    <button class="option-btn bg-white border-2 border-blue-200 rounded-xl p-6 text-center hover:bg-blue-50" data-value="robot-sleep">
+                        <i class="fas fa-bed text-5xl text-purple-500 mb-3"></i>
+                        <p class="font-bold text-gray-800">روبوت نائم</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Q5: Vocabulary -->
+            <div class="question-card" data-question="5" data-type="vocabulary">
+                <div class="mb-6">
+                    <div class="inline-block bg-yellow-100 text-yellow-700 px-4 py-2 rounded-xl font-bold mb-4">
+                        <i class="fas fa-laptop ml-2"></i>كلمات التكنولوجيا
+                    </div>
+                    <p class="question-text text-lg md:text-xl font-semibold text-gray-800 mb-4">
+                        اختر الكلمة الإنجليزية الصحيحة لكل صورة
+                    </p>
+                </div>
+                <div class="space-y-6">
+                    <div>
+                        <div class="flex items-center gap-4 mb-3">
+                            <i class="fas fa-desktop text-5xl text-gray-700"></i>
+                            <p class="font-bold text-gray-800">كمبيوتر</p>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button class="option-btn bg-white border-2 border-yellow-200 rounded-xl p-3 text-sm" data-value="v1-1">Mobile</button>
+                            <button class="option-btn bg-white border-2 border-yellow-200 rounded-xl p-3 text-sm" data-value="v1-2">Computer</button>
+                            <button class="option-btn bg-white border-2 border-yellow-200 rounded-xl p-3 text-sm" data-value="v1-3">App</button>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex items-center gap-4 mb-3">
+                            <i class="fas fa-mobile-alt text-5xl text-gray-700"></i>
+                            <p class="font-bold text-gray-800">موبايل</p>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button class="option-btn bg-white border-2 border-yellow-200 rounded-xl p-3 text-sm" data-value="v2-1">Computer</button>
+                            <button class="option-btn bg-white border-2 border-yellow-200 rounded-xl p-3 text-sm" data-value="v2-2">Mobile</button>
+                            <button class="option-btn bg-white border-2 border-yellow-200 rounded-xl p-3 text-sm" data-value="v2-3">App</button>
+                        </div>
+                    <div>
+                        <div class="flex items-center gap-4 mb-3">
+                            <i class="fas fa-tablet-alt text-5xl text-gray-700"></i>
+                            <p class="font-bold text-gray-800">تطبيق</p>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2">
+                            <button class="option-btn bg-white border-2 border-yellow-200 rounded-xl p-3 text-sm" data-value="v3-1">App</button>
+                            <button class="option-btn bg-white border-2 border-yellow-200 rounded-xl p-3 text-sm" data-value="v3-2">Computer</button>
+                            <button class="option-btn bg-white border-2 border-yellow-200 rounded-xl p-3 text-sm" data-value="v3-3">Mobile</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q6: Speaking -->
+            <div class="question-card" data-question="6" data-type="speaking">
+                <div class="mb-6">
+                    <div class="inline-block bg-red-100 text-red-700 px-4 py-2 rounded-xl font-bold mb-4">
+                        <i class="fas fa-microphone ml-2"></i>تحدث بالإنجليزية
+                    </div>
+                    <p class="question-text text-lg md:text-xl font-semibold text-gray-800 mb-2">
+                        Say: "I want to be an inventor"
+                    </p>
+                    <p class="text-sm text-gray-600 mb-4">قل الجملة بالإنجليزية: أنا أريد أن أكون مخترع</p>
+                </div>
+                <div class="text-center">
+                    <button id="recordBtn" class="bg-gradient-to-r from-red-500 to-pink-500 text-white px-8 py-4 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all mb-4">
+                        <i class="fas fa-microphone text-2xl ml-2"></i>
+                        اضغط للتسجيل
+                    </button>
+                    <div id="recordingStatus" class="hidden">
+                        <div class="flex items-center justify-center gap-2 text-red-600 font-bold">
+                            <div class="w-3 h-3 bg-red-600 rounded-full recording"></div>
+                            <span>جاري التسجيل...</span>
+                        </div>
+                    </div>
+                    <div id="recordingDone" class="hidden">
+                        <div class="bg-green-100 text-green-700 px-6 py-3 rounded-xl inline-flex items-center gap-2">
+                            <i class="fas fa-check-circle"></i>
+                            <span class="font-bold">تم التسجيل بنجاح!</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q7: Function -->
+            <div class="question-card" data-question="7" data-type="function">
+                <div class="mb-6">
+                    <div class="inline-block bg-pink-100 text-pink-700 px-4 py-2 rounded-xl font-bold mb-4">
+                        <i class="fas fa-comment-dots ml-2"></i>اطلب المساعدة بأدب
+                    </div>
+                    <p class="question-text text-lg md:text-xl font-semibold text-gray-800 mb-4">
+                        كيف تطلب المساعدة باللغة الإنجليزية بطريقة مهذبة؟
+                    </p>
+                </div>
+                <div class="grid gap-3">
+                    <button class="option-btn bg-white border-2 border-pink-200 rounded-xl p-4 text-right font-semibold" data-value="f1">Help me now!</button>
+                    <button class="option-btn bg-white border-2 border-pink-200 rounded-xl p-4 text-right font-semibold" data-value="f2">Can you help me, please?</button>
+                    <button class="option-btn bg-white border-2 border-pink-200 rounded-xl p-4 text-right font-semibold" data-value="f3">Give me help</button>
+                </div>
+            </div>
+
+            <!-- Q8: Conversation -->
+            <div class="question-card" data-question="8" data-type="conversation">
+                <div class="mb-6">
+                    <div class="inline-block bg-teal-100 text-teal-700 px-4 py-2 rounded-xl font-bold mb-4">
+                        <i class="fas fa-comments ml-2"></i>محادثة
+                    </div>
+                    <div class="bg-gradient-to-r from-teal-50 to-cyan-50 rounded-2xl p-5 mb-6 border-r-4 border-teal-500">
+                        <p class="text-lg font-semibold text-gray-800 mb-2">
+                            <i class="fas fa-user ml-2 text-teal-600"></i>صديقك: "Your tablet broke" (الجهاز اللوحي تعطل)
+                        </p>
+                        <p class="text-gray-600">ماذا ترد عليه؟</p>
+                    </div>
+                </div>
+                <div class="grid gap-3">
+                    <button class="option-btn bg-white border-2 border-teal-200 rounded-xl p-4 text-right font-semibold" data-value="c1">Don't worry</button>
+                    <button class="option-btn bg-white border-2 border-teal-200 rounded-xl p-4 text-right font-semibold" data-value="c2">Let's fix it together</button>
+                    <button class="option-btn bg-white border-2 border-teal-200 rounded-xl p-4 text-right font-semibold" data-value="c3">It's not my problem</button>
+                </div>
+            </div>
+
+            <!-- Q9: Phonics -->
+            <div class="question-card" data-question="9" data-type="phonics">
+                <div class="mb-6">
+                    <div class="inline-block bg-orange-100 text-orange-700 px-4 py-2 rounded-xl font-bold mb-4">
+                        <i class="fas fa-music ml-2"></i>الأصوات الطويلة
+                    </div>
+                    <p class="question-text text-lg md:text-xl font-semibold text-gray-800 mb-4">
+                        أي كلمة تحتوي على صوت طويل "Long vowel"?
+                    </p>
+                </div>
+                <div class="grid gap-3">
+                    <button class="option-btn bg-white border-2 border-orange-200 rounded-xl p-5 text-center" data-value="p1">
+                        <p class="text-2xl font-bold text-gray-800 mb-1">cat</p>
+                        <p class="text-sm text-gray-600">قطة</p>
+                    </button>
+                    <button class="option-btn bg-white border-2 border-orange-200 rounded-xl p-5 text-center" data-value="p2">
+                        <p class="text-2xl font-bold text-gray-800 mb-1">cake</p>
+                        <p class="text-sm text-gray-600">كيك</p>
+                    </button>
+                    <button class="option-btn bg-white border-2 border-orange-200 rounded-xl p-5 text-center" data-value="p3">
+                        <p class="text-2xl font-bold text-gray-800 mb-1">cut</p>
+                        <p class="text-sm text-gray-600">يقطع</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Q10: Culture -->
+            <div class="question-card" data-question="10" data-type="culture">
+                <div class="mb-6">
+                    <div class="inline-block bg-amber-100 text-amber-700 px-4 py-2 rounded-xl font-bold mb-4">
+                        <i class="fas fa-heart ml-2"></i>القيم والعادات
+                    </div>
+                    <div class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-6 mb-6 text-center">
+                        <i class="fas fa-users text-6xl text-amber-600 mb-4"></i>
+                        <p class="text-lg md:text-xl font-bold text-gray-800 mb-2">الصورة: بنت تعلم جدها استخدام الجهاز اللوحي</p>
+                        <p class="text-gray-600">هذه الصورة تعبر عن أي قيمة؟</p>
+                    </div>
+                </div>
+                <div class="grid gap-3">
+                    <button class="option-btn bg-white border-2 border-amber-200 rounded-xl p-4 text-right font-semibold" data-value="cult1">احترام الكبير وبر الوالدين</button>
+                    <button class="option-btn bg-white border-2 border-amber-200 rounded-xl p-4 text-right font-semibold" data-value="cult2">اللعب فقط</button>
+                    <button class="option-btn bg-white border-2 border-amber-200 rounded-xl p-4 text-right font-semibold" data-value="cult3">التكنولوجيا خطيرة</button>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="flex items-center justify-between mt-8 pt-6 border-t-2 border-gray-200">
+                <button id="prevBtn" class="hidden bg-gray-200 text-gray-700 px-6 py-3 rounded-xl font-bold hover:bg-gray-300 transition-all">
+                    <i class="fas fa-arrow-right ml-2"></i>السابق
+                </button>
+                <button id="nextBtn" class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-bold hover:shadow-lg transform hover:scale-105 transition-all mr-auto">
+                    التالي<i class="fas fa-arrow-left mr-2"></i>
+                </button>
+                <button id="submitBtn" class="hidden bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-3 rounded-xl font-bold hover:shadow-lg transform hover:scale-105 transition-all">
+                    <i class="fas fa-check-circle ml-2"></i>إنهاء التحدي
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Screen -->
+    <div id="resultsScreen" class="hidden glass rounded-3xl shadow-2xl p-6 md:p-10 max-w-2xl w-full bounce-in">
+        <div class="text-center">
+            <div class="relative inline-block mb-6">
+                <div class="absolute inset-0 bg-yellow-400 rounded-full blur-2xl opacity-50"></div>
+                <div class="relative">
+                    <i class="fas fa-trophy text-yellow-500 text-7xl md:text-8xl star-animation"></i>
+                </div>
+            </div>
+            
+            <h1 class="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600 mb-4">
+                مذهل يا Codey!
+            </h1>
+            
+            <div class="flex justify-center gap-3 mb-8">
+                <i class="fas fa-star text-yellow-400 text-5xl star-animation" style="animation-delay: 0s"></i>
+                <i class="fas fa-star text-yellow-400 text-5xl star-animation" style="animation-delay: 0.2s"></i>
+                <i class="fas fa-star text-yellow-400 text-5xl star-animation" style="animation-delay: 0.4s"></i>
+            </div>
+            
+            <p class="text-2xl md:text-3xl font-bold text-gray-800 mb-6">كسبت 3 نجوم ⭐⭐⭐</p>
+            
+            <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-2xl p-6 mb-6">
+                <div class="flex items-center justify-center gap-3 mb-3">
+                    <i class="fas fa-check-circle text-3xl text-green-600"></i>
+                    <span class="text-xl font-bold text-gray-800">تم إرسال النتيجة لولي الأمر</span>
+                </div>
+                <div class="flex items-center justify-center gap-2 text-gray-600">
+                    <i class="fab fa-whatsapp text-2xl text-green-600"></i>
+                    <span>سيتم التواصل معك قريباً</span>
+                </div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-purple-50 to-indigo-50 rounded-2xl p-4">
+                <div class="flex items-center justify-center gap-2 text-purple-700">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <span class="font-semibold">جاري توجيهك للصفحة التالية...</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const state = {
+            currentQuestion: 1,
+            totalQuestions: 10,
+            answers: {},
+            timeRemaining: 180,
+            timerInterval: null,
+            score: 0,
+            correctAnswers: {
+                1: 'played',
+                2: {'a1': 'a1-2', 'a2': 'a2-1', 'a3': 'a3-2'},
+                3: 'writing',
+                4: 'robot-help',
+                5: {'v1': 'v1-2', 'v2': 'v2-2', 'v3': 'v3-1'},
+                6: 'recorded',
+                7: 'f2',
+                8: 'c2',
+                9: 'p2',
+                10: 'cult1'
+            }
+        };
+
+        const startBtn = document.getElementById('startBtn');
+        const welcomeScreen = document.getElementById('welcomeScreen');
+        const challengeScreen = document.getElementById('challengeScreen');
+        const resultsScreen = document.getElementById('resultsScreen');
+        const timer = document.getElementById('timer');
+        const currentQ = document.getElementById('currentQ');
+        const progressBar = document.getElementById('progressBar');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const submitBtn = document.getElementById('submitBtn');
+        const writingInput = document.getElementById('writingInput');
+        const wordCount = document.getElementById('wordCount');
+        const recordBtn = document.getElementById('recordBtn');
+        const recordingStatus = document.getElementById('recordingStatus');
+        const recordingDone = document.getElementById('recordingDone');
+        const playAudio = document.getElementById('playAudio');
+
+        startBtn.addEventListener('click', startChallenge);
+        prevBtn.addEventListener('click', previousQuestion);
+        nextBtn.addEventListener('click', nextQuestion);
+        submitBtn.addEventListener('click', submitChallenge);
+        writingInput.addEventListener('input', updateWordCount);
+        recordBtn.addEventListener('click', handleRecording);
+        playAudio.addEventListener('click', playAudioClip);
+
+        function startChallenge() {
+            welcomeScreen.classList.add('hidden');
+            challengeScreen.classList.remove('hidden');
+            startTimer();
+            updateQuestionDisplay();
+        }
+
+        function startTimer() {
+            state.timerInterval = setInterval(() => {
+                state.timeRemaining--;
+                updateTimerDisplay();
+                
+                if (state.timeRemaining <= 0) {
+                    clearInterval(state.timerInterval);
+                    submitChallenge();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(state.timeRemaining / 60);
+            const seconds = state.timeRemaining % 60;
+            timer.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (state.timeRemaining <= 30) {
+                timer.parentElement.classList.add('bg-red-100');
+                timer.classList.add('text-red-700');
+            }
+        }
+
+        function updateQuestionDisplay() {
+            document.querySelectorAll('.question-card').forEach(card => {
+                card.classList.remove('active');
+            });
+            
+            const currentCard = document.querySelector(`[data-question="${state.currentQuestion}"]`);
+            if (currentCard) {
+                currentCard.classList.add('active');
+            }
+            
+            currentQ.textContent = state.currentQuestion;
+            progressBar.style.width = `${(state.currentQuestion / state.totalQuestions) * 100}%`;
+            
+            prevBtn.classList.toggle('hidden', state.currentQuestion === 1);
+            nextBtn.classList.toggle('hidden', state.currentQuestion === state.totalQuestions);
+            submitBtn.classList.toggle('hidden', state.currentQuestion !== state.totalQuestions);
+            
+            restoreAnswer();
+        }
+
+        function nextQuestion() {
+            saveCurrentAnswer();
+            if (state.currentQuestion < state.totalQuestions) {
+                state.currentQuestion++;
+                updateQuestionDisplay();
+            }
+        }
+
+        function previousQuestion() {
+            saveCurrentAnswer();
+            if (state.currentQuestion > 1) {
+                state.currentQuestion--;
+                updateQuestionDisplay();
+            }
+        }
+
+        document.querySelectorAll('.option-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const card = this.closest('.question-card');
+                const questionType = card.dataset.type;
+                
+                if (questionType === 'reading' || questionType === 'vocabulary') {
+                    const group = this.dataset.value.split('-')[0];
+                    card.querySelectorAll(`[data-value^="${group}"]`).forEach(b => {
+                        b.classList.remove('selected');
+                    });
+                } else {
+                    card.querySelectorAll('.option-btn').forEach(b => {
+                        b.classList.remove('selected');
+                    });
+                }
+                
+                this.classList.add('selected');
+            });
+        });
+
+        function saveCurrentAnswer() {
+            const card = document.querySelector(`[data-question="${state.currentQuestion}"]`);
+            const type = card.dataset.type;
+            
+            if (type === 'reading') {
+                const readingAnswers = {};
+                ['a1', 'a2', 'a3'].forEach(key => {
+                    const selected = card.querySelector(`[data-value^="${key}"].selected`);
+                    if (selected) readingAnswers[key] = selected.dataset.value;
+                });
+                state.answers[state.currentQuestion] = readingAnswers;
+            } else if (type === 'vocabulary') {
+                const vocabAnswers = {};
+                ['v1', 'v2', 'v3'].forEach(key => {
+                    const selected = card.querySelector(`[data-value^="${key}"].selected`);
+                    if (selected) vocabAnswers[key] = selected.dataset.value;
+                });
+                state.answers[state.currentQuestion] = vocabAnswers;
+            } else if (type === 'writing') {
+                state.answers[state.currentQuestion] = writingInput.value.trim();
+            } else if (type === 'speaking') {
+                state.answers[state.currentQuestion] = recordingDone.classList.contains('hidden') ? '' : 'recorded';
+            } else {
+                const selected = card.querySelector('.option-btn.selected');
+                if (selected) {
+                    state.answers[state.currentQuestion] = selected.dataset.value;
+                }
+            }
+        }
+
+        function restoreAnswer() {
+            const card = document.querySelector(`[data-question="${state.currentQuestion}"]`);
+            const answer = state.answers[state.currentQuestion];
+            
+            if (!answer) return;
+            
+            if (typeof answer === 'object') {
+                Object.values(answer).forEach(val => {
+                    const btn = card.querySelector(`[data-value="${val}"]`);
+                    if (btn) btn.classList.add('selected');
+                });
+            } else if (card.dataset.type === 'writing') {
+                writingInput.value = answer;
+                updateWordCount();
+            } else if (card.dataset.type === 'speaking' && answer === 'recorded') {
+                recordingDone.classList.remove('hidden');
+                recordBtn.classList.add('hidden');
+            } else {
+                const btn = card.querySelector(`[data-value="${answer}"]`);
+                if (btn) btn.classList.add('selected');
+            }
+        }
+
+        function updateWordCount() {
+            const words = writingInput.value.trim().split(/\s+/).filter(w => w.length > 0);
+            wordCount.textContent = words.length;
+        }
+
+        function handleRecording() {
+            recordBtn.classList.add('hidden');
+            recordingStatus.classList.remove('hidden');
+            
+            setTimeout(() => {
+                recordingStatus.classList.add('hidden');
+                recordingDone.classList.remove('hidden');
+                state.answers[6] = 'recorded';
+            }, 2000);
+        }
+
+        function playAudioClip() {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance('Robots help people');
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9;
+                speechSynthesis.speak(utterance);
+            }
+            
+            const btn = document.getElementById('playAudio');
+            btn.innerHTML = '<i class="fas fa-volume-up text-2xl ml-2"></i>جاري التشغيل...';
+            setTimeout(() => {
+                btn.innerHTML = '<i class="fas fa-volume-up text-2xl ml-2"></i>استمع';
+            }, 2000);
+        }
+
+        function calculateScore() {
+            let score = 0;
+            let analysis = {
+                strong: [],
+                weak: [],
+                totalCorrect: 0
+            };
+
+            // Q1 Grammar
+            if (state.answers[1] === state.correctAnswers[1]) {
+                score++;
+                analysis.totalCorrect++;
+                analysis.strong.push('Grammar');
+            } else {
+                analysis.weak.push('Grammar');
+            }
+
+            // Q2 Reading
+            let readingCorrect = 0;
+            if (state.answers[2]) {
+                Object.keys(state.correctAnswers[2]).forEach(key => {
+                    if (state.answers[2][key] === state.correctAnswers[2][key]) readingCorrect++;
+                });
+            }
+            score += readingCorrect;
+            analysis.totalCorrect += readingCorrect;
+            if (readingCorrect >= 2) analysis.strong.push('Reading');
+            else analysis.weak.push('Reading');
+
+            // Q3 Writing
+            if (state.answers[3] && state.answers[3].split(/\s+/).length >= 3) {
+                score++;
+                analysis.totalCorrect++;
+                analysis.strong.push('Writing');
+            } else {
+                analysis.weak.push('Writing');
+            }
+
+            // Q4 Listening
+            if (state.answers[4] === state.correctAnswers[4]) {
+                score++;
+                analysis.totalCorrect++;
+                analysis.strong.push('Listening');
+            } else {
+                analysis.weak.push('Listening');
+            }
+
+            // Q5 Vocabulary
+            let vocabCorrect = 0;
+            if (state.answers[5]) {
+                Object.keys(state.correctAnswers[5]).forEach(key => {
+                    if (state.answers[5][key] === state.correctAnswers[5][key]) vocabCorrect++;
+                });
+            }
+            score += vocabCorrect;
+            analysis.totalCorrect += vocabCorrect;
+            if (vocabCorrect >= 2) analysis.strong.push('Vocabulary');
+            else analysis.weak.push('Vocabulary');
+
+            // Q6 Speaking
+            if (state.answers[6] === 'recorded') {
+                score++;
+                analysis.totalCorrect++;
+                analysis.strong.push('Speaking');
+            } else {
+                analysis.weak.push('Speaking');
+            }
+
+            // Q7 Function
+            if (state.answers[7] === state.correctAnswers[7]) {
+                score++;
+                analysis.totalCorrect++;
+                analysis.strong.push('Functions');
+            } else {
+                analysis.weak.push('Functions');
+            }
+
+            // Q8 Conversation
+            if (state.answers[8] === state.correctAnswers[8]) {
+                score++;
+                analysis.totalCorrect++;
+                analysis.strong.push('Conversation');
+            } else {
+                analysis.weak.push('Conversation');
+            }
+
+            // Q9 Phonics
+            if (state.answers[9] === state.correctAnswers[9]) {
+                score++;
+                analysis.totalCorrect++;
+                analysis.strong.push('Phonics');
+            } else {
+                analysis.weak.push('Phonics');
+            }
+
+            // Q10 Culture
+            if (state.answers[10] === state.correctAnswers[10]) {
+                score++;
+                analysis.totalCorrect++;
+                analysis.strong.push('Culture');
+            } else {
+                analysis.weak.push('Culture');
+            }
+
+            return {
+                score: score,
+                maxScore: 12,
+                percentage: Math.round((score / 12) * 100),
+                level: score >= 9 ? 'proficient' : 'developing',
+                analysis: analysis
+            };
+        }
+
+        function submitChallenge() {
+            clearInterval(state.timerInterval);
+            saveCurrentAnswer();
+            
+            const results = calculateScore();
+            
+            // Store in localStorage
+            const challengeData = {
+                timestamp: new Date().toISOString(),
+                student: 'Primary 5',
+                challenge: 'Codey Robot Challenge',
+                score: results.score,
+                maxScore: results.maxScore,
+                percentage: results.percentage,
+                level: results.level,
+                strongAreas: results.analysis.strong,
+                weakAreas: results.analysis.weak,
+                timeSpent: 180 - state.timeRemaining,
+                answers: state.answers
+            };
+            
+            localStorage.setItem('codeyChallenge_primary5', JSON.stringify(challengeData));
+            
+            // Simulate WhatsApp notification for parent
+            console.log('WhatsApp Notification to Parent:', {
+                message: `تم إنهاء تحدي Codey بنجاح! المستوى: ${results.level === 'proficient' ? 'متقدم' : 'قيد التطوير'}`,
+                timestamp: new Date().toLocaleString('ar-EG'),
+                stars: 3
+            });
+            
+            challengeScreen.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+            
+            // Redirect after 3 seconds
+            setTimeout(() => {
+                window.location.href = `grades/primary5.html?level=${results.level}`;
+            }, 3000);
+        }
+
+        // Prevent accidental page reload
+        window.addEventListener('beforeunload', (e) => {
+            if (!resultsScreen.classList.contains('hidden')) return;
+            if (state.currentQuestion > 1 || Object.keys(state.answers).length > 0) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+    </script>
+<script>(function(){document.addEventListener("click",function(e){var a=e.target.closest("[data-product-id]");if(!a)return;e.preventDefault();var pid=a.getAttribute("data-product-id");if(pid)parent.postMessage({type:"ecto-artifact-link-click",productId:pid},"*")})})();</script>
+</body>
+</html>
