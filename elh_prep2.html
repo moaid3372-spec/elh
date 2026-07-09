@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atlas the Explorer - الصف الثاني الإعدادي</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+  * {
+    font-family: 'Cairo', sans-serif;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    overflow-x: hidden;
+  }
+  .gradient-bg {
+    background: linear-gradient(135deg, #0f766e 0%, #14b8a6 50%, #f59e0b 100%);
+  }
+  .card-hover {
+    transition: all 0.3s ease;
+  }
+  .card-hover:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  }
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+  }
+  .progress-bar {
+    animation: progressLoad 1.5s ease-out forwards;
+  }
+  @keyframes progressLoad {
+    from { width: 0%; }
+  }
+  .badge-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: .7; }
+  }
+  .lesson-locked {
+    filter: grayscale(0.8);
+    opacity: 0.6;
+  }
+</style>
+</head>
+<body class="bg-gradient-to-br from-teal-50 via-amber-50 to-orange-50">
+
+<!-- Header -->
+<header class="gradient-bg text-white shadow-lg sticky top-0 z-50">
+  <div class="container mx-auto px-4 py-4">
+    <div class="flex items-center justify-between flex-wrap gap-4">
+      <div class="flex items-center gap-3">
+        <div class="w-14 h-14 bg-white rounded-full flex items-center justify-center animate-float shadow-lg">
+          <i class="fa-solid fa-compass text-3xl text-teal-600"></i>
+        </div>
+        <div>
+          <h1 class="text-xl md:text-2xl font-extrabold">رحلة Atlas المستكشف</h1>
+          <p class="text-xs md:text-sm opacity-90">الصف الثاني الإعدادي - 14 سنة</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <div id="levelBadge" class="bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-sm font-semibold">
+          <i class="fa-solid fa-map-location-dot ml-2"></i>
+          <span id="levelText">جاري الاستكشاف...</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Hero Section -->
+<section class="container mx-auto px-4 py-8 md:py-12">
+  <div class="bg-white rounded-3xl shadow-xl overflow-hidden">
+    <div class="gradient-bg p-6 md:p-10 text-white relative">
+      <div class="absolute top-0 left-0 w-32 h-32 bg-white/10 rounded-full -translate-x-16 -translate-y-16"></div>
+      <div class="absolute bottom-0 right-0 w-40 h-40 bg-white/10 rounded-full translate-x-20 translate-y-20"></div>
+      <div class="relative z-10 flex flex-col md:flex-row items-center gap-6">
+        <div class="flex-1 text-center md:text-right">
+          <h2 class="text-2xl md:text-4xl font-extrabold mb-3">أهلاً بك يا مستكشف! 🗺️</h2>
+          <p class="text-base md:text-lg mb-4 opacity-95 leading-relaxed">
+            انطلق مع Atlas في رحلة استكشافية عبر محافظات مصر الجميلة. سنتعلم الجغرافيا، القواعد، ونستكشف ثقافتنا المصرية الأصيلة!
+          </p>
+          <div class="flex flex-wrap gap-3 justify-center md:justify-start">
+            <div class="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold">
+              <i class="fa-solid fa-book-open ml-2"></i>
+              <span id="lessonCount">10</span> دروس استكشاف
+            </div>
+            <div class="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold">
+              <i class="fa-solid fa-video ml-2"></i>
+              <span id="videoCount">2</span> فيديو رحلة
+            </div>
+            <div class="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold">
+              <i class="fa-solid fa-gamepad ml-2"></i>
+              2 ألعاب محافظات
+            </div>
+          </div>
+        </div>
+        <div class="w-40 h-40 md:w-56 md:h-56 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center">
+          <div class="text-center">
+            <i class="fa-solid fa-user-astronaut text-7xl md:text-8xl mb-2"></i>
+            <p class="font-bold text-lg">Atlas</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Progress Section -->
+    <div class="p-6 md:p-8 bg-gradient-to-r from-teal-50 to-amber-50">
+      <div class="flex items-center justify-between mb-3">
+        <h3 class="font-bold text-gray-800 text-lg">تقدم رحلتك</h3>
+        <span class="text-teal-600 font-bold" id="progressText">0%</span>
+      </div>
+      <div class="w-full bg-gray-200 rounded-full h-4 overflow-hidden shadow-inner">
+        <div id="progressBar" class="progress-bar h-full gradient-bg rounded-full" style="width: 0%"></div>
+      </div>
+      <p class="text-sm text-gray-600 mt-2 text-center">
+        <i class="fa-solid fa-location-dot text-teal-600 ml-1"></i>
+        <span id="currentLocation">بداية الرحلة - القاهرة</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Cards -->
+<section class="container mx-auto px-4 pb-8">
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <div class="bg-white rounded-2xl p-5 shadow-md card-hover text-center">
+      <i class="fa-solid fa-mountain-sun text-3xl text-teal-600 mb-2"></i>
+      <p class="text-2xl font-extrabold text-gray-800" id="statLessons">10</p>
+      <p class="text-xs text-gray-600">درس استكشاف</p>
+    </div>
+    <div class="bg-white rounded-2xl p-5 shadow-md card-hover text-center">
+      <i class="fa-solid fa-map text-3xl text-amber-500 mb-2"></i>
+      <p class="text-2xl font-extrabold text-gray-800">27</p>
+      <p class="text-xs text-gray-600">محافظة مصرية</p>
+    </div>
+    <div class="bg-white rounded-2xl p-5 shadow-md card-hover text-center">
+      <i class="fa-solid fa-trophy text-3xl text-orange-500 mb-2"></i>
+      <p class="text-2xl font-extrabold text-gray-800" id="badgesCount">0</p>
+      <p class="text-xs text-gray-600">شارة استكشاف</p>
+    </div>
+    <div class="bg-white rounded-2xl p-5 shadow-md card-hover text-center">
+      <i class="fa-solid fa-clock text-3xl text-teal-600 mb-2"></i>
+      <p class="text-2xl font-extrabold text-gray-800">45</p>
+      <p class="text-xs text-gray-600">دقيقة الرحلة</p>
+    </div>
+  </div>
+</section>
+
+<!-- Main Content Tabs -->
+<section class="container mx-auto px-4 pb-8">
+  <div class="bg-white rounded-3xl shadow-xl p-6 md:p-8">
+    <!-- Tab Buttons -->
+    <div class="flex flex-wrap gap-2 mb-8 border-b border-gray-200 pb-4">
+      <button onclick="switchTab('lessons')" id="tab-lessons" class="tab-btn bg-teal-600 text-white px-4 md:px-6 py-3 rounded-xl font-semibold transition-all flex items-center gap-2">
+        <i class="fa-solid fa-book"></i>
+        <span class="hidden sm:inline">الدروس</span>
+      </button>
+      <button onclick="switchTab('videos')" id="tab-videos" class="tab-btn bg-gray-100 text-gray-700 px-4 md:px-6 py-3 rounded-xl font-semibold transition-all flex items-center gap-2 hover:bg-gray-200">
+        <i class="fa-solid fa-video"></i>
+        <span class="hidden sm:inline">الفيديوهات</span>
+      </button>
+      <button onclick="switchTab('games')" id="tab-games" class="tab-btn bg-gray-100 text-gray-700 px-4 md:px-6 py-3 rounded-xl font-semibold transition-all flex items-center gap-2 hover:bg-gray-200">
+        <i class="fa-solid fa-gamepad"></i>
+        <span class="hidden sm:inline">الألعاب</span>
+      </button>
+    </div>
+
+    <!-- Lessons Tab -->
+    <div id="content-lessons" class="tab-content">
+      <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-6">
+        <i class="fa-solid fa-signs-post text-teal-600 ml-2"></i>
+        دروس الاستكشاف
+      </h3>
+      <div id="lessonsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Lessons will be injected here -->
+      </div>
+    </div>
+
+    <!-- Videos Tab -->
+    <div id="content-videos" class="tab-content hidden">
+      <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-6">
+        <i class="fa-solid fa-film text-amber-500 ml-2"></i>
+        فيديوهات الرحلة
+      </h3>
+      <div id="videosContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Videos will be injected here -->
+      </div>
+    </div>
+
+    <!-- Games Tab -->
+    <div id="content-games" class="tab-content hidden">
+      <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-6">
+        <i class="fa-solid fa-puzzle-piece text-orange-500 ml-2"></i>
+        ألعاب المحافظات
+      </h3>
+      <div id="gamesContainer" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Games will be injected here -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Parent Contact Section -->
+<section class="container mx-auto px-4 pb-8">
+  <div class="bg-gradient-to-r from-green-500 to-emerald-600 rounded-3xl shadow-xl p-6 md:p-8 text-white">
+    <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-4 text-center md:text-right">
+        <div class="w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center flex-shrink-0">
+          <i class="fa-brands fa-whatsapp text-4xl"></i>
+        </div>
+        <div>
+          <h3 class="text-xl md:text-2xl font-bold mb-1">تواصل مع أولياء الأمور</h3>
+          <p class="text-sm opacity-90">شارك تقدم رحلة ابنك مع Atlas المستكشف</p>
+        </div>
+      </div>
+      <a href="https://wa.me/201000000000?text=أريد%20معرفة%20تفاصيل%20رحلة%20ابني%20مع%20Atlas%20المستكشف" target="_blank" class="bg-white text-green-600 px-8 py-4 rounded-xl font-bold hover:bg-gray-100 transition-all shadow-lg flex items-center gap-3 whitespace-nowrap">
+        <i class="fa-brands fa-whatsapp text-2xl"></i>
+        <span>راسلنا عبر واتساب</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="gradient-bg text-white py-8 mt-8">
+  <div class="container mx-auto px-4 text-center">
+    <div class="flex items-center justify-center gap-3 mb-4">
+      <i class="fa-solid fa-compass text-3xl animate-float"></i>
+      <h3 class="text-2xl font-extrabold">رحلة Atlas مستمرة! 🗺️</h3>
+    </div>
+    <p class="text-sm opacity-90 mb-4">استكشف محافظات مصر وتعلم مع Atlas المستكشف</p>
+    <div class="flex justify-center gap-4 text-2xl">
+      <i class="fa-solid fa-pyramid"></i>
+      <i class="fa-solid fa-water"></i>
+      <i class="fa-solid fa-mountain"></i>
+      <i class="fa-solid fa-tree"></i>
+    </div>
+    <p class="text-xs opacity-75 mt-6">جميع الحقوق محفوظة © 2024 - Atlas the Explorer</p>
+  </div>
+</footer>
+
+<script>
+  // Get URL parameter for level
+  const urlParams = new URLSearchParams(window.location.search);
+  const level = urlParams.get('level') || 'developing';
+  const isProficient = level === 'proficient';
+
+  // Update UI based on level
+  document.getElementById('levelText').textContent = isProficient ? 'مستكشف محترف' : 'مستكشف مبتدئ';
+  document.getElementById('lessonCount').textContent = '10';
+  document.getElementById('videoCount').textContent = isProficient ? '3' : '2';
+  document.getElementById('statLessons').textContent = '10';
+
+  // Lessons Data
+  const developingLessons = [
+    { icon: 'fa-map-location-dot', title: 'مفردات الجغرافيا', desc: 'تعلم الكلمات الأساسية لوصف الأماكن والمناطق', duration: '5 دقائق', unlocked: true },
+    { icon: 'fa-mountain-city', title: 'مناطق مصر الجغرافية', desc: 'الصحراء الغربية والشرقية - وادي النيل والدلتا', duration: '6 دقائق', unlocked: true },
+    { icon: 'fa-clock-rotate-left', title: 'Past Perfect - الماضي التام', desc: 'كيف نستخدم had + التصريف الثالث', duration: '7 دقائق', unlocked: false },
+    { icon: 'fa-comments', title: 'Passive Voice - المبني للمجهول', desc: 'تحويل الجمل من المبني للمعلوم للمجهول', duration: '6 دقائق', unlocked: false },
+    { icon: 'fa-city', title: 'القاهرة الكبرى', desc: 'استكشاف العاصمة وأهم معالمها التاريخية', duration: '5 دقائق', unlocked: false },
+    { icon: 'fa-water', title: 'محافظات الدلتا', desc: 'رحلة عبر محافظات الوجه البحري الخضراء', duration: '5 دقائق', unlocked: false },
+    { icon: 'fa-sun', title: 'محافظات الصعيد', desc: 'استكشاف ثقافة وتاريخ جنوب مصر', duration: '5 دقائق', unlocked: false },
+    { icon: 'fa-umbrella-beach', title: 'محافظات القناة', desc: 'السويس - الإسماعيلية - بورسعيد', duration: '4 دقائق', unlocked: false },
+    { icon: 'fa-mountain', title: 'محافظات سيناء', desc: 'جمال الطبيعة والتاريخ في أرض الفيروز', duration: '5 دقائق', unlocked: false },
+    { icon: 'fa-fish', title: 'محافظات البحر الأحمر', desc: 'الغوص في جمال البحر الأحمر وسواحله', duration: '4 دقائق', unlocked: false }
+  ];
+
+  const proficientLessons = [
+    ...developingLessons.slice(0, 8),
+    { icon: 'fa-pen-nib', title: 'كتابة أدلة السفر', desc: 'كيف تكتب دليل سياحي لمدينتك بالإنجليزية', duration: '8 دقائق', unlocked: false },
+    { icon: 'fa-layer-group', title: 'Complex Tenses - الأزمنة المركبة', desc: 'الماضي التام المستمر والمستقبل التام', duration: '9 دقائق', unlocked: false }
+  ];
+
+  const lessons = isProficient ? proficientLessons : developingLessons;
+
+  // Videos Data
+  const developingVideos = [
+    { 
+      icon: 'fa-map', 
+      title: 'محافظات مصر الـ27', 
+      desc: 'جولة سريعة عبر جميع محافظات مصر ومعالمها', 
+      duration: '8 دقائق',
+      thumbnail: 'linear-gradient(135deg, #0f766e 0%, #f59e0b 100%)'
+    },
+    { 
+      icon: 'fa-water', 
+      title: 'استكشاف نهر النيل', 
+      desc: 'رحلة من المنبع إلى المصب عبر مصر', 
+      duration: '10 دقائق',
+      thumbnail: 'linear-gradient(135deg, #0891b2 0%, #0f766e 100%)'
+    }
+  ];
+
+  const proficientVideos = [
+    ...developingVideos,
+    { 
+      icon: 'fa-landmark', 
+      title: 'وثائقي: الثقافة المصرية', 
+      desc: 'عادات وتقاليد المصريين عبر المحافظات', 
+      duration: '12 دقيقة',
+      thumbnail: 'linear-gradient(135deg, #f59e0b 0%, #dc2626 100%)'
+    }
+  ];
+
+  const videos = isProficient ? proficientVideos : developingVideos;
+
+  // Games Data
+  const games = [
+    { 
+      icon: 'fa-location-crosshairs', 
+      title: 'اختبار الخريطة', 
+      desc: 'حدد موقع المحافظات على خريطة مصر', 
+      difficulty: 'متوسط',
+      color: 'from-teal-500 to-teal-700'
+    },
+    { 
+      icon: 'fa-puzzle-piece', 
+      title: 'مطابقة المناطق', 
+      desc: 'طابق كل محافظة بمعلمها الشهير', 
+      difficulty: 'سهل',
+      color: 'from-amber-500 to-orange-600'
+    }
+  ];
+
+  // Render Lessons
+  function renderLessons() {
+    const container = document.getElementById('lessonsContainer');
+    container.innerHTML = lessons.map((lesson, index) => `
+      <div class="bg-gradient-to-br from-white to-teal-50 rounded-2xl p-5 shadow-md card-hover border border-teal-100 ${lesson.locked ? 'lesson-locked' : ''}">
+        <div class="flex items-start gap-4">
+          <div class="w-14 h-14 bg-gradient-to-br from-teal-500 to-teal-600 rounded-xl flex items-center justify-center flex-shrink-0 shadow-lg">
+            <i class="fa-solid ${lesson.icon} text-2xl text-white"></i>
+          </div>
+          <div class="flex-1">
+            <div class="flex items-start justify-between gap-2 mb-2">
+              <h4 class="font-bold text-gray-800 text-base">${lesson.title}</h4>
+              ${lesson.unlocked ? '<span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full font-semibold badge-pulse">متاح</span>' : '<span class="bg-gray-200 text-gray-600 text-xs px-2 py-1 rounded-full"><i class="fa-solid fa-lock ml-1"></i>مقفل</span>'}
+            </div>
+            <p class="text-sm text-gray-600 mb-3 leading-relaxed">${lesson.desc}</p>
+            <div class="flex items-center justify-between">
+              <span class="text-xs text-teal-600 font-semibold">
+                <i class="fa-regular fa-clock ml-1"></i>
+                ${lesson.duration}
+              </span>
+              <button onclick="startLesson(${index})" class="bg-teal-600 hover:bg-teal-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all" ${!lesson.unlocked ? 'disabled' : ''}>
+                ${lesson.unlocked ? 'ابدأ الاستكشاف' : 'مقفل'}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Render Videos
+  function renderVideos() {
+    const container = document.getElementById('videosContainer');
+    container.innerHTML = videos.map((video, index) => `
+      <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+        <div class="h-48 relative" style="background: ${video.thumbnail}">
+          <div class="absolute inset-0 bg-black/20 flex items-center justify-center">
+            <div class="w-20 h-20 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-2xl cursor-pointer hover:scale-110 transition-transform">
+              <i class="fa-solid fa-play text-3xl text-teal-600 mr-1"></i>
+            </div>
+          <div class="absolute top-3 left-3 bg-black/60 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-semibold">
+            <i class="fa-regular fa-clock ml-1"></i>
+            ${video.duration}
+          </div>
+        </div>
+        <div class="p-5">
+          <div class="flex items-start gap-3 mb-3">
+            <div class="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-xl flex items-center justify-center flex-shrink-0">
+              <i class="fa-solid ${video.icon} text-xl text-white"></i>
+            </div>
+            <div class="flex-1">
+              <h4 class="font-bold text-gray-800 text-base mb-1">${video.title}</h4>
+              <p class="text-sm text-gray-600 leading-relaxed">${video.desc}</p>
+            </div>
+          </div>
+          <button onclick="playVideo(${index})" class="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white py-3 rounded-xl font-semibold transition-all shadow-md">
+            <i class="fa-solid fa-play ml-2"></i>
+            شاهد الرحلة
+          </button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Render Games
+  function renderGames() {
+    const container = document.getElementById('gamesContainer');
+    container.innerHTML = games.map((game, index) => `
+      <div class="bg-white rounded-2xl overflow-hidden shadow-lg card-hover">
+        <div class="h-40 bg-gradient-to-br ${game.color} flex items-center justify-center relative">
+          <i class="fa-solid ${game.icon} text-7xl text-white/90"></i>
+          <div class="absolute top-3 right-3 bg-white/20 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-semibold">
+            ${game.difficulty}
+          </div>
+        </div>
+        <div class="p-5">
+          <h4 class="font-bold text-gray-800 text-lg mb-2">${game.title}</h4>
+          <p class="text-sm text-gray-600 mb-4 leading-relaxed">${game.desc}</p>
+          <button onclick="startGame(${index})" class="w-full bg-gradient-to-r ${game.color} hover:opacity-90 text-white py-3 rounded-xl font-semibold transition-all shadow-md">
+            <i class="fa-solid fa-gamepad ml-2"></i>
+            ابدأ اللعبة
+          </button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Tab Switching
+  function switchTab(tabName) {
+    // Hide all content
+    document.querySelectorAll('.tab-content').forEach(content => {
+      content.classList.add('hidden');
+    });
+    
+    // Remove active class from all tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.classList.remove('bg-teal-600', 'text-white');
+      btn.classList.add('bg-gray-100', 'text-gray-700');
+    });
+    
+    // Show selected content
+    document.getElementById(`content-${tabName}`).classList.remove('hidden');
+    
+    // Add active class to selected tab
+    const activeTab = document.getElementById(`tab-${tabName}`);
+    activeTab.classList.remove('bg-gray-100', 'text-gray-700');
+    activeTab.classList.add('bg-teal-600', 'text-white');
+  }
+
+  // Interactions
+  function startLesson(index) {
+    if (!lessons[index].unlocked) return;
+    
+    // Update progress
+    const progress = Math.min(((index + 2) / lessons.length) * 100, 100);
+    document.getElementById('progressBar').style.width = progress + '%';
+    document.getElementById('progressText').textContent = Math.round(progress) + '%';
+    
+    // Update badges
+    const badges = Math.floor((index + 1) / 3) + 1;
+    document.getElementById('badgesCount').textContent = badges;
+    
+    // Update location
+    const locations = ['القاهرة', 'الجيزة', 'الإسكندرية', 'أسوان', 'الأقصر', 'سيناء'];
+    document.getElementById('currentLocation').textContent = 'الاستكشاف الحالي - ' + locations[index % locations.length];
+    
+    // Unlock next lesson
+    if (index + 1 < lessons.length) {
+      lessons[index + 1].unlocked = true;
+      renderLessons();
+    }
+    
+    // Show achievement
+    showToast('أحسنت! أكملت درس: ' + lessons[index].title);
+  }
+
+  function playVideo(index) {
+    showToast('جاري تشغيل: ' + videos[index].title);
+  }
+
+  function startGame(index) {
+    showToast('تم بدء لعبة: ' + games[index].title);
+  }
+
+  function showToast(message) {
+    const toast = document.createElement('div');
+    toast.className = 'fixed bottom-6 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-6 py-4 rounded-2xl shadow-2xl z-50 animate-float';
+    toast.innerHTML = `
+      <div class="flex items-center gap-3">
+        <i class="fa-solid fa-circle-check text-green-400 text-xl"></i>
+        <span class="font-semibold">${message}</span>
+      </div>
+    `;
+    document.body.appendChild(toast);
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transition = 'opacity 0.5s';
+      setTimeout(() => toast.remove(), 500);
+    }, 3000);
+  }
+
+  // Initialize
+  renderLessons();
+  renderVideos();
+  renderGames();
+</script>
+
+<script>(function(){document.addEventListener("click",function(e){var a=e.target.closest("[data-product-id]");if(!a)return;e.preventDefault();var pid=a.getAttribute("data-product-id");if(pid)parent.postMessage({type:"ecto-artifact-link-click",productId:pid},"*")})})();</script>
+</body>
+</html>
