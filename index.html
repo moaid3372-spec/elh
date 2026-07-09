@@ -1,168 +1,123 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>أبطال اللغة الإنجليزية - ELH</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
-    <style>
-        * { font-family: 'Cairo', sans-serif; }
-        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .hero-gradient { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-        .card-hover { transition: all 0.3s ease; }
-        .card-hover:hover { transform: translateY(-8px); box-shadow: 0 20px 40px rgba(0,0,0,0.3); }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- Title & Favicon -->
+  <title>ELH Characters - شخصيات فريق ELH</title>
+  <link rel="icon" href="assets/images/falcon.webp" type="image/webp">
+  
+  <!-- Meta للسوشيال ميديا -->
+  <meta property="og:title" content="ELH Characters">
+  <meta property="og:description" content="تعرف على شخصيات فريق ELH التسعة">
+  <meta property="og:image" content="assets/images/leo.webp">
+  <meta name="description" content="الموقع الرسمي لشخصيات فريق ELH: Leo, Pixel, Atlas, Nova, Luna, Zina, Codey, Splash, Falcon">
+  
+  <!-- Tailwind CSS لو كنت بتستخدمه -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- CSS الأساسي -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- خط Cairo عربي -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="min-h-screen">
-    <!-- Header -->
-    <header class="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-4">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-xl flex items-center justify-center">
-                        <i class="fas fa-star text-white text-2xl"></i>
-                    </div>
-                    <div>
-                        <h1 class="text-2xl md:text-3xl font-extrabold text-white">أبطال اللغة الإنجليزية</h1>
-                        <p class="text-sm text-white/80">ELH - Egyptian Language Heroes</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
+<body class="bg-gray-50">
 
-    <!-- Hero Section -->
-    <section class="hero-gradient text-white py-16 md:py-24">
-        <div class="container mx-auto px-4 text-center">
-            <h2 class="text-4xl md:text-6xl font-extrabold mb-4">تعلم الإنجليزية بالمغامرات والنجوم ⭐</h2>
-            <p class="text-xl md:text-2xl mb-8">من Primary 1 لـ Prep 3 | 7-15 سنة</p>
-            <div class="flex flex-wrap justify-center gap-4 text-lg">
-                <span class="bg-white/20 px-6 py-2 rounded-full"><i class="fas fa-ban ml-2"></i>صفر اختبارات</span>
-                <span class="bg-white/20 px-6 py-2 rounded-full"><i class="fas fa-ban ml-2"></i>صفر درجات</span>
-                <span class="bg-white/20 px-6 py-2 rounded-full"><i class="fas fa-star ml-2"></i>كله مغامرات</span>
-            </div>
-        </div>
-    </section>
+  <!-- Header -->
+  <header class="text-center py-12 px-4">
+    <h1 class="text-4xl md:text-5xl font-bold text-gray-800 mb-4" style="font-family: 'Cairo', sans-serif;">
+      شخصيات فريق ELH
+    </h1>
+    <p class="text-lg text-gray-600">تعرف على أبطالنا التسعة</p>
+  </header>
 
-    <!-- Grades Grid -->
-    <section class="container mx-auto px-4 py-12">
-        <h3 class="text-3xl md:text-4xl font-bold text-white text-center mb-12">اختار صفك وابدأ المغامرة</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Primary 1 -->
-            <div class="card-hover bg-white rounded-2xl p-6 shadow-xl">
-                <div class="text-6xl mb-4 text-center">🦁</div>
-                <h4 class="text-2xl font-bold text-gray-800 mb-2">Primary 1</h4>
-                <p class="text-gray-600 mb-1">Leo - الأسد الملك</p>
-                <p class="text-sm text-gray-500 mb-4">عمر 7 | مغامرة الغابة</p>
-                <a href="challenge-leo.html" class="block w-full bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-center font-bold py-3 rounded-xl hover:shadow-lg">ابدأ التحدي</a>
-            </div>
-            <!-- Primary 2 -->
-            <div class="card-hover bg-white rounded-2xl p-6 shadow-xl">
-                <div class="text-6xl mb-4 text-center">🐝</div>
-                <h4 class="text-2xl font-bold text-gray-800 mb-2">Primary 2</h4>
-                <p class="text-gray-600 mb-1">Bizzy - النحلة الشاطرة</p>
-                <p class="text-sm text-gray-500 mb-4">عمر 8 | الحديقة</p>
-                <a href="challenge-bizzy.html" class="block w-full bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-center font-bold py-3 rounded-xl hover:shadow-lg">ابدأ التحدي</a>
-            </div>
-            <!-- Primary 3 -->
-            <div class="card-hover bg-white rounded-2xl p-6 shadow-xl">
-                <div class="text-6xl mb-4 text-center">🐬</div>
-                <h4 class="text-2xl font-bold text-gray-800 mb-2">Primary 3</h4>
-                <p class="text-gray-600 mb-1">Splash - الدولفين المرح</p>
-                <p class="text-sm text-gray-500 mb-4">عمر 9 | المحيط</p>
-                <a href="challenge-splash.html" class="block w-full bg-gradient-to-r from-blue-400 to-cyan-500 text-white text-center font-bold py-3 rounded-xl hover:shadow-lg">ابدأ التحدي</a>
-            </div>
-            <!-- Primary 4 -->
-            <div class="card-hover bg-white rounded-2xl p-6 shadow-xl">
-                <div class="text-6xl mb-4 text-center">🦅</div>
-                <h4 class="text-2xl font-bold text-gray-800 mb-2">Primary 4</h4>
-                <p class="text-gray-600 mb-1">Falcon - الصقر المصري</p>
-                <p class="text-sm text-gray-500 mb-4">عمر 10 | الصحراء</p>
-                <a href="challenge-falcon.html" class="block w-full bg-gradient-to-r from-amber-600 to-orange-700 text-white text-center font-bold py-3 rounded-xl hover:shadow-lg">ابدأ التحدي</a>
-            </div>
-            <!-- Primary 5 -->
-            <div class="card-hover bg-white rounded-2xl p-6 shadow-xl">
-                <div class="text-6xl mb-4 text-center">🤖</div>
-                <h4 class="text-2xl font-bold text-gray-800 mb-2">Primary 5</h4>
-                <p class="text-gray-600 mb-1">Codey - الروبوت المبرمج</p>
-                <p class="text-sm text-gray-500 mb-4">عمر 11 | التكنولوجيا</p>
-                <a href="challenge-codey.html" class="block w-full bg-gradient-to-r from-cyan-500 to-blue-600 text-white text-center font-bold py-3 rounded-xl hover:shadow-lg">ابدأ التحدي</a>
-            </div>
-            <!-- Primary 6 -->
-            <div class="card-hover bg-white rounded-2xl p-6 shadow-xl">
-                <div class="text-6xl mb-4 text-center">🚀</div>
-                <h4 class="text-2xl font-bold text-gray-800 mb-2">Primary 6</h4>
-                <p class="text-gray-600 mb-1">Luna - رائدة الفضاء</p>
-                <p class="text-sm text-gray-500 mb-4">عمر 12 | الفضاء</p>
-                <a href="challenge-luna.html" class="block w-full bg-gradient-to-r from-purple-500 to-pink-600 text-white text-center font-bold py-3 rounded-xl hover:shadow-lg">ابدأ التحدي</a>
-            </div>
-            <!-- Prep 1 -->
-            <div class="card-hover bg-white rounded-2xl p-6 shadow-xl">
-                <div class="text-6xl mb-4 text-center">🎨</div>
-                <h4 class="text-2xl font-bold text-gray-800 mb-2">Prep 1</h4>
-                <p class="text-gray-600 mb-1">Pixel - الفنانة المبدعة</p>
-                <p class="text-sm text-gray-500 mb-4">عمر 13 | الفن</p>
-                <a href="challenge-pixel.html" class="block w-full bg-gradient-to-r from-pink-500 to-rose-600 text-white text-center font-bold py-3 rounded-xl hover:shadow-lg">ابدأ التحدي</a>
-            </div>
-            <!-- Prep 2 -->
-            <div class="card-hover bg-white rounded-2xl p-6 shadow-xl">
-                <div class="text-6xl mb-4 text-center">🗺️</div>
-                <h4 class="text-2xl font-bold text-gray-800 mb-2">Prep 2</h4>
-                <p class="text-gray-600 mb-1">Atlas - المستكشف</p>
-                <p class="text-sm text-gray-500 mb-4">عمر 14 | الاستكشاف</p>
-                <a href="challenge-atlas.html" class="block w-full bg-gradient-to-r from-teal-500 to-cyan-600 text-white text-center font-bold py-3 rounded-xl hover:shadow-lg">ابدأ التحدي</a>
-            </div>
-            <!-- Prep 3 -->
-            <div class="card-hover bg-white rounded-2xl p-6 shadow-xl">
-                <div class="text-6xl mb-4 text-center">💡</div>
-                <h4 class="text-2xl font-bold text-gray-800 mb-2">Prep 3</h4>
-                <p class="text-gray-600 mb-1">Nova - المبتكرة</p>
-                <p class="text-sm text-gray-500 mb-4">عمر 15 | الابتكار</p>
-                <a href="challenge-nova.html" class="block w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-center font-bold py-3 rounded-xl hover:shadow-lg">ابدأ التحدي</a>
-            </div>
-        </div>
-    </section>
+  <!-- Characters Grid -->
+  <main class="container mx-auto">
+    <div class="characters-grid">
+      
+      <!-- 1. Leo -->
+      <div class="character-card">
+        <img src="assets/images/leo.webp" alt="Leo الأسد" loading="lazy">
+        <h3>Leo 🦁</h3>
+        <p class="text-gray-600 mb-1">الأسد الملك</p>
+        <p class="text-sm text-gray-500 mb-4">عمر 7 | قائد الفريق</p>
+      </div>
 
-    <!-- How It Works -->
-    <section class="bg-white/10 backdrop-blur-md py-12">
-        <div class="container mx-auto px-4">
-            <h3 class="text-3xl font-bold text-white text-center mb-12">إزاي نبدأ؟</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div class="text-center text-white">
-                    <div class="w-20 h-20 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-book-open text-3xl"></i>
-                    </div>
-                    <h4 class="text-xl font-bold mb-2">1. اختار صفك</h4>
-                    <p class="text-white/80">من Primary 1 لـ Prep 3</p>
-                </div>
-                <div class="text-center text-white">
-                    <div class="w-20 h-20 bg-gradient-to-br from-blue-400 to-cyan-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-clock text-3xl"></i>
-                    </div>
-                    <h4 class="text-xl font-bold mb-2">2. العب التحدي</h4>
-                    <p class="text-white/80">3 دقايق بس، كله ممتع</p>
-                </div>
-                <div class="text-center text-white">
-                    <div class="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-4">
-                        <i class="fas fa-star text-3xl"></i>
-                    </div>
-                    <h4 class="text-xl font-bold mb-2">3. استكشف دروسك</h4>
-                    <p class="text-white/80">محتوى مخصص ليك</p>
-                </div>
-            </div>
-        </div>
-    </section>
+      <!-- 2. Pixel -->
+      <div class="character-card">
+        <img src="assets/images/pixel.webp" alt="Pixel الفنان" loading="lazy">
+        <h3>Pixel 🎨</h3>
+        <p class="text-gray-600 mb-1">الرسام المبدع</p>
+        <p class="text-sm text-gray-500 mb-4">عمر 6 | فنان الفريق</p>
+      </div>
 
-    <!-- Footer -->
-    <footer class="bg-black/30 text-white py-8 mt-12">
-        <div class="container mx-auto px-4 text-center">
-            <p class="text-lg mb-2">صُنع بحب في مصر 🇪🇬</p>
-            <p class="text-sm text-white/60">ELH 2026 - Egyptian Language Heroes</p>
-        </div>
-    </footer>
-    <link rel="stylesheet" href="style.css">
+      <!-- 3. Atlas -->
+      <div class="character-card">
+        <img src="assets/images/atlas.webp" alt="Atlas الرحالة" loading="lazy">
+        <h3>Atlas 🗺️</h3>
+        <p class="text-gray-600 mb-1">المستكشف</p>
+        <p class="text-sm text-gray-500 mb-4">عمر 8 | خبير الخرائط</p>
+      </div>
+
+      <!-- 4. Nova -->
+      <div class="character-card">
+        <img src="assets/images/nova.webp" alt="Nova المبتكرة" loading="lazy">
+        <h3>Nova 💡</h3>
+        <p class="text-gray-600 mb-1">صاحبة الأفكار</p>
+        <p class="text-sm text-gray-500 mb-4">عمر 7 | مخترعة الفريق</p>
+      </div>
+
+      <!-- 5. Luna -->
+      <div class="character-card">
+        <img src="assets/images/luna.webp" alt="Luna رائدة الفضاء" loading="lazy">
+        <h3>Luna 🚀</h3>
+        <p class="text-gray-600 mb-1">رائدة الفضاء</p>
+        <p class="text-sm text-gray-500 mb-4">عمر 9 | عالمة الفلك</p>
+      </div>
+
+      <!-- 6. Zina -->
+      <div class="character-card">
+        <img src="assets/images/zina.webp" alt="Zina النحلة" loading="lazy">
+        <h3>Zina 🐝</h3>
+        <p class="text-gray-600 mb-1">النحلة المجتهدة</p>
+        <p class="text-sm text-gray-500 mb-4">عمر 6 | محبة الكتب</p>
+      </div>
+
+      <!-- 7. Codey -->
+      <div class="character-card">
+        <img src="assets/images/codey.webp" alt="Codey الروبوت" loading="lazy">
+        <h3>Codey 🤖</h3>
+        <p class="text-gray-600 mb-1">الروبوت المبرمج</p>
+        <p class="text-sm text-gray-500 mb-4">عمر ؟ | عبقري التكنولوجيا</p>
+      </div>
+
+      <!-- 8. Splash -->
+      <div class="character-card">
+        <img src="assets/images/splash.webp" alt="Splash الدولفين" loading="lazy">
+        <h3>Splash 🐬</h3>
+        <p class="text-gray-600 mb-1">دولفين المرح</p>
+        <p class="text-sm text-gray-500 mb-4">عمر 5 | نجم الرياضة</p>
+      </div>
+
+      <!-- 9. Falcon -->
+      <div class="character-card">
+        <img src="assets/images/falcon.webp" alt="Falcon الصقر" loading="lazy">
+        <h3>Falcon 🦅</h3>
+        <p class="text-gray-600 mb-1">الصقر السريع</p>
+        <p class="text-sm text-gray-500 mb-4">عمر 8 | كشاف الفريق</p>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="text-center py-8 mt-12 text-gray-500 text-sm">
+    <p>© 2026 ELH Team. جميع الحقوق محفوظة</p>
+  </footer>
+
 </body>
 </html>
