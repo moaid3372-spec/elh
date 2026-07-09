@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تحدي Atlas المستكشف - الصف الثاني الإعدادي</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+    * {
+        font-family: 'Cairo', sans-serif;
+    }
+    body {
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #dbeafe 100%);
+        min-height: 100vh;
+    }
+    .map-bg {
+        background-image: 
+            radial-gradient(circle at 20% 30%, rgba(251, 191, 36, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 70%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 40% 80%, rgba(16, 185, 129, 0.1) 0%, transparent 50%);
+    }
+    .question-card {
+        transition: all 0.3s ease;
+        transform: translateX(0);
+    }
+    .question-card.hidden {
+        display: none;
+    }
+    .option-btn {
+        transition: all 0.2s ease;
+    }
+    .option-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .option-btn.selected {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+        border-color: #2563eb;
+    }
+    .progress-bar {
+        transition: width 0.5s ease;
+    }
+    @keyframes pulse-timer {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+    .timer-warning {
+        animation: pulse-timer 1s infinite;
+        color: #ef4444;
+    }
+    .star-animation {
+        animation: starPop 0.6s ease;
+    }
+    @keyframes starPop {
+        0% { transform: scale(0) rotate(0deg); }
+        50% { transform: scale(1.2) rotate(180deg); }
+        100% { transform: scale(1) rotate(360deg); }
+    }
+    .recording {
+        animation: pulse-red 1.5s infinite;
+    }
+    @keyframes pulse-red {
+        0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+        50% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+    }
+</style>
+</head>
+<body class="map-bg">
+    <!-- Welcome Screen -->
+    <div id="welcomeScreen" class="min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-6 md:p-10 text-center">
+            <div class="mb-6">
+                <div class="inline-flex items-center justify-center w-24 h-24 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full mb-4 shadow-lg">
+                    <i class="fa-solid fa-compass text-white text-4xl"></i>
+                </div>
+                <h1 class="text-3xl md:text-5xl font-extrabold text-gray-800 mb-3">
+                    تحدي Atlas المستكشف
+                </h1>
+                <p class="text-xl md:text-2xl text-blue-600 font-bold">مستعد تستكشف؟</p>
+            </div>
+            
+            <div class="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl p-6 mb-6 border-2 border-blue-200">
+                <div class="flex items-center justify-center gap-3 mb-3">
+                    <i class="fa-solid fa-map text-blue-600 text-2xl"></i>
+                    <p class="text-lg font-semibold text-gray-700">مغامرتك تبدأ الآن</p>
+                </div>
+                <div class="grid grid-cols-3 gap-4 text-center">
+                    <div>
+                        <i class="fa-solid fa-clock text-amber-500 text-2xl mb-2"></i>
+                        <p class="text-sm text-gray-600">الوقت</p>
+                        <p class="font-bold text-gray-800">3 دقائق</p>
+                    </div>
+                    <div>
+                        <i class="fa-solid fa-star text-amber-500 text-2xl mb-2"></i>
+                        <p class="text-sm text-gray-600">الأسئلة</p>
+                        <p class="font-bold text-gray-800">10 محطات</p>
+                    </div>
+                    <div>
+                        <i class="fa-solid fa-trophy text-amber-500 text-2xl mb-2"></i>
+                        <p class="text-sm text-gray-600">المكافأة</p>
+                        <p class="font-bold text-gray-800">نجوم</p>
+                    </div>
+                </div>
+            </div>
+
+            <button id="startBtn" class="w-full bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold text-xl py-4 px-8 rounded-2xl shadow-lg transition-all duration-300 hover:shadow-xl hover:scale-105">
+                <i class="fa-solid fa-play ml-2"></i>
+                ابدأ المغامرة
+            </button>
+            
+            <p class="text-sm text-gray-500 mt-4">
+                <i class="fa-solid fa-info-circle ml-1"></i>
+                تأكد من تشغيل الصوت والميكروفون للمغامرة الكاملة
+            </p>
+        </div>
+    </div>
+
+    <!-- Challenge Screen -->
+    <div id="challengeScreen" class="hidden min-h-screen p-4 pb-24">
+        <!-- Header with Progress and Timer -->
+        <div class="max-w-4xl mx-auto mb-4">
+            <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full flex items-center justify-center">
+                            <i class="fa-solid fa-compass text-white"></i>
+                        </div>
+                        <div>
+                            <p class="text-sm text-gray-500">المحطة الحالية</p>
+                            <p class="font-bold text-lg text-gray-800"><span id="currentQ">1</span> من 10</p>
+                        </div>
+                    </div>
+                    <div class="w-full md:w-1/2">
+                        <div class="bg-gray-200 rounded-full h-3 overflow-hidden">
+                            <div id="progressBar" class="progress-bar bg-gradient-to-l from-blue-500 to-cyan-500 h-full rounded-full" style="width: 10%"></div>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-2 bg-amber-50 px-4 py-2 rounded-xl border-2 border-amber-200">
+                        <i class="fa-solid fa-clock text-amber-600"></i>
+                        <span id="timer" class="font-bold text-xl text-gray-800">3:00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Questions Container -->
+        <div class="max-w-4xl mx-auto">
+            <!-- Q1 Grammar -->
+            <div class="question-card bg-white rounded-2xl shadow-lg p-6 md:p-8" data-q="1">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-pen text-blue-600"></i>
+                    </div>
+                    <h2 class="text-xl md:text-2xl font-bold text-gray-800">محطة القواعد</h2>
+                </div>
+                <p class="text-lg text-gray-700 mb-4">اختر الإجابة الصحيحة:</p>
+                <div class="bg-gradient-to-r from-blue-50 to-cyan-50 p-6 rounded-xl mb-6 border-r-4 border-blue-500">
+                    <p class="text-xl text-gray-800 font-semibold">I had ___ many places in Egypt before I traveled abroad.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <button class="option-btn border-2 border-gray-300 rounded-xl p-4 text-lg font-semibold text-gray-700 hover:border-blue-500" data-answer="visited">visited</button>
+                    <button class="option-btn border-2 border-gray-300 rounded-xl p-4 text-lg font-semibold text-gray-700 hover:border-blue-500" data-answer="visit">visit</button>
+                    <button class="option-btn border-2 border-gray-300 rounded-xl p-4 text-lg font-semibold text-gray-700 hover:border-blue-500" data-answer="visiting">visiting</button>
+                    <button class="option-btn border-2 border-gray-300 rounded-xl p-4 text-lg font-semibold text-gray-700 hover:border-blue-500" data-answer="visits">visits</button>
+                </div>
+            </div>
+
+            <!-- Q2 Reading -->
+            <div class="question-card hidden bg-white rounded-2xl shadow-lg p-6 md:p-8" data-q="2">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-book-open text-green-600"></i>
+                    </div>
+                    <h2 class="text-xl md:text-2xl font-bold text-gray-800">محطة القراءة</h2>
+                </div>
+                <div class="bg-gradient-to-r from-green-50 to-emerald-50 p-6 rounded-xl mb-6 border-r-4 border-green-500">
+                    <p class="text-base md:text-lg text-gray-800 leading-relaxed">
+                        Omar is a 14-year-old student from Cairo. Last summer, he decided to explore Egypt's governorates with his family. They had visited Alexandria before, but this time they went to Aswan and Luxor. Omar was amazed by the temples and the Nile River. He discovered that Egypt has many different cultures and traditions. After the trip, Omar felt proud of his country and wanted to learn more about its history. He started reading books about ancient Egypt and now he dreams of becoming a tour guide.
+                    </p>
+                </div>
+                <div class="space-y-6">
+                    <div>
+                        <p class="font-semibold text-gray-800 mb-3">1. Where did Omar go last summer?</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <button class="option-btn border-2 border-gray-300 rounded-xl p-3 text-gray-700 hover:border-green-500" data-answer="q2-1-a">Alexandria only</button>
+                            <button class="option-btn border-2 border-gray-300 rounded-xl p-3 text-gray-700 hover:border-green-500" data-answer="q2-1-b">Aswan and Luxor</button>
+                        </div>
+                    <div>
+                        <p class="font-semibold text-gray-800 mb-3">2. What did Omar discover?</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <button class="option-btn border-2 border-gray-300 rounded-xl p-3 text-gray-700 hover:border-green-500" data-answer="q2-2-a">Egypt has many cultures</button>
+                            <button class="option-btn border-2 border-gray-300 rounded-xl p-3 text-gray-700 hover:border-green-500" data-answer="q2-2-b">Egypt is small</button>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-800 mb-3">3. How did Omar feel after the trip?</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <button class="option-btn border-2 border-gray-300 rounded-xl p-3 text-gray-700 hover:border-green-500" data-answer="q2-3-a">Proud</button>
+                            <button class="option-btn border-2 border-gray-300 rounded-xl p-3 text-gray-700 hover:border-green-500" data-answer="q2-3-b">Bored</button>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-gray-800 mb-3">4. What does Omar dream of becoming?</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <button class="option-btn border-2 border-gray-300 rounded-xl p-3 text-gray-700 hover:border-green-500" data-answer="q2-4-a">A tour guide</button>
+                            <button class="option-btn border-2 border-gray-300 rounded-xl p-3 text-gray-700 hover:border-green-500" data-answer="q2-4-b">A doctor</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q3 Writing -->
+            <div class="question-card hidden bg-white rounded-2xl shadow-lg p-6 md:p-8" data-q="3">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-feather text-purple-600"></i>
+                    </div>
+                    <h2 class="text-xl md:text-2xl font-bold text-gray-800">محطة الكتابة</h2>
+                </div>
+                <p class="text-lg text-gray-700 mb-4">Write a short article about the best place to visit in Egypt (3-4 sentences):</p>
+                <textarea id="writingAnswer" class="w-full border-2 border-gray-300 rounded-xl p-4 text-lg focus:border-purple-500 focus:outline-none" rows="6" placeholder="The best place to visit in Egypt is..."></textarea>
+                <p class="text-sm text-gray-500 mt-2"><span id="wordCount">0</span> كلمة</p>
+            </div>
+
+            <!-- Q4 Listening -->
+            <div class="question-card hidden bg-white rounded-2xl shadow-lg p-6 md:p-8" data-q="4">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-headphones text-orange-600"></i>
+                    </div>
+                    <h2 class="text-xl md:text-2xl font-bold text-gray-800">محطة الاستماع</h2>
+                </div>
+                <p class="text-lg text-gray-700 mb-4">Listen to Atlas and choose the correct image:</p>
+                <button id="playAudio" class="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-3 px-6 rounded-xl mb-6 shadow-lg">
+                    <i class="fa-solid fa-volume-up ml-2"></i>
+                    استمع إلى Atlas
+                </button>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <button class="option-btn border-2 border-gray-300 rounded-xl p-6 hover:border-orange-500" data-answer="adventure">
+                        <i class="fa-solid fa-mountain-sun text-4xl text-orange-500 mb-3"></i>
+                        <p class="font-semibold">Adventure</p>
+                    </button>
+                    <button class="option-btn border-2 border-gray-300 rounded-xl p-6 hover:border-orange-500" data-answer="sleep">
+                        <i class="fa-solid fa-bed text-4xl text-blue-400 mb-3"></i>
+                        <p class="font-semibold">Sleep</p>
+                    </button>
+                    <button class="option-btn border-2 border-gray-300 rounded-xl p-6 hover:border-orange-500" data-answer="study">
+                        <i class="fa-solid fa-book text-4xl text-green-500 mb-3"></i>
+                        <p class="font-semibold">Study</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Q5 Vocabulary -->
+            <div class="question-card hidden bg-white rounded-2xl shadow-lg p-6 md:p-8" data-q="5">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-earth-africa text-teal-600"></i>
+                    </div>
+                    <h2 class="text-xl md:text-2xl font-bold text-gray-800">محطة الجغرافيا</h2>
+                </div>
+                <p class="text-lg text-gray-700 mb-4">Match the words with the correct images:</p>
+                <div class="space-y-4">
+                    <div class="bg-gradient-to-r from-teal-50 to-cyan-50 p-4 rounded-xl">
+                        <p class="font-semibold text-gray-800 mb-3">1. Mountain</p>
+                        <div class="grid grid-cols-3 gap-3">
+                            <button class="option-btn border-2 border-gray-300 rounded-xl p-4 hover:border-teal-500" data-answer="q5-1-mountain">
+                                <i class="fa-solid fa-mountain text-3xl text-stone-600"></i>
+                            </button>
+                            <button class="option-btn border-2 border-gray-300 rounded-xl p-4 hover:border-teal-500" data-answer="q5-1-desert">
+                                <i class="fa-solid fa-sun text-3xl text-yellow-500"></i>
+                            </button>
+                            <button class="option-btn border-2 border-gray-300 rounded-xl p-4 hover:border-teal-500" data-answer="q5-1-river">
+                                <i class="fa-solid fa-water text-3xl text-blue-500"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-r from-teal-50 to-cyan-50 p-4 rounded-xl">
+                        <p class="font-semibold text-gray-800 mb-3">2. Desert</p>
+                        <div class="grid grid-cols-3 gap-3">
+                            <button class="option-btn border-2 border-gray-300 rounded-xl p-4 hover:border-teal-500" data-answer="q5-2-mountain">
+                                <i class="fa-solid fa-mountain text-3xl text-stone-600"></i>
+                            </button>
+                            <button class="option-btn border-2 border-gray-300 rounded-xl p-4 hover:border-teal-500" data-answer="q5-2-desert">
+                                <i class="fa-solid fa-sun text-3xl text-yellow-500"></i>
+                            </button>
+                            <button class="option-btn border-2 border-gray-300 rounded-xl p-4 hover:border-teal-500" data-answer="q5-2-river">
+                                <i class="fa-solid fa-water text-3xl text-blue-500"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-r from-teal-50 to-cyan-50 p-4 rounded-xl">
+                        <p class="font-semibold text-gray-800 mb-3">3. River</p>
+                        <div class="grid grid-cols-3 gap-3">
+                            <button class="option-btn border-2 border-gray-300 rounded-xl p-4 hover:border-teal-500" data-answer="q5-3-mountain">
+                                <i class="fa-solid fa-mountain text-3xl text-stone-600"></i>
+                            </button>
+                            <button class="option-btn border-2 border-gray-300 rounded-xl p-4 hover:border-teal-500" data-answer="q5-3-desert">
+                                <i class="fa-solid fa-sun text-3xl text-yellow-500"></i>
+                            </button>
+                            <button class="option-btn border-2 border-gray-300 rounded-xl p-4 hover:border-teal-500" data-answer="q5-3-river">
+                                <i class="fa-solid fa-water text-3xl text-blue-500"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q6 Speaking -->
+            <div class="question-card hidden bg-white rounded-2xl shadow-lg p-6 md:p-8" data-q="6">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-pink-100 rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-microphone text-pink-600"></i>
+                    </div>
+                    <h2 class="text-xl md:text-2xl font-bold text-gray-800">محطة التحدث</h2>
+                </div>
+                <p class="text-lg text-gray-700 mb-4">Record yourself saying:</p>
+                <div class="bg-gradient-to-r from-pink-50 to-rose-50 p-6 rounded-xl mb-6 border-r-4 border-pink-500">
+                    <p class="text-2xl text-gray-800 font-bold text-center">"I have been to Alexandria"</p>
+                </div>
+                <div class="flex flex-col items-center gap-4">
+                    <button id="recordBtn" class="w-24 h-24 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white rounded-full shadow-lg transition-all">
+                        <i class="fa-solid fa-microphone text-3xl"></i>
+                    </button>
+                    <p id="recordStatus" class="text-gray-600 font-semibold">اضغط للتسجيل</p>
+                    <audio id="audioPlayback" controls class="hidden w-full"></audio>
+                </div>
+            </div>
+
+            <!-- Q7 Function -->
+            <div class="question-card hidden bg-white rounded-2xl shadow-lg p-6 md:p-8" data-q="7">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-comments text-indigo-600"></i>
+                    </div>
+                    <h2 class="text-xl md:text-2xl font-bold text-gray-800">محطة الوظائف اللغوية</h2>
+                </div>
+                <p class="text-lg text-gray-700 mb-4">How do you politely ask for information?</p>
+                <div class="grid grid-cols-1 gap-4">
+                    <button class="option-btn border-2 border-gray-300 rounded-xl p-4 text-lg font-semibold text-gray-700 hover:border-indigo-500 text-right" data-answer="tell-me">Tell me now!</button>
+                    <button class="option-btn border-2 border-gray-300 rounded-xl p-4 text-lg font-semibold text-gray-700 hover:border-indigo-500 text-right" data-answer="could-you">Could you tell me, please?</button>
+                    <button class="option-btn border-2 border-gray-300 rounded-xl p-4 text-lg font-semibold text-gray-700 hover:border-indigo-500 text-right" data-answer="i-want">I want information.</button>
+                </div>
+            </div>
+
+            <!-- Q8 Conversation -->
+            <div class="question-card hidden bg-white rounded-2xl shadow-lg p-6 md:p-8" data-q="8">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-hands-helping text-yellow-600"></i>
+                    </div>
+                    <h2 class="text-xl md:text-2xl font-bold text-gray-800">محطة المحادثة</h2>
+                </div>
+                <div class="bg-gradient-to-r from-yellow-50 to-amber-50 p-6 rounded-xl mb-6 border-r-4 border-yellow-500">
+                    <p class="text-gray-700 mb-2">Situation:</p>
+                    <p class="text-lg text-gray-800 font-semibold">A tourist is lost and asks you for help. What do you say?</p>
+                </div>
+                <div class="grid grid-cols-1 gap-4">
+                    <button class="option-btn border-2 border-gray-300 rounded-xl p-4 text-lg font-semibold text-gray-700 hover:border-yellow-500 text-right" data-answer="no">I don't know. Sorry.</button>
+                    <button class="option-btn border-2 border-gray-300 rounded-xl p-4 text-lg font-semibold text-gray-700 hover:border-yellow-500 text-right" data-answer="show-you">I can show you the way!</button>
+                    <button class="option-btn border-2 border-gray-300 rounded-xl p-4 text-lg font-semibold text-gray-700 hover:border-yellow-500 text-right" data-answer="busy">I'm busy.</button>
+                </div>
+            </div>
+
+            <!-- Q9 Phonics -->
+            <div class="question-card hidden bg-white rounded-2xl shadow-lg p-6 md:p-8" data-q="9">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-volume-high text-red-600"></i>
+                    </div>
+                    <h2 class="text-xl md:text-2xl font-bold text-gray-800">محطة النطق</h2>
+                </div>
+                <p class="text-lg text-gray-700 mb-4">Choose the correct word stress:</p>
+                <div class="space-y-4">
+                    <div class="bg-gradient-to-r from-red-50 to-pink-50 p-4 rounded-xl">
+                        <p class="font-semibold text-gray-800 mb-3">1. Explore</p>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button class="option-btn border-2 border-gray-300 rounded-xl p-3 hover:border-red-500" data-answer="q9-1-a">EXplore</button>
+                            <button class="option-btn border-2 border-gray-300 rounded-xl p-3 hover:border-red-500" data-answer="q9-1-b">exPLORE</button>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-r from-red-50 to-pink-50 p-4 rounded-xl">
+                        <p class="font-semibold text-gray-800 mb-3">2. Adventure</p>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button class="option-btn border-2 border-gray-300 rounded-xl p-3 hover:border-red-500" data-answer="q9-2-a">adVENture</button>
+                            <button class="option-btn border-2 border-gray-300 rounded-xl p-3 hover:border-red-500" data-answer="q9-2-b">ADventure</button>
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-r from-red-50 to-pink-50 p-4 rounded-xl">
+                        <p class="font-semibold text-gray-800 mb-3">3. Discover</p>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button class="option-btn border-2 border-gray-300 rounded-xl p-3 hover:border-red-500" data-answer="q9-3-a">DIScover</button>
+                            <button class="option-btn border-2 border-gray-300 rounded-xl p-3 hover:border-red-500" data-answer="q9-3-b">disCOVer</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q10 Culture -->
+            <div class="question-card hidden bg-white rounded-2xl shadow-lg p-6 md:p-8" data-q="10">
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-10 h-10 bg-emerald-100 rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-leaf text-emerald-600"></i>
+                    </div>
+                    <h2 class="text-xl md:text-2xl font-bold text-gray-800">محطة الثقافة</h2>
+                </div>
+                <div class="bg-gradient-to-r from-emerald-50 to-teal-50 p-6 rounded-xl mb-6 border-r-4 border-emerald-500">
+                    <div class="flex justify-center mb-4">
+                        <i class="fa-solid fa-people-group text-6xl text-emerald-600"></i>
+                    </div>
+                    <p class="text-lg text-gray-800 font-semibold text-center mb-2">شباب مصريون ينظفون نهر النيل</p>
+                    <p class="text-gray-600 text-center">Egyptian youth cleaning the Nile River</p>
+                </div>
+                <p class="text-lg text-gray-700 mb-4">What values does this image represent?</p>
+                <div class="grid grid-cols-1 gap-4">
+                    <button class="option-btn border-2 border-gray-300 rounded-xl p-4 text-lg font-semibold text-gray-700 hover:border-emerald-500 text-right" data-answer="environment">حماية البيئة والانتماء للوطن</button>
+                    <button class="option-btn border-2 border-gray-300 rounded-xl p-4 text-lg font-semibold text-gray-700 hover:border-emerald-500 text-right" data-answer="shopping">التسوق والترفيه</button>
+                    <button class="option-btn border-2 border-gray-300 rounded-xl p-4 text-lg font-semibold text-gray-700 hover:border-emerald-500 text-right" data-answer="sports">الرياضة فقط</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="max-w-4xl mx-auto mt-6">
+            <div class="bg-white rounded-2xl shadow-lg p-4 flex justify-between items-center">
+                <button id="prevBtn" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold py-3 px-6 rounded-xl transition-all disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                    <i class="fa-solid fa-arrow-right ml-2"></i>
+                    السابق
+                </button>
+                <button id="nextBtn" class="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all">
+                    التالي
+                    <i class="fa-solid fa-arrow-left mr-2"></i>
+                </button>
+                <button id="finishBtn" class="hidden bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white font-bold py-3 px-6 rounded-xl shadow-lg transition-all">
+                    <i class="fa-solid fa-flag-checkered ml-2"></i>
+                    إنهاء المغامرة
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Completion Screen -->
+    <div id="completionScreen" class="hidden min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl shadow-2xl max-w-2xl w-full p-8 md:p-12 text-center">
+            <div class="mb-6">
+                <div class="star-animation inline-flex items-center justify-center w-28 h-28 bg-gradient-to-br from-amber-400 to-orange-500 rounded-full mb-4 shadow-xl">
+                    <i class="fa-solid fa-star text-white text-5xl"></i>
+                </div>
+                <h1 class="text-3xl md:text-5xl font-extrabold text-gray-800 mb-4">
+                    استكشاف رائع يا Atlas!
+                </h1>
+                <div class="flex justify-center gap-2 mb-6">
+                    <i class="fa-solid fa-star text-4xl text-amber-400 star-animation"></i>
+                    <i class="fa-solid fa-star text-4xl text-amber-400 star-animation" style="animation-delay: 0.2s"></i>
+                    <i class="fa-solid fa-star text-4xl text-amber-400 star-animation" style="animation-delay: 0.4s"></i>
+                </div>
+            </div>
+            
+            <div class="bg-gradient-to-r from-blue-50 to-cyan-50 rounded-2xl p-6 mb-6 border-2 border-blue-200">
+                <p class="text-lg text-gray-700 mb-2">لقد أنهيت المغامرة بنجاح</p>
+                <p class="text-2xl font-bold text-blue-600">أحسنت يا مستكشف!</p>
+            </div>
+
+            <div class="bg-green-50 rounded-2xl p-6 mb-6 border-2 border-green-200">
+                <div class="flex items-center justify-center gap-3 mb-3">
+                    <i class="fa-brands fa-whatsapp text-3xl text-green-600"></i>
+                    <p class="text-lg font-semibold text-gray-700">تم إرسال إشعار لولي الأمر</p>
+                </div>
+                <p class="text-sm text-gray-600">سيتم مشاركة نجاحك مع عائلتك الآن</p>
+            </div>
+
+            <p class="text-gray-600 mb-2">
+                <i class="fa-solid fa-spinner fa-spin ml-2"></i>
+                جاري العودة للصفحة الرئيسية...
+            </p>
+            <p class="text-sm text-gray-500">سيتم تحويلك خلال <span id="countdown">3</span> ثوانٍ</p>
+        </div>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // State
+    let currentQuestion = 1;
+    let totalQuestions = 10;
+    let timeLeft = 180; // 3 minutes in seconds
+    let timerInterval;
+    let answers = {};
+    let mediaRecorder;
+    let audioChunks = [];
+    let isRecording = false;
+
+    // Elements
+    const welcomeScreen = document.getElementById('welcomeScreen');
+    const challengeScreen = document.getElementById('challengeScreen');
+    const completionScreen = document.getElementById('completionScreen');
+    const startBtn = document.getElementById('startBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const prevBtn = document.getElementById('prevBtn');
+    const finishBtn = document.getElementById('finishBtn');
+    const timerEl = document.getElementById('timer');
+    const currentQEl = document.getElementById('currentQ');
+    const progressBar = document.getElementById('progressBar');
+
+    // Start Challenge
+    startBtn.addEventListener('click', function() {
+        welcomeScreen.classList.add('hidden');
+        challengeScreen.classList.remove('hidden');
+        startTimer();
+        showQuestion(1);
+    });
+
+    // Timer
+    function startTimer() {
+        timerInterval = setInterval(function() {
+            timeLeft--;
+            updateTimerDisplay();
+            
+            if (timeLeft <= 30) {
+                timerEl.classList.add('timer-warning');
+            }
+            
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                autoSubmit();
+            }
+        }, 1000);
+    }
+
+    function updateTimerDisplay() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        timerEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    }
+
+    // Navigation
+    nextBtn.addEventListener('click', function() {
+        saveCurrentAnswer();
+        if (currentQuestion < totalQuestions) {
+            showQuestion(currentQuestion + 1);
+        }
+    });
+
+    prevBtn.addEventListener('click', function() {
+        saveCurrentAnswer();
+        if (currentQuestion > 1) {
+            showQuestion(currentQuestion - 1);
+        }
+    });
+
+    finishBtn.addEventListener('click', function() {
+        saveCurrentAnswer();
+        submitChallenge();
+    });
+
+    function showQuestion(qNum) {
+        document.querySelectorAll('.question-card').forEach(card => {
+            card.classList.add('hidden');
+        });
+        
+        const currentCard = document.querySelector(`[data-q="${qNum}"]`);
+        if (currentCard) {
+            currentCard.classList.remove('hidden');
+        }
+        
+        currentQuestion = qNum;
+        currentQEl.textContent = qNum;
+        progressBar.style.width = `${(qNum / totalQuestions) * 100}%`;
+        
+        prevBtn.disabled = qNum === 1;
+        
+        if (qNum === totalQuestions) {
+            nextBtn.classList.add('hidden');
+            finishBtn.classList.remove('hidden');
+        } else {
+            nextBtn.classList.remove('hidden');
+            finishBtn.classList.add('hidden');
+        }
+        
+        loadSavedAnswer(qNum);
+    }
+
+    // Answer Handling
+    document.addEventListener('click', function(e) {
+        if (e.target.classList.contains('option-btn') || e.target.closest('.option-btn')) {
+            const btn = e.target.classList.contains('option-btn') ? e.target : e.target.closest('.option-btn');
+            const questionCard = btn.closest('.question-card');
+            const qNum = questionCard.dataset.q;
+            
+            // For multi-part questions, handle separately
+            if (qNum === '2' || qNum === '5' || qNum === '9') {
+                btn.classList.toggle('selected');
+            } else {
+                // Single answer questions
+                questionCard.querySelectorAll('.option-btn').forEach(b => b.classList.remove('selected'));
+                btn.classList.add('selected');
+            }
+        }
+    });
+
+    function saveCurrentAnswer() {
+        const qNum = currentQuestion;
+        const card = document.querySelector(`[data-q="${qNum}"]`);
+        
+        if (qNum === 3) {
+            answers[qNum] = document.getElementById('writingAnswer').value;
+        } else if (qNum === 6) {
+            answers[qNum] = document.getElementById('audioPlayback').src || 'recorded';
+        } else {
+            const selected = card.querySelectorAll('.option-btn.selected');
+            if (selected.length > 0) {
+                answers[qNum] = Array.from(selected).map(btn => btn.dataset.answer);
+            }
+        }
+    }
+
+    function loadSavedAnswer(qNum) {
+        if (!answers[qNum]) return;
+        
+        const card = document.querySelector(`[data-q="${qNum}"]`);
+        if (qNum === 3) {
+            document.getElementById('writingAnswer').value = answers[qNum];
+        } else if (qNum !== 6) {
+            const savedAnswers = Array.isArray(answers[qNum]) ? answers[qNum] : [answers[qNum]];
+            card.querySelectorAll('.option-btn').forEach(btn => {
+                if (savedAnswers.includes(btn.dataset.answer)) {
+                    btn.classList.add('selected');
+                }
+            });
+        }
+    }
+
+    // Word Count for Writing
+    document.getElementById('writingAnswer')?.addEventListener('input', function() {
+        const words = this.value.trim().split(/\s+/).filter(w => w.length > 0);
+        document.getElementById('wordCount').textContent = words.length;
+    });
+
+    // Audio Playback for Q4
+    document.getElementById('playAudio')?.addEventListener('click', function() {
+        const utterance = new SpeechSynthesisUtterance('Adventure awaits');
+        utterance.lang = 'en-US';
+        utterance.rate = 0.9;
+        speechSynthesis.speak(utterance);
+    });
+
+    // Recording for Q6
+    document.getElementById('recordBtn')?.addEventListener('click', async function() {
+        if (!isRecording) {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+                
+                mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    const audioPlayback = document.getElementById('audioPlayback');
+                    audioPlayback.src = audioUrl;
+                    audioPlayback.classList.remove('hidden');
+                    document.getElementById('recordStatus').textContent = 'تم التسجيل بنجاح';
+                    this.classList.remove('recording');
+                };
+                
+                mediaRecorder.start();
+                isRecording = true;
+                this.classList.add('recording');
+                document.getElementById('recordStatus').textContent = 'جاري التسجيل... اضغط للإيقاف';
+            } catch (err) {
+                alert('تعذر الوصول للميكروفون. تأكد من إعطاء الإذن.');
+            }
+        } else {
+            mediaRecorder.stop();
+            mediaRecorder.stream.getTracks().forEach(track => track.stop());
+            isRecording = false;
+        }
+    });
+
+    // Submit
+    function autoSubmit() {
+        saveCurrentAnswer();
+        submitChallenge();
+    }
+
+    function submitChallenge() {
+        clearInterval(timerInterval);
+        saveCurrentAnswer();
+        
+        // Calculate score internally - not shown to user
+        const score = calculateScore();
+        const level = score >= 7 ? 'proficient' : 'developing';
+        
+        // Store in localStorage
+        const result = {
+            challenge: 'Atlas_Explorer_Prep2',
+            score: score,
+            totalQuestions: totalQuestions,
+            level: level,
+            timestamp: new Date().toISOString(),
+            answers: answers
+        };
+        localStorage.setItem('atlasPrep2Challenge', JSON.stringify(result));
+        
+        // Simulate parent WhatsApp notification
+        simulateParentNotification(score, level);
+        
+        // Show completion screen
+        challengeScreen.classList.add('hidden');
+        completionScreen.classList.remove('hidden');
+        
+        // Countdown and redirect
+        let countdown = 3;
+        const countdownEl = document.getElementById('countdown');
+        const countdownInterval = setInterval(() => {
+            countdown--;
+            countdownEl.textContent = countdown;
+            if (countdown <= 0) {
+                clearInterval(countdownInterval);
+                window.location.href = `grades/prep2.html?level=${level}`;
+            }
+        }, 1000);
+    }
+
+    function calculateScore() {
+        let score = 0;
+        
+        // Q1: visited
+        if (answers[1] && answers[1][0] === 'visited') score++;
+        
+        // Q2: 4 parts
+        if (answers[2]) {
+            if (answers[2].includes('q2-1-b')) score += 0.25;
+            if (answers[2].includes('q2-2-a')) score += 0.25;
+            if (answers[2].includes('q2-3-a')) score += 0.25;
+            if (answers[2].includes('q2-4-a')) score += 0.25;
+        }
+        
+        // Q3: Check if wrote something substantial
+        if (answers[3] && answers[3].trim().split(/\s+/).length >= 3) score++;
+        
+        // Q4: adventure
+        if (answers[4] && answers[4][0] === 'adventure') score++;
+        
+        // Q5: 3 matches
+        if (answers[5]) {
+            if (answers[5].includes('q5-1-mountain')) score += 0.33;
+            if (answers[5].includes('q5-2-desert')) score += 0.33;
+            if (answers[5].includes('q5-3-river')) score += 0.33;
+        }
+        
+        // Q6: recorded
+        if (answers[6]) score++;
+        
+        // Q7: could-you
+        if (answers[7] && answers[7][0] === 'could-you') score++;
+        
+        // Q8: show-you
+        if (answers[8] && answers[8][0] === 'show-you') score++;
+        
+        // Q9: 3 parts
+        if (answers[9]) {
+            if (answers[9].includes('q9-1-b')) score += 0.33;
+            if (answers[9].includes('q9-2-a')) score += 0.33;
+            if (answers[9].includes('q9-3-b')) score += 0.33;
+        }
+        
+        // Q10: environment
+        if (answers[10] && answers[10][0] === 'environment') score++;
+        
+        return Math.round(score);
+    }
+
+    function simulateParentNotification(score, level) {
+        // In production, this would call an API to send WhatsApp
+        // For now, we log it and store notification status
+        const notification = {
+            sent: true,
+            timestamp: new Date().toISOString(),
+            message: `ابنك/ابنتك أنهى تحدي Atlas المستكشف بنجاح! المستوى: ${level === 'proficient' ? 'متمكن' : 'نامي'}`,
+            phone: 'PARENT_PHONE_PLACEHOLDER'
+        };
+        localStorage.setItem('parentNotification_prep2', JSON.stringify(notification));
+        console.log('Parent notification sent:', notification);
+    }
+});
+</script>
+<script>(function(){document.addEventListener("click",function(e){var a=e.target.closest("[data-product-id]");if(!a)return;e.preventDefault();var pid=a.getAttribute("data-product-id");if(pid)parent.postMessage({type:"ecto-artifact-link-click",productId:pid},"*")})})();</script>
+</body>
+</html>
