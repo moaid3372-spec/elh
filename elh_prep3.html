@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nova the Innovator - Prep 3</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --bg-primary: #0a0e27;
+            --bg-secondary: #151a3a;
+            --bg-card: #1e2347;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-purple: #8b5cf6;
+            --text-primary: #f1f5f9;
+            --text-secondary: #cbd5e1;
+            --glow: rgba(59, 130, 246, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Cairo', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(139, 92, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(6, 182, 212, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-blue), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s ease;
+        }
+
+        .card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px var(--glow), 0 0 40px rgba(59, 130, 246, 0.2);
+            border-color: var(--accent-blue);
+        }
+
+        .lesson-badge {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .video-play-btn {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+        }
+
+        .video-play-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.6);
+        }
+
+        .game-card {
+            background: linear-gradient(135deg, var(--bg-card), #252b5a);
+            border: 1px solid rgba(139, 92, 246, 0.3);
+        }
+
+        .nova-float {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite;
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(59, 130, 246, 0.4); }
+            50% { box-shadow: 0 0 30px rgba(59, 130, 246, 0.8); }
+        }
+
+        .whatsapp-btn {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            transition: all 0.3s ease;
+        }
+
+        .whatsapp-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 24px rgba(37, 211, 102, 0.5);
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-purple));
+            margin-top: 8px;
+            border-radius: 2px;
+        }
+
+        @media (max-width: 390px) {
+            .text-5xl { font-size: 2rem; }
+            .text-3xl { font-size: 1.5rem; }
+            .text-2xl { font-size: 1.25rem; }
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body>
+    <div class="container max-w-7xl mx-auto px-4 py-6 md:py-10">
+        <!-- Header Section -->
+        <header class="mb-8 md:mb-12">
+            <div class="card p-6 md:p-8">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="flex items-center gap-4 md:gap-6">
+                        <div class="nova-float relative">
+                            <div class="w-20 h-20 md:w-24 md:h-24 bg-gradient-to-br from-blue-500 via-cyan-500 to-purple-600 rounded-2xl flex items-center justify-center pulse-glow">
+                                <i class="fas fa-lightbulb text-4xl md:text-5xl text-white"></i>
+                            </div>
+                            <div class="absolute -top-2 -right-2 w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center">
+                                <i class="fas fa-bolt text-sm text-gray-900"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <h1 class="text-3xl md:text-5xl font-black mb-2">
+                                <span class="gradient-text">Nova</span> المبتكر
+                            </h1>
+                            <p class="text-secondary text-sm md:text-base">الصف الثالث الإعدادي - سن 15</p>
+                            <div id="levelBadge" class="inline-flex items-center gap-2 mt-3 px-4 py-1.5 bg-blue-500/20 border border-blue-500/30 rounded-full">
+                                <i class="fas fa-rocket text-blue-400"></i>
+                                <span id="levelText" class="text-sm font-semibold text-blue-300"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="flex flex-col gap-3 w-full md:w-auto">
+                        <a href="https://wa.me/?text=تابع ابتكارات ابنك مع Nova المبتكر" target="_blank" class="whatsapp-btn flex items-center justify-center gap-2 px-6 py-3 rounded-xl text-white font-bold">
+                            <i class="fab fa-whatsapp text-xl"></i>
+                            <span>تواصل مع ولي الأمر</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Welcome Message -->
+        <div class="card p-6 mb-8 border-cyan-500/30">
+            <div class="flex items-start gap-4">
+                <div class="text-4xl">💡</div>
+                <div>
+                    <h2 class="text-xl md:text-2xl font-bold mb-2 text-cyan-400">أهلاً بالمبتكرين!</h2>
+                    <p class="text-text-secondary leading-relaxed">
+                        هنا بنبني حلول للمستقبل! مع Nova هتتعلم إزاي تفكر برة الصندوق وتطور ابتكارات تخدم مجتمعك المصري. 
+                        <span class="text-cyan-300 font-semibold">كل درس خطوة نحو المستقبل!</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Lessons Section -->
+        <section class="mb-10">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl md:text-3xl font-bold section-title">
+                    <i class="fas fa-book-open text-blue-400 ml-2"></i>
+                    الدروس - 10 حلول للابتكار
+                </h2>
+                <span class="text-sm text-text-secondary">
+                    <i class="fas fa-clock ml-1"></i>
+                    30-45 دقيقة لكل حل
+                </span>
+            </div>
+            <div id="lessonsContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                <!-- Lessons will be inserted by JS -->
+            </div>
+        </section>
+
+        <!-- Videos Section -->
+        <section class="mb-10">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl md:text-3xl font-bold section-title">
+                    <i class="fas fa-video text-red-400 ml-2"></i>
+                    <span id="videosTitle">الفيديوهات</span>
+                </h2>
+                <span class="text-sm text-text-secondary">
+                    <i class="fas fa-play-circle ml-1"></i>
+                    محتوى بصري
+                </span>
+            </div>
+            <div id="videosContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                <!-- Videos will be inserted by JS -->
+            </div>
+        </section>
+
+        <!-- Games Section -->
+        <section class="mb-10">
+            <div class="flex items-center justify-between mb-6">
+                <h2 class="text-2xl md:text-3xl font-bold section-title">
+                    <i class="fas fa-gamepad text-purple-400 ml-2"></i>
+                    ألعاب الابتكار - 2 تحدي
+                </h2>
+                <span class="text-sm text-text-secondary">
+                    <i class="fas fa-star ml-1"></i>
+                    تعلم عن طريق اللعب
+                </span>
+            </div>
+            <div id="gamesContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                <!-- Games will be inserted by JS -->
+            </div>
+        </section>
+
+        <!-- Innovation Stats -->
+        <div class="card p-6 mb-10 bg-gradient-to-br from-blue-900/30 to-purple-900/30">
+            <h3 class="text-xl font-bold mb-4 flex items-center gap-2">
+                <i class="fas fa-chart-line text-cyan-400"></i>
+                رحلة الابتكار الخاصة بك
+            </h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="text-center p-4 bg-blue-500/10 rounded-xl border border-blue-500/20">
+                    <div class="text-3xl font-black text-blue-400 mb-1">10</div>
+                    <div class="text-sm text-text-secondary">حلول تعلمتها</div>
+                </div>
+                <div class="text-center p-4 bg-cyan-500/10 rounded-xl border border-cyan-500/20">
+                    <div id="videosCount" class="text-3xl font-black text-cyan-400 mb-1">2</div>
+                    <div class="text-sm text-text-secondary">فيديو ملهم</div>
+                </div>
+                <div class="text-center p-4 bg-purple-500/10 rounded-xl border border-purple-500/20">
+                    <div class="text-3xl font-black text-purple-400 mb-1">2</div>
+                    <div class="text-sm text-text-secondary">تحدي مبتكر</div>
+                </div>
+                <div class="text-center p-4 bg-yellow-500/10 rounded-xl border border-yellow-500/20">
+                    <div class="text-3xl font-black text-yellow-400 mb-1">∞</div>
+                    <div class="text-sm text-text-secondary">إمكانيات المستقبل</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="card p-6 text-center">
+            <div class="flex flex-col items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-lightbulb text-2xl text-yellow-400"></i>
+                    <p class="text-lg md:text-xl font-bold gradient-text">ابتكارات Nova مستمرة! 💡</p>
+                </div>
+                <p class="text-sm text-text-secondary max-w-2xl">
+                    كل فكرة جديدة بتقربك من حلمك. استمر في الابتكار وصنع حلول لمجتمعك ووطنك مصر
+                </p>
+                <div class="flex gap-4 text-text-secondary text-sm mt-2">
+                    <span><i class="fas fa-rocket ml-1"></i> Nova the Innovator</span>
+                    <span>•</span>
+                    <span>Prep 3 - سن 15</span>
+                    <span>•</span>
+                    <span><i class="fas fa-heart text-red-400 ml-1"></i> صنع في مصر</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Get URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const level = urlParams.get('level') || 'developing';
+
+        // Level display
+        const levelText = document.getElementById('levelText');
+        const levelBadge = document.getElementById('levelBadge');
+        
+        if (level === 'proficient') {
+            levelText.textContent = 'مبتكر محترف';
+            levelBadge.classList.remove('bg-blue-500/20', 'border-blue-500/30');
+            levelBadge.classList.add('bg-purple-500/20', 'border-purple-500/30');
+            levelBadge.querySelector('i').className = 'fas fa-crown text-purple-400';
+            levelBadge.querySelector('span').className = 'text-sm font-semibold text-purple-300';
+        } else {
+            levelText.textContent = 'مبتكر متطور';
+        }
+
+        // Content data
+        const developingContent = {
+            lessons: [
+                { title: 'مصطلحات التكنولوجيا والابتكار', desc: 'تعلم أهم الكلمات في عالم الابتكار', icon: 'fa-microchip', duration: '35 دقيقة', theme: 'blue' },
+                { title: 'الابتكار في مصر القديمة والحديثة', desc: 'من الأهرامات للمدن الذكية', icon: 'fa-landmark-dome', duration: '40 دقيقة', theme: 'cyan' },
+                { title: 'الجمل الشرطية لحل المشكلات', desc: 'If I could solve... I would...', icon: 'fa-code-branch', duration: '30 دقيقة', theme: 'purple' },
+                { title: 'كتابة مقال: فكرتي للمستقبل', desc: 'Express your innovation in English', icon: 'fa-pen-fancy', duration: '45 دقيقة', theme: 'blue' },
+                { title: 'التفكير النقدي', desc: 'إزاي تحلل المشاكل وتلاقي حلول', icon: 'fa-brain', duration: '35 دقيقة', theme: 'cyan' },
+                { title: 'المستقبل الشرطي الأول', desc: 'First Conditional for plans', icon: 'fa-forward', duration: '30 دقيقة', theme: 'purple' },
+                { title: 'الطاقة المتجددة', desc: 'Renewable energy vocabulary', icon: 'fa-solar-panel', duration: '40 دقيقة', theme: 'blue' },
+                { title: 'العرض التقديمي', desc: 'Present your innovation', icon: 'fa-person-chalkboard', duration: '45 دقيقة', theme: 'cyan' },
+                { title: 'المبني للمجهول', desc: 'Passive Voice in science', icon: 'fa-flask', duration: '35 دقيقة', theme: 'purple' },
+                { title: 'اختراع يخدم المجتمع', desc: 'Community solution project', icon: 'fa-people-group', duration: '50 دقيقة', theme: 'blue' }
+            ],
+            videos: [
+                { title: 'عباقرة مصريون غيروا العالم', desc: 'شباب مصري ومبتكرين صنعوا المستقبل', icon: 'fa-star', duration: '8 دقائق', thumbnail: 'egypt' },
+                { title: 'تكنولوجيا المستقبل', desc: 'AI, Robotics, و Green Tech', icon: 'fa-robot', duration: '10 دقائق', thumbnail: 'future' }
+            ],
+            games: [
+                { title: 'مطابقة الابتكارات', desc: 'اربط كل اختراع بمجاله', icon: 'fa-puzzle-piece', reward: 'شارات الابتكار' },
+                { title: 'باني الحلول', desc: 'مشكلة + فكرتك = حل مبتكر', icon: 'fa-hammer', reward: 'نجوم الإبداع' }
+            ]
+        };
+
+        const proficientContent = {
+            lessons: [
+                { title: 'مصطلحات التكنولوجيا المتقدمة', desc: 'Deep tech & innovation vocabulary', icon: 'fa-rocket', duration: '40 دقيقة', theme: 'blue' },
+                { title: 'الابتكار وريادة الأعمال', desc: 'From idea to startup', icon: 'fa-lightbulb', duration: '45 دقيقة', theme: 'cyan' },
+                { title: 'الجمل الشرطية المعقدة', desc: 'Mixed Conditionals & unreal past', icon: 'fa-infinity', duration: '35 دقيقة', theme: 'purple' },
+                { title: 'كتابة مقال احترافي', desc: 'Advanced essay: My Vision 2030', icon: 'fa-scroll', duration: '50 دقيقة', theme: 'blue' },
+                { title: 'مشاريع بحثية مصغرة', desc: 'Mini research projects', icon: 'fa-microscope', duration: '60 دقيقة', badge: 'جديد', theme: 'cyan' },
+                { title: 'مهارات المناظرة', desc: 'Debate skills: Tech for good?', icon: 'fa-comments', duration: '45 دقيقة', badge: 'جديد', theme: 'purple' },
+                { title: 'الكتابة المعقدة', desc: 'Complex writing & analysis', icon: 'fa-file-pen', duration: '50 دقيقة', badge: 'جديد', theme: 'blue' },
+                { title: 'الاستدامة والبيئة', desc: 'Sustainability solutions', icon: 'fa-leaf', duration: '40 دقيقة', theme: 'cyan' },
+                { title: 'براءة الاختراع', desc: 'Patents & Intellectual Property', icon: 'fa-certificate', duration: '35 دقيقة', theme: 'purple' },
+                { title: 'العرض أمام المستثمرين', desc: 'Pitch your innovation', icon: 'fa-chart-line', duration: '55 دقيقة', theme: 'blue' }
+            ],
+            videos: [
+                { title: 'المبتكرون المصريون الشباب', desc: 'وثائقي عن شباب غير عادي', icon: 'fa-trophy', duration: '12 دقيقة', thumbnail: 'youth', badge: 'حصري' },
+                { title: 'اختراعات مصرية حديثة', desc: 'ابتكارات تخدم المجتمع', icon: 'fa-pyramid', duration: '9 دقائق', thumbnail: 'egypt' },
+                { title: 'مستقبل التكنولوجيا 2030', desc: 'AI, VR, والمدن الذكية', icon: 'fa-vr-cardboard', duration: '11 دقيقة', thumbnail: 'future' }
+            ],
+            games: [
+                { title: 'تحدي المبتكرين الكبار', desc: 'صمم حل متكامل لمشكلة حقيقية', icon: 'fa-chess-king', reward: 'وسام الابتكار الذهبي' },
+                { title: 'مناظرة المستقبل', desc: 'ناقش ودافع عن فكرتك', icon: 'fa-scale-balanced', reward: 'شارة المتحدث المبدع' }
+            ]
+        };
+
+        const content = level === 'proficient' ? proficientContent : developingContent;
+
+        // Update videos count and title
+        document.getElementById('videosCount').textContent = content.videos.length;
+        document.getElementById('videosTitle').textContent = `الفيديوهات - ${content.videos.length} ${content.videos.length === 2 ? 'مصدر' : 'مصادر'} ملهمة`;
+
+        // Render Lessons
+        const lessonsContainer = document.getElementById('lessonsContainer');
+        content.lessons.forEach((lesson, index) => {
+            const badgeHtml = lesson.badge ? `<span class="lesson-badge">${lesson.badge}</span>` : '';
+            const themeColors = {
+                blue: 'from-blue-500/20 to-blue-600/10 border-blue-500/30',
+                cyan: 'from-cyan-500/20 to-cyan-600/10 border-cyan-500/30',
+                purple: 'from-purple-500/20 to-purple-600/10 border-purple-500/30'
+            };
+            lessonsContainer.innerHTML += `
+                <div class="card p-5 cursor-pointer group">
+                    <div class="flex items-start justify-between mb-3">
+                        <div class="w-12 h-12 bg-gradient-to-br ${themeColors[lesson.theme]} rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i class="fas ${lesson.icon} text-xl text-${lesson.theme}-400"></i>
+                        </div>
+                        <div class="flex flex-col items-end gap-2">
+                            <span class="text-xs text-text-secondary">${lesson.duration}</span>
+                            ${badgeHtml}
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2 group-hover:text-cyan-400 transition-colors">
+                        حل ${index + 1}: ${lesson.title}
+                    </h3>
+                    <p class="text-sm text-text-secondary mb-4 leading-relaxed">${lesson.desc}</p>
+                    <div class="flex items-center justify-between">
+                        <button class="text-sm font-semibold text-blue-400 hover:text-cyan-400 transition-colors">
+                            ابدأ الابتكار <i class="fas fa-arrow-left mr-1"></i>
+                        </button>
+                        <i class="fas fa-lightbulb text-yellow-400/50 group-hover:text-yellow-400 transition-colors"></i>
+                    </div>
+                </div>
+            `;
+        });
+
+        // Render Videos
+        const videosContainer = document.getElementById('videosContainer');
+        content.videos.forEach((video) => {
+            const badgeHtml = video.badge ? `<span class="absolute top-3 left-3 px-3 py-1 bg-red-500 rounded-full text-xs font-bold">${video.badge}</span>` : '';
+            videosContainer.innerHTML += `
+                <div class="card p-5 cursor-pointer group">
+                    <div class="relative mb-4 rounded-xl overflow-hidden bg-gradient-to-br from-red-900/30 to-orange-900/30 h-40 flex items-center justify-center border border-red-500/20">
+                        <i class="fas ${video.icon} text-6xl text-red-400/30"></i>
+                        ${badgeHtml}
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="video-play-btn group-hover:scale-110">
+                                <i class="fas fa-play text-white mr-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2 group-hover:text-red-400 transition-colors">${video.title}</h3>
+                    <p class="text-sm text-text-secondary mb-3">${video.desc}</p>
+                    <div class="flex items-center justify-between text-xs text-text-secondary">
+                        <span><i class="fas fa-clock ml-1"></i> ${video.duration}</span>
+                        <span class="text-red-400"><i class="fas fa-video ml-1"></i> شاهد الآن</span>
+                    </div>
+                </div>
+            `;
+        });
+
+        // Render Games
+        const gamesContainer = document.getElementById('gamesContainer');
+        content.games.forEach((game) => {
+            gamesContainer.innerHTML += `
+                <div class="card game-card p-6 cursor-pointer group">
+                    <div class="flex items-start gap-4 mb-4">
+                        <div class="w-16 h-16 bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-2xl flex items-center justify-center group-hover:rotate-12 transition-transform border border-purple-500/30">
+                            <i class="fas ${game.icon} text-2xl text-purple-400"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h3 class="text-xl font-bold mb-1 group-hover:text-purple-400 transition-colors">${game.title}</h3>
+                            <p class="text-sm text-text-secondary">${game.desc}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center justify-between pt-4 border-t border-purple-500/20">
+                        <div class="flex items-center gap-2 text-sm">
+                            <i class="fas fa-trophy text-yellow-400"></i>
+                            <span class="text-text-secondary">${game.reward}</span>
+                        </div>
+                        <button class="px-4 py-2 bg-purple-500/20 hover:bg-purple-500/30 border border-purple-500/40 rounded-lg text-sm font-semibold text-purple-300 transition-all">
+                            تحدي الآن <i class="fas fa-bolt mr-1"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+
+        // Add click animations
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                if (!e.target.closest('button') && !e.target.closest('a')) {
+                    this.style.transform = 'scale(0.98)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                }
+            });
+        });
+    </script>
+<script>(function(){document.addEventListener("click",function(e){var a=e.target.closest("[data-product-id]");if(!a)return;e.preventDefault();var pid=a.getAttribute("data-product-id");if(pid)parent.postMessage({type:"ecto-artifact-link-click",productId:pid},"*")})})();</script>
+</body>
+</html>
