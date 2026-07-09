@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تحدي Falcon الصقر</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+    * {
+        font-family: 'Cairo', sans-serif;
+    }
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+    }
+    .glass {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    }
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        transition: all 0.3s ease;
+    }
+    .btn-primary:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+    }
+    .btn-primary:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    .option-card {
+        transition: all 0.2s ease;
+        cursor: pointer;
+    }
+    .option-card:hover {
+        transform: scale(1.02);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .option-card.selected {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-color: #667eea;
+    }
+    .progress-bar {
+        transition: width 0.5s ease;
+    }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in {
+        animation: fadeIn 0.5s ease;
+    }
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+    .pulse-animation {
+        animation: pulse 2s infinite;
+    }
+    .timer-warning {
+        animation: pulse 1s infinite;
+        color: #ef4444 !important;
+    }
+    textarea:focus, input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+</style>
+</head>
+<body class="py-4 px-3 md:py-8 md:px-4">
+    <div class="max-w-3xl mx-auto">
+        <!-- Timer Bar - Fixed Top -->
+        <div id="timerBar" class="glass rounded-2xl p-3 md:p-4 mb-4 hidden">
+            <div class="flex items-center justify-between gap-4 flex-wrap">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center text-white font-bold text-xl">
+                        🦅
+                    </div>
+                    <div>
+                        <p class="text-xs text-gray-600">تحدي Falcon الصقر</p>
+                        <p class="font-bold text-gray-800" id="questionCounter">السؤال 1 من 10</p>
+                    </div>
+                <div class="flex items-center gap-2">
+                    <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z" clip-rule="evenodd"/>
+                    </svg>
+                    <span id="timer" class="text-2xl font-bold text-purple-600">3:00</span>
+                </div>
+            </div>
+            <div class="mt-3 bg-gray-200 rounded-full h-2 overflow-hidden">
+                <div id="progressBar" class="progress-bar h-full bg-gradient-to-r from-purple-500 to-indigo-600" style="width: 10%"></div>
+            </div>
+        </div>
+
+        <!-- Welcome Screen -->
+        <div id="welcomeScreen" class="glass rounded-3xl p-6 md:p-12 text-center fade-in">
+            <div class="pulse-animation inline-block mb-6">
+                <div class="w-32 h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-yellow-400 via-orange-500 to-red-500 flex items-center justify-center text-6xl md:text-7xl shadow-2xl">
+                    🦅
+                </div>
+            </div>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-gray-800 mb-3">تحدي Falcon الصقر</h1>
+            <p class="text-xl md:text-2xl text-purple-600 font-semibold mb-8">مستعد للمغامرة؟</p>
+            
+            <div class="bg-purple-50 rounded-2xl p-6 mb-8 text-right">
+                <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+                    </svg>
+                    تعليمات المغامرة:
+                </h3>
+                <ul class="space-y-2 text-gray-700 text-sm md:text-base">
+                    <li class="flex items-start gap-2">
+                        <span class="text-purple-600 font-bold">•</span>
+                        <span>لديك 10 مهام ممتعة لإكمالها</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-purple-600 font-bold">•</span>
+                        <span>الوقت المتاح: 3 دقائق</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-purple-600 font-bold">•</span>
+                        <span>اقرأ كل سؤال جيداً قبل الإجابة</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-purple-600 font-bold">•</span>
+                        <span>يمكنك تخطي أي سؤال والعودة إليه لاحقاً</span>
+                    </li>
+                </ul>
+            </div>
+
+            <button onclick="startChallenge()" class="btn-primary w-full md:w-auto px-12 py-4 rounded-xl text-white font-bold text-lg md:text-xl">
+                ابدأ المغامرة الآن 🚀
+            </button>
+            <p class="text-sm text-gray-500 mt-4">⏱️ المدة: 3:00 دقائق</p>
+        </div>
+
+        <!-- Questions Container -->
+        <div id="questionsContainer" class="hidden"></div>
+
+        <!-- Completion Screen -->
+        <div id="completionScreen" class="glass rounded-3xl p-6 md:p-12 text-center hidden fade-in">
+            <div class="mb-6">
+                <div class="text-7xl md:text-8xl mb-4">⭐⭐⭐</div>
+            </div>
+            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-4">رائع يا Falcon!</h2>
+            <p class="text-xl md:text-2xl text-purple-600 font-semibold mb-6">كسبت 3 نجوم ⭐⭐⭐</p>
+            
+            <div class="bg-green-50 border-2 border-green-200 rounded-2xl p-6 mb-6">
+                <div class="flex items-center justify-center gap-3 mb-3">
+                    <svg class="w-8 h-8 text-green-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                    </svg>
+                    <p class="text-lg font-bold text-green-800">تم إكمال المغامرة بنجاح!</p>
+                </div>
+                <p class="text-gray-700" id="completionMessage">أحسنت! لقد أنهيت جميع مهام Falcon الصقر</p>
+            </div>
+
+            <div class="bg-purple-50 rounded-2xl p-4 mb-6 text-sm text-gray-600">
+                <p class="flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z"/>
+                    </svg>
+                    تم إرسال إشعار لولي الأمر
+                </p>
+            </div>
+
+            <div class="flex items-center justify-center gap-2 text-gray-500">
+                <div class="w-4 h-4 border-2 border-purple-600 border-t-transparent rounded-full animate-spin"></div>
+                <p>جاري التحضير للمرحلة التالية...</p>
+            </div>
+        </div>
+    </div>
+
+<script>
+let currentQuestion = 0;
+let timeLeft = 180; // 3 minutes
+let timerInterval = null;
+let answers = {};
+let startTime = null;
+
+const questions = [
+    // Q1 Grammar: Present Perfect
+    {
+        id: 1,
+        type: 'grammar',
+        aspect: 'Grammar',
+        title: 'القواعد - Grammar',
+        question: 'اختر الكلمة الصحيحة:',
+        content: 'I have lived in Egypt ___ 10 years',
+        options: ['for', 'since', 'at', 'in'],
+        correct: 'for'
+    },
+    // Q2 Reading
+    {
+        id: 2,
+        type: 'reading',
+        aspect: 'Reading',
+        title: 'القراءة - Reading',
+        question: 'اقرأ النص التالي ثم أجب على الأسئلة:',
+        content: 'My family and I live in Cairo. We love helping our neighbors. Last week, we helped our neighbor carry heavy bags from the market. My father said, "Helping others makes us happy." In Egypt, we care about our neighbors like family. We share food and help each other always.',
+        subQuestions: [
+            { q: 'أين تعيش العائلة؟', options: ['الإسكندرية', 'القاهرة', 'الأقصر', 'أسوان'], correct: 'القاهرة' },
+            { q: 'ماذا فعلت العائلة الأسبوع الماضي؟', options: ['ذهبوا للسوق', 'ساعدوا الجار', 'طبخوا الطعام', 'زاروا الأقارب'], correct: 'ساعدوا الجار' },
+            { q: 'كيف يشعر الأب عند مساعدة الآخرين؟', options: ['حزين', 'متعب', 'سعيد', 'غاضب'], correct: 'سعيد' }
+        ]
+    },
+    // Q3 Writing
+    {
+        id: 3,
+        type: 'writing',
+        aspect: 'Writing',
+        title: 'الكتابة - Writing',
+        question: 'اكتب جملتين عن مكانك المفضل في مصر:',
+        content: 'My favorite place in Egypt is...',
+        placeholder: 'اكتب جملتين هنا...',
+        minLength: 10
+    },
+    // Q4 Listening
+    {
+        id: 4,
+        type: 'listening',
+        aspect: 'Listening',
+        title: 'الاستماع - Listening',
+        question: 'استمع ثم اختر الصورة المناسبة:',
+        audioText: 'Egypt is my home',
+        options: [
+            { text: 'علم مصر', emoji: '🇪🇬', value: 'egypt' },
+            { text: 'المدرسة', emoji: '🏫', value: 'school' },
+            { text: 'الحديقة', emoji: '🌳', value: 'park' },
+            { text: 'البيت', emoji: '🏠', value: 'home' }
+        ],
+        correct: 'egypt'
+    },
+    // Q5 Vocabulary
+    {
+        id: 5,
+        type: 'vocabulary',
+        aspect: 'Vocabulary',
+        title: 'المفردات - Vocabulary',
+        question: 'اختر الصورة المناسبة لكل كلمة:',
+        items: [
+            { word: 'School', options: [{emoji: '🏫', val: 'school'}, {emoji: '🏠', val: 'home'}, {emoji: '🌳', val: 'park'}], correct: 'school' },
+            { word: 'Home', options: [{emoji: '🏫', val: 'school'}, {emoji: '🏠', val: 'home'}, {emoji: '🌳', val: 'park'}], correct: 'home' },
+            { word: 'Park', options: [{emoji: '🏫', val: 'school'}, {emoji: '🏠', val: 'home'}, {emoji: '🌳', val: 'park'}], correct: 'park' }
+        ]
+    },
+    // Q6 Speaking
+    {
+        id: 6,
+        type: 'speaking',
+        aspect: 'Speaking',
+        title: 'التحدث - Speaking',
+        question: 'سجل صوتك وأنت تقول الجملة التالية:',
+        content: 'I love my family',
+        instruction: 'اضغط على الميكروفون وقل: "I love my family"'
+    },
+    // Q7 Function
+    {
+        id: 7,
+        type: 'function',
+        aspect: 'Function',
+        title: 'الوظائف اللغوية - Language Functions',
+        question: 'كيف تعتذر بأدب باللغة الإنجليزية؟',
+        options: ["I'm sorry", "Give me that", "Go away", "No way"],
+        correct: "I'm sorry"
+    },
+    // Q8 Conversation
+    {
+        id: 8,
+        type: 'conversation',
+        aspect: 'Conversation',
+        title: 'المحادثة - Conversation',
+        question: 'صديقك حزين. ماذا تقول له؟',
+        context: 'Your friend is sad',
+        options: ["Don't worry, I'm here", "I'm busy", "That's funny", "Good bye"],
+        correct: "Don't worry, I'm here"
+    },
+    // Q9 Phonics
+    {
+        id: 9,
+        type: 'phonics',
+        aspect: 'Phonics',
+        title: 'الصوتيات - Phonics',
+        question: 'اختر الكلمات التي تحتوي على أصوات قصيرة متشابهة:',
+        instruction: 'Short vowels: cat / bat / hat',
+        options: ['cat', 'cake', 'car', 'bat', 'hat', 'hate'],
+        correct: ['cat', 'bat', 'hat'],
+        multiSelect: true
+    },
+    // Q10 Culture
+    {
+        id: 10,
+        type: 'culture',
+        aspect: 'Culture',
+        title: 'الثقافة - Culture',
+        question: 'اختر الصورة التي تعبر عن "بر الوالدين":',
+        options: [
+            { text: 'ولد يساعد أمه في المطبخ', emoji: '👦👩‍🍳', value: 'helping' },
+            { text: 'ولد يلعب بالكرة', emoji: '⚽', value: 'playing' },
+            { text: 'ولد يشاهد التلفاز', emoji: '📺', value: 'watching' },
+            { text: 'ولد نائم', emoji: '😴', value: 'sleeping' }
+        ],
+        correct: 'helping'
+    }
+];
+
+function startChallenge() {
+    document.getElementById('welcomeScreen').classList.add('hidden');
+    document.getElementById('timerBar').classList.remove('hidden');
+    document.getElementById('questionsContainer').classList.remove('hidden');
+    startTime = Date.now();
+    startTimer();
+    showQuestion(0);
+}
+
+function startTimer() {
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            autoSubmit();
+        }
+    }, 1000);
+}
+
+function updateTimerDisplay() {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    const timerEl = document.getElementById('timer');
+    timerEl.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+    
+    if (timeLeft <= 30) {
+        timerEl.classList.add('timer-warning');
+    }
+}
+
+function showQuestion(index) {
+    currentQuestion = index;
+    const q = questions[index];
+    const container = document.getElementById('questionsContainer');
+    
+    document.getElementById('questionCounter').textContent = `السؤال ${index + 1} من 10`;
+    document.getElementById('progressBar').style.width = `${((index + 1) / 10) * 100}%`;
+    
+    let html = `<div class="glass rounded-3xl p-6 md:p-8 fade-in">`;
+    html += `<div class="mb-6">`;
+    html += `<span class="inline-block px-4 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-semibold mb-3">${q.title}</span>`;
+    html += `<h2 class="text-xl md:text-2xl font-bold text-gray-800 mb-4">${q.question}</h2>`;
+    html += `</div>`;
+    
+    // Render question based on type
+    switch(q.type) {
+        case 'grammar':
+        case 'function':
+        case 'conversation':
+            html += renderMCQ(q);
+            break;
+        case 'reading':
+            html += renderReading(q);
+            break;
+        case 'writing':
+            html += renderWriting(q);
+            break;
+        case 'listening':
+            html += renderListening(q);
+            break;
+        case 'vocabulary':
+            html += renderVocabulary(q);
+            break;
+        case 'speaking':
+            html += renderSpeaking(q);
+            break;
+        case 'phonics':
+            html += renderPhonics(q);
+            break;
+        case 'culture':
+            html += renderCulture(q);
+            break;
+    }
+    
+    // Navigation buttons
+    html += `<div class="flex gap-3 mt-8">`;
+    if (index > 0) {
+        html += `<button onclick="showQuestion(${index - 1})" class="flex-1 px-6 py-3 bg-gray-200 hover:bg-gray-300 text-gray-700 rounded-xl font-semibold transition">السابق</button>`;
+    }
+    if (index < questions.length - 1) {
+        html += `<button onclick="showQuestion(${index + 1})" class="flex-1 px-6 py-3 btn-primary text-white rounded-xl font-semibold">التالي</button>`;
+    } else {
+        html += `<button onclick="submitChallenge()" class="flex-1 px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl font-semibold transition">إنهاء المغامرة ✓</button>`;
+    }
+    html += `</div>`;
+    html += `</div>`;
+    
+    container.innerHTML = html;
+    
+    // Restore previous answers
+    restoreAnswer(q.id);
+}
+
+function renderMCQ(q) {
+    let html = `<div class="bg-purple-50 rounded-2xl p-6 mb-6">`;
+    if (q.content) html += `<p class="text-lg md:text-xl font-semibold text-gray-800 text-center mb-2">${q.content}</p>`;
+    if (q.context) html += `<p class="text-sm text-gray-600 text-center">${q.context}</p>`;
+    html += `</div>`;
+    
+    html += `<div class="space-y-3">`;
+    q.options.forEach((opt, i) => {
+        const value = typeof opt === 'object' ? opt.value : opt;
+        const text = typeof opt === 'object' ? opt.text : opt;
+        html += `<div onclick="selectAnswer(${q.id}, '${value}')" class="option-card bg-white border-2 border-gray-200 rounded-xl p-4 text-center font-semibold text-gray-700" data-value="${value}">
+            ${text}
+        </div>`;
+    });
+    html += `</div>`;
+    return html;
+}
+
+function renderReading(q) {
+    let html = `<div class="bg-blue-50 rounded-2xl p-6 mb-6">`;
+    html += `<p class="text-gray-800 leading-relaxed text-base md:text-lg">${q.content}</p>`;
+    html += `</div>`;
+    
+    html += `<div class="space-y-6">`;
+    q.subQuestions.forEach((subQ, idx) => {
+        html += `<div class="bg-white rounded-xl p-5 border-2 border-gray-200">`;
+        html += `<p class="font-semibold text-gray-800 mb-3">${idx + 1}. ${subQ.q}</p>`;
+        html += `<div class="grid grid-cols-1 md:grid-cols-2 gap-2">`;
+        subQ.options.forEach(opt => {
+            html += `<div onclick="selectReadingAnswer(${q.id}, ${idx}, '${opt}')" class="option-card bg-gray-50 border border-gray-200 rounded-lg p-3 text-sm text-gray-700 cursor-pointer" data-qid="${q.id}-${idx}" data-value="${opt}">
+                ${opt}
+            </div>`;
+        });
+        html += `</div></div>`;
+    });
+    html += `</div>`;
+    return html;
+}
+
+function renderWriting(q) {
+    const saved = answers[q.id] || '';
+    let html = `<div class="bg-green-50 rounded-2xl p-6 mb-6">`;
+    html += `<p class="text-lg font-semibold text-gray-800 text-center">${q.content}</p>`;
+    html += `</div>`;
+    html += `<textarea id="writing-${q.id}" oninput="saveAnswer(${q.id}, this.value)" placeholder="${q.placeholder}" class="w-full h-40 p-4 border-2 border-gray-200 rounded-xl text-right resize-none" dir="ltr">${saved}</textarea>`;
+    html += `<p class="text-xs text-gray-500 mt-2">اكتب جملتين على الأقل</p>`;
+    return html;
+}
+
+function renderListening(q) {
+    let html = `<div class="bg-yellow-50 rounded-2xl p-6 mb-6 text-center">`;
+    html += `<button onclick="playAudio('${q.audioText}')" class="inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-yellow-400 to-orange-500 text-white rounded-xl font-bold text-lg hover:shadow-lg transition">
+        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd"/>
+        </svg>
+        استمع هنا
+    </button>`;
+    html += `<p class="text-sm text-gray-600 mt-3">اضغط للاستماع مرة أخرى</p>`;
+    html += `</div>`;
+    
+    html += `<div class="grid grid-cols-2 gap-4">`;
+    q.options.forEach(opt => {
+        html += `<div onclick="selectAnswer(${q.id}, '${opt.value}')" class="option-card bg-white border-2 border-gray-200 rounded-xl p-6 text-center" data-value="${opt.value}">
+            <div class="text-5xl mb-2">${opt.emoji}</div>
+            <p class="font-semibold text-gray-700">${opt.text}</p>
+        </div>`;
+    });
+    html += `</div>`;
+    return html;
+}
+
+function renderVocabulary(q) {
+    let html = `<div class="space-y-6">`;
+    q.items.forEach((item, idx) => {
+        html += `<div class="bg-white rounded-xl p-5 border-2 border-gray-200">`;
+        html += `<p class="font-bold text-xl text-purple-600 mb-4 text-center">${item.word}</p>`;
+        html += `<div class="grid grid-cols-3 gap-3">`;
+        item.options.forEach(opt => {
+            html += `<div onclick="selectVocabAnswer(${q.id}, ${idx}, '${opt.val}')" class="option-card bg-gray-50 border border-gray-200 rounded-lg p-4 text-center cursor-pointer" data-qid="${q.id}-${idx}" data-value="${opt.val}">
+                <div class="text-4xl mb-1">${opt.emoji}</div>
+            </div>`;
+        });
+        html += `</div></div>`;
+    });
+    html += `</div>`;
+    return html;
+}
+
+function renderSpeaking(q) {
+    const recorded = answers[q.id] || false;
+    let html = `<div class="bg-pink-50 rounded-2xl p-6 mb-6 text-center">`;
+    html += `<p class="text-2xl font-bold text-gray-800 mb-4" dir="ltr">${q.content}</p>`;
+    html += `<p class="text-sm text-gray-600">${q.instruction}</p>`;
+    html += `</div>`;
+    
+    html += `<div class="text-center">`;
+    html += `<button id="recordBtn-${q.id}" onclick="toggleRecording(${q.id})" class="w-24 h-24 rounded-full ${recorded ? 'bg-green-500' : 'bg-red-500'} hover:scale-110 text-white shadow-lg transition-all mx-auto flex items-center justify-center">
+        <svg class="w-10 h-10" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M7 4a3 3 0 016 0v4a3 3 0 11-6 0V4zm4 10.93A7.001 7.001 0 0017 8a1 1 0 10-2 0A5 5 0 015 8a1 1 0 00-2 0 7.001 7.001 0 006 6.93V17H6a1 1 0 100 2h8a1 1 0 100-2h-3v-2.07z" clip-rule="evenodd"/>
+        </svg>
+    </button>`;
+    html += `<p class="mt-4 text-sm ${recorded ? 'text-green-600 font-semibold' : 'text-gray-600'}" id="recordStatus-${q.id}">${recorded ? '✓ تم التسجيل' : 'اضغط للتسجيل'}</p>`;
+    html += `</div>`;
+    return html;
+}
+
+function renderPhonics(q) {
+    let html = `<div class="bg-indigo-50 rounded-2xl p-6 mb-6 text-center">`;
+    html += `<p class="text-lg text-gray-700 mb-2">${q.instruction}</p>`;
+    html += `<p class="text-sm text-gray-600">اختر كل الكلمات الصحيحة</p>`;
+    html += `</div>`;
+    
+    html += `<div class="grid grid-cols-2 md:grid-cols-3 gap-3">`;
+    q.options.forEach(opt => {
+        html += `<div onclick="togglePhonicsAnswer(${q.id}, '${opt}')" class="option-card bg-white border-2 border-gray-200 rounded-xl p-4 text-center font-bold text-lg text-gray-700" data-value="${opt}">
+            ${opt}
+        </div>`;
+    });
+    html += `</div>`;
+    return html;
+}
+
+function renderCulture(q) {
+    let html = `<div class="grid grid-cols-1 md:grid-cols-2 gap-4">`;
+    q.options.forEach(opt => {
+        html += `<div onclick="selectAnswer(${q.id}, '${opt.value}')" class="option-card bg-white border-2 border-gray-200 rounded-xl p-6 text-center" data-value="${opt.value}">
+            <div class="text-6xl mb-3">${opt.emoji}</div>
+            <p class="font-semibold text-gray-700">${opt.text}</p>
+        </div>`;
+    });
+    html += `</div>`;
+    return html;
+}
+
+function selectAnswer(qId, value) {
+    answers[qId] = value;
+    document.querySelectorAll(`[data-value="${value}"]`).forEach(el => {
+        el.parentElement.querySelectorAll('.option-card').forEach(card => card.classList.remove('selected'));
+        el.classList.add('selected');
+    });
+}
+
+function selectReadingAnswer(qId, subIdx, value) {
+    if (!answers[qId]) answers[qId] = {};
+    answers[qId][subIdx] = value;
+    document.querySelectorAll(`[data-qid="${qId}-${subIdx}"]`).forEach(el => el.classList.remove('selected'));
+    document.querySelector(`[data-qid="${qId}-${subIdx}"][data-value="${value}"]`).classList.add('selected');
+}
+
+function selectVocabAnswer(qId, itemIdx, value) {
+    if (!answers[qId]) answers[qId] = {};
+    answers[qId][itemIdx] = value;
+    document.querySelectorAll(`[data-qid="${qId}-${itemIdx}"]`).forEach(el => el.classList.remove('selected'));
+    document.querySelector(`[data-qid="${qId}-${itemIdx}"][data-value="${value}"]`).classList.add('selected');
+}
+
+function togglePhonicsAnswer(qId, value) {
+    if (!answers[qId]) answers[qId] = [];
+    const index = answers[qId].indexOf(value);
+    if (index > -1) {
+        answers[qId].splice(index, 1);
+    } else {
+        answers[qId].push(value);
+    }
+    const el = document.querySelector(`[data-value="${value}"]`);
+    el.classList.toggle('selected');
+}
+
+function saveAnswer(qId, value) {
+    answers[qId] = value;
+}
+
+function restoreAnswer(qId) {
+    setTimeout(() => {
+        if (answers[qId]) {
+            if (typeof answers[qId] === 'string' || Array.isArray(answers[qId])) {
+                // Handle selection restoration
+            }
+        }
+    }, 100);
+}
+
+function playAudio(text) {
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.9;
+        speechSynthesis.speak(utterance);
+    }
+}
+
+function toggleRecording(qId) {
+    const btn = document.getElementById(`recordBtn-${qId}`);
+    const status = document.getElementById(`recordStatus-${qId}`);
+    
+    if (answers[qId]) {
+        // Already recorded, reset
+        answers[qId] = false;
+        btn.classList.remove('bg-green-500');
+        btn.classList.add('bg-red-500');
+        status.textContent = 'اضغط للتسجيل';
+        status.classList.remove('text-green-600', 'font-semibold');
+        status.classList.add('text-gray-600');
+    } else {
+        // Simulate recording
+        btn.classList.add('animate-pulse');
+        status.textContent = 'جاري التسجيل...';
+        setTimeout(() => {
+            answers[qId] = true;
+            btn.classList.remove('animate-pulse', 'bg-red-500');
+            btn.classList.add('bg-green-500');
+            status.textContent = '✓ تم التسجيل';
+            status.classList.remove('text-gray-600');
+            status.classList.add('text-green-600', 'font-semibold');
+        }, 2000);
+    }
+}
+
+function calculateResults() {
+    let score = 0;
+    const weak = [];
+    const strong = [];
+    
+    questions.forEach(q => {
+        let isCorrect = false;
+        const userAnswer = answers[q.id];
+        
+        switch(q.type) {
+            case 'grammar':
+            case 'function':
+            case 'conversation':
+            case 'listening':
+            case 'culture':
+                isCorrect = userAnswer === q.correct;
+                break;
+            case 'reading':
+                isCorrect = q.subQuestions.every((subQ, idx) => userAnswer && userAnswer[idx] === subQ.correct);
+                break;
+            case 'writing':
+                isCorrect = userAnswer && userAnswer.trim().length >= q.minLength;
+                break;
+            case 'vocabulary':
+                isCorrect = userAnswer && q.items.every((item, idx) => userAnswer[idx] === item.correct);
+                break;
+            case 'speaking':
+                isCorrect = userAnswer === true;
+                break;
+            case 'phonics':
+                isCorrect = userAnswer && Array.isArray(userAnswer) && 
+                           q.correct.length === userAnswer.length &&
+                           q.correct.every(val => userAnswer.includes(val));
+                break;
+        }
+        
+        if (isCorrect) {
+            score++;
+            strong.push(q.aspect);
+        } else {
+            weak.push(q.aspect);
+        }
+    });
+    
+    const level = score >= 7 ? 'proficient' : 'developing';
+    
+    return {
+        grade: 'primary4',
+        level: level,
+        score: score,
+        weak: [...new Set(weak)],
+        strong: [...new Set(strong)],
+        timestamp: new Date().toISOString(),
+        timeSpent: Math.floor((Date.now() - startTime) / 1000)
+    };
+}
+
+function submitChallenge() {
+    clearInterval(timerInterval);
+    const results = calculateResults();
+    
+    // Store in localStorage
+    localStorage.setItem('falconChallengeResults', JSON.stringify(results));
+    
+    // Simulate WhatsApp notification to parent
+    console.log('Parent WhatsApp Notification:', {
+        student: 'Falcon Student',
+        challenge: 'تحدي Falcon الصقر',
+        completed: true,
+        stars: 3,
+        timestamp: results.timestamp
+    });
+    
+    // Show completion screen
+    document.getElementById('timerBar').classList.add('hidden');
+    document.getElementById('questionsContainer').classList.add('hidden');
+    document.getElementById('completionScreen').classList.remove('hidden');
+    
+    // Redirect after 3 seconds
+    setTimeout(() => {
+        window.location.href = `grades/primary4.html?level=${results.level}`;
+    }, 3000);
+}
+
+function autoSubmit() {
+    submitChallenge();
+}
+
+// Prevent accidental page close
+window.addEventListener('beforeunload', (e) => {
+    if (startTime && timeLeft > 0) {
+        e.preventDefault();
+        e.returnValue = '';
+    }
+});
+</script>
+<script>(function(){document.addEventListener("click",function(e){var a=e.target.closest("[data-product-id]");if(!a)return;e.preventDefault();var pid=a.getAttribute("data-product-id");if(pid)parent.postMessage({type:"ecto-artifact-link-click",productId:pid},"*")})})();</script>
+</body>
+</html>
