@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تحدي Bizzy النحلة</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
+* {
+    font-family: 'Cairo', sans-serif;
+}
+body {
+    background: linear-gradient(135deg, #FEF3C7 0%, #DBEAFE 50%, #D1FAE5 100%);
+    min-height: 100vh;
+}
+.garden-bg {
+    background-image: 
+        radial-gradient(circle at 20% 80%, rgba(251, 191, 36, 0.2) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(34, 197, 94, 0.2) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(59, 130, 246, 0.15) 0%, transparent 50%);
+}
+.btn-primary {
+    background: linear-gradient(135deg, #F59E0B 0%, #FBBF24 100%);
+    box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+    transition: all 0.3s ease;
+}
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.5);
+}
+.btn-primary:active {
+    transform: translateY(0);
+}
+.question-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border: 3px solid #FDE68A;
+    transition: all 0.3s ease;
+}
+.question-card:hover {
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+.option-btn {
+    transition: all 0.2s ease;
+    min-height: 70px;
+}
+.option-btn:hover {
+    transform: scale(1.02);
+}
+.option-selected {
+    background: linear-gradient(135deg, #34D399 0%, #10B981 100%) !important;
+    color: white !important;
+    border-color: #059669 !important;
+}
+.bee-float {
+    animation: float 3s ease-in-out infinite;
+}
+@keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(-5deg); }
+    50% { transform: translateY(-20px) rotate(5deg); }
+}
+.timer-pulse {
+    animation: pulse 1s ease-in-out infinite;
+}
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+.fade-in {
+    animation: fadeIn 0.5s ease-in;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.progress-bar {
+    transition: width 0.3s ease;
+}
+.recording {
+    animation: recordingPulse 1s ease-in-out infinite;
+}
+@keyframes recordingPulse {
+    0%, 100% { background-color: #EF4444; }
+    50% { background-color: #DC2626; }
+}
+</style>
+</head>
+<body class="garden-bg">
+<div id="app" class="min-h-screen flex flex-col">
+    
+    <!-- Header with Timer -->
+    <header id="header" class="hidden sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-md">
+        <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="text-4xl">🐝</div>
+                <div>
+                    <h2 class="text-lg font-bold text-amber-600">Bizzy النحلة</h2>
+                    <p class="text-xs text-gray-600" id="progressText">سؤال 1 من 10</p>
+                </div>
+            </div>
+            <div id="timerContainer" class="flex items-center gap-2 bg-amber-100 px-4 py-2 rounded-full">
+                <i class="fas fa-clock text-amber-600"></i>
+                <span id="timer" class="font-bold text-amber-700 text-xl">3:00</span>
+            </div>
+        </div>
+        <div class="h-2 bg-gray-200">
+            <div id="progressBar" class="progress-bar h-full bg-gradient-to-r from-amber-400 to-green-400" style="width: 10%"></div>
+        </div>
+    </header>
+
+    <!-- Welcome Screen -->
+    <div id="welcomeScreen" class="flex-1 flex items-center justify-center p-4">
+        <div class="question-card rounded-3xl p-8 max-w-2xl w-full text-center fade-in">
+            <div class="bee-float text-8xl mb-6">🐝</div>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-amber-600 mb-3">تحدي Bizzy النحلة</h1>
+            <p class="text-2xl md:text-3xl font-bold text-green-600 mb-8">يلا نجمع العسل؟</p>
+            
+            <div class="bg-yellow-50 rounded-2xl p-6 mb-8 border-2 border-yellow-200">
+                <div class="flex items-center justify-center gap-3 mb-4">
+                    <i class="fas fa-star text-yellow-500 text-2xl"></i>
+                    <p class="text-lg font-semibold text-gray-700">مغامرة ممتعة مع 10 تحديات</p>
+                    <i class="fas fa-star text-yellow-500 text-2xl"></i>
+                </div>
+                <div class="flex items-center justify-center gap-2 text-gray-600">
+                    <i class="fas fa-clock"></i>
+                    <p>الوقت: 3 دقائق</p>
+                </div>
+            </div>
+
+            <button onclick="startChallenge()" class="btn-primary text-white font-bold text-2xl py-5 px-12 rounded-2xl w-full md:w-auto">
+                <i class="fas fa-play ml-2"></i>
+                يلا نبدأ
+            </button>
+            
+            <p class="text-sm text-gray-500 mt-6">🎯 اختار الإجابة الصحيحة لكل تحدٍ</p>
+        </div>
+    </div>
+
+    <!-- Questions Container -->
+    <div id="questionsContainer" class="hidden flex-1 p-4 pb-24">
+        <div class="max-w-3xl mx-auto space-y-6">
+            
+            <!-- Q1: Grammar - This/That -->
+            <div id="q1" class="question-card rounded-3xl p-6 md:p-8 fade-in">
+                <div class="flex items-start gap-4 mb-6">
+                    <div class="bg-amber-100 text-amber-600 rounded-2xl w-12 h-12 flex items-center justify-center font-bold text-xl">1</div>
+                    <div class="flex-1">
+                        <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-2">اختار الكلمة الصحيحة</h3>
+                        <p class="text-gray-600">النحلة قريبة منك 👈</p>
+                    </div>
+                </div>
+                <div class="bg-blue-50 rounded-2xl p-6 mb-6 text-center">
+                    <p class="text-2xl md:text-3xl font-bold mb-4"><span class="text-gray-400">___</span> is a bee 🐝</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <button onclick="selectAnswer(1, 'This', true)" class="option-btn bg-white border-3 border-gray-300 rounded-2xl p-5 text-xl font-bold hover:border-amber-400">
+                        This
+                    </button>
+                    <button onclick="selectAnswer(1, 'That', false)" class="option-btn bg-white border-3 border-gray-300 rounded-2xl p-5 text-xl font-bold hover:border-amber-400">
+                        That
+                    </button>
+                </div>
+            </div>
+
+            <!-- Q2: Reading -->
+            <div id="q2" class="question-card rounded-3xl p-6 md:p-8 hidden">
+                <div class="flex items-start gap-4 mb-6">
+                    <div class="bg-green-100 text-green-600 rounded-2xl w-12 h-12 flex items-center justify-center font-bold text-xl">2</div>
+                    <div class="flex-1">
+                        <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-2">اقرأ واختار</h3>
+                        <p class="text-gray-600">اقرأ القصة وجاوب</p>
+                    </div>
+                </div>
+                <div class="bg-green-50 rounded-2xl p-6 mb-6 border-2 border-green-200">
+                    <p class="text-lg leading-relaxed text-gray-800">
+                        I see a garden in Egypt. The garden has many flowers. The flowers are red and yellow. 
+                        Bizzy the bee lives here. Bizzy makes honey. She loves the sun. She is happy.
+                    </p>
+                </div>
+                <div class="space-y-4">
+                    <p class="font-bold text-lg text-gray-700 mb-3">Where does Bizzy live?</p>
+                    <div class="grid gap-3">
+                        <button onclick="selectAnswer(2, 'garden', true)" class="option-btn bg-white border-3 border-gray-300 rounded-2xl p-4 text-lg font-semibold hover:border-green-400 text-right">
+                            🌻 In a garden
+                        </button>
+                        <button onclick="selectAnswer(2, 'house', false)" class="option-btn bg-white border-3 border-gray-300 rounded-2xl p-4 text-lg font-semibold hover:border-green-400 text-right">
+                            🏠 In a house
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q3: Writing -->
+            <div id="q3" class="question-card rounded-3xl p-6 md:p-8 hidden">
+                <div class="flex items-start gap-4 mb-6">
+                    <div class="bg-blue-100 text-blue-600 rounded-2xl w-12 h-12 flex items-center justify-center font-bold text-xl">3</div>
+                    <div class="flex-1">
+                        <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-2">اكتب الجملة</h3>
+                        <p class="text-gray-600">اكتب الجملة دي بالظبط</p>
+                    </div>
+                </div>
+                <div class="bg-blue-50 rounded-2xl p-6 mb-6 text-center">
+                    <p class="text-2xl md:text-3xl font-bold text-blue-700">The bee is yellow</p>
+                </div>
+                <input type="text" id="q3input" onkeyup="checkWriting(3, 'The bee is yellow')" 
+                    class="w-full p-5 text-xl border-3 border-gray-300 rounded-2xl focus:border-blue-400 focus:outline-none" 
+                    placeholder="اكتب هنا..." dir="ltr">
+                <div id="q3feedback" class="mt-4 text-center font-bold text-lg hidden"></div>
+            </div>
+
+            <!-- Q4: Listening -->
+            <div id="q4" class="question-card rounded-3xl p-6 md:p-8 hidden">
+                <div class="flex items-start gap-4 mb-6">
+                    <div class="bg-purple-100 text-purple-600 rounded-2xl w-12 h-12 flex items-center justify-center font-bold text-xl">4</div>
+                    <div class="flex-1">
+                        <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-2">اسمع واختار</h3>
+                        <p class="text-gray-600">Bizzy بتقول: "Buzz buzz"</p>
+                    </div>
+                </div>
+                <div class="text-center mb-6">
+                    <button onclick="playSound('buzz')" class="bg-purple-500 hover:bg-purple-600 text-white rounded-full w-24 h-24 text-4xl shadow-lg transition-all">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <p class="text-sm text-gray-500 mt-3">اضغط عشان تسمع</p>
+                </div>
+                <div class="grid grid-cols-3 gap-4">
+                    <button onclick="selectAnswer(4, 'bee', true)" class="option-btn bg-white border-3 border-gray-300 rounded-2xl p-5 text-6xl hover:border-purple-400">
+                        🐝
+                    </button>
+                    <button onclick="selectAnswer(4, 'cat', false)" class="option-btn bg-white border-3 border-gray-300 rounded-2xl p-5 text-6xl hover:border-purple-400">
+                        🐱
+                    </button>
+                    <button onclick="selectAnswer(4, 'dog', false)" class="option-btn bg-white border-3 border-gray-300 rounded-2xl p-5 text-6xl hover:border-purple-400">
+                        🐶
+                    </button>
+                </div>
+            </div>
+
+            <!-- Q5: Vocabulary -->
+            <div id="q5" class="question-card rounded-3xl p-6 md:p-8 hidden">
+                <div class="flex items-start gap-4 mb-6">
+                    <div class="bg-orange-100 text-orange-600 rounded-2xl w-12 h-12 flex items-center justify-center font-bold text-xl">5</div>
+                    <div class="flex-1">
+                        <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-2">اختار الصورة الصح</h3>
+                        <p class="text-gray-600">أين الـ Flower؟</p>
+                    </div>
+                </div>
+                <div class="bg-orange-50 rounded-2xl p-6 mb-6 text-center">
+                    <p class="text-3xl font-bold text-orange-700">Flower 🌸</p>
+                </div>
+                <div class="grid grid-cols-3 gap-4">
+                    <button onclick="selectAnswer(5, 'flower', true)" class="option-btn bg-white border-3 border-gray-300 rounded-2xl p-5 text-6xl hover:border-orange-400">
+                        🌸
+                    </button>
+                    <button onclick="selectAnswer(5, 'tree', false)" class="option-btn bg-white border-3 border-gray-300 rounded-2xl p-5 text-6xl hover:border-orange-400">
+                        🌳
+                    </button>
+                    <button onclick="selectAnswer(5, 'sun', false)" class="option-btn bg-white border-3 border-gray-300 rounded-2xl p-5 text-6xl hover:border-orange-400">
+                        ☀️
+                    </button>
+                </div>
+            </div>
+
+            <!-- Q6: Speaking -->
+            <div id="q6" class="question-card rounded-3xl p-6 md:p-8 hidden">
+                <div class="flex items-start gap-4 mb-6">
+                    <div class="bg-pink-100 text-pink-600 rounded-2xl w-12 h-12 flex items-center justify-center font-bold text-xl">6</div>
+                    <div class="flex-1">
+                        <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-2">سجل صوتك</h3>
+                        <p class="text-gray-600">قول الجملة دي</p>
+                    </div>
+                </div>
+                <div class="bg-pink-50 rounded-2xl p-6 mb-6 text-center">
+                    <p class="text-2xl md:text-3xl font-bold text-pink-700">I see a flower</p>
+                </div>
+                <div class="text-center">
+                    <button id="recordBtn" onclick="toggleRecording(6)" class="bg-pink-500 hover:bg-pink-600 text-white rounded-full w-28 h-28 text-4xl shadow-lg transition-all">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <p id="recordStatus" class="text-sm text-gray-500 mt-3">اضغط عشان تسجل</p>
+                    <div id="q6feedback" class="mt-4 text-center font-bold text-lg hidden text-green-600">
+                        ✓ برافو! تم التسجيل
+                    </div>
+                </div>
+            </div>
+
+            <!-- Q7: Function -->
+            <div id="q7" class="question-card rounded-3xl p-6 md:p-8 hidden">
+                <div class="flex items-start gap-4 mb-6">
+                    <div class="bg-teal-100 text-teal-600 rounded-2xl w-12 h-12 flex items-center justify-center font-bold text-xl">7</div>
+                    <div class="flex-1">
+                        <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-2">إزاي نقول شكراً؟</h3>
+                        <p class="text-gray-600">لو حد اداك عسل، تقول إيه؟</p>
+                    </div>
+                <div class="bg-teal-50 rounded-2xl p-6 mb-6 text-center text-6xl">
+                    🍯💛
+                </div>
+                <div class="grid gap-3">
+                    <button onclick="selectAnswer(7, 'thank you', true)" class="option-btn bg-white border-3 border-gray-300 rounded-2xl p-5 text-xl font-bold hover:border-teal-400">
+                        Thank you
+                    </button>
+                    <button onclick="selectAnswer(7, 'bye', false)" class="option-btn bg-white border-3 border-gray-300 rounded-2xl p-5 text-xl font-bold hover:border-teal-400">
+                        Bye bye
+                    </button>
+                    <button onclick="selectAnswer(7, 'hello', false)" class="option-btn bg-white border-3 border-gray-300 rounded-2xl p-5 text-xl font-bold hover:border-teal-400">
+                        Hello
+                    </button>
+                </div>
+            </div>
+
+            <!-- Q8: Conversation -->
+            <div id="q8" class="question-card rounded-3xl p-6 md:p-8 hidden">
+                <div class="flex items-start gap-4 mb-6">
+                    <div class="bg-indigo-100 text-indigo-600 rounded-2xl w-12 h-12 flex items-center justify-center font-bold text-xl">8</div>
+                    <div class="flex-1">
+                        <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-2">رد على السؤال</h3>
+                        <p class="text-gray-600">Bizzy بتسألك</p>
+                    </div>
+                </div>
+                <div class="bg-indigo-50 rounded-2xl p-6 mb-6">
+                    <div class="flex items-center gap-3 mb-4">
+                        <span class="text-4xl">🐝</span>
+                        <div class="bg-white rounded-2xl p-4 flex-1">
+                            <p class="text-xl font-bold text-indigo-700">How are you?</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid gap-3">
+                    <button onclick="selectAnswer(8, 'fine', true)" class="option-btn bg-white border-3 border-gray-300 rounded-2xl p-5 text-xl font-bold hover:border-indigo-400">
+                        I am fine 😊
+                    </button>
+                    <button onclick="selectAnswer(8, 'name', false)" class="option-btn bg-white border-3 border-gray-300 rounded-2xl p-5 text-xl font-bold hover:border-indigo-400">
+                        My name is...
+                    </button>
+                </div>
+            </div>
+
+            <!-- Q9: Phonics -->
+            <div id="q9" class="question-card rounded-3xl p-6 md:p-8 hidden">
+                <div class="flex items-start gap-4 mb-6">
+                    <div class="bg-rose-100 text-rose-600 rounded-2xl w-12 h-12 flex items-center justify-center font-bold text-xl">9</div>
+                    <div class="flex-1">
+                        <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-2">صوت الحرف b</h3>
+                        <p class="text-gray-600">أي كلمة بتبدأ بصوت 'b'؟</p>
+                    </div>
+                <div class="bg-rose-50 rounded-2xl p-6 mb-6 text-center">
+                    <button onclick="playSound('b')" class="bg-rose-500 hover:bg-rose-600 text-white rounded-full w-20 h-20 text-3xl shadow-lg mb-3">
+                        <i class="fas fa-volume-up"></i>
+                    </button>
+                    <p class="text-3xl font-bold text-rose-700">b - b - bee 🐝</p>
+                </div>
+                <div class="grid grid-cols-3 gap-4">
+                    <button onclick="selectAnswer(9, 'bee', true)" class="option-btn bg-white border-3 border-gray-300 rounded-2xl p-4 hover:border-rose-400">
+                        <div class="text-5xl mb-2">🐝</div>
+                        <p class="font-bold">bee</p>
+                    </button>
+                    <button onclick="selectAnswer(9, 'bus', true)" class="option-btn bg-white border-3 border-gray-300 rounded-2xl p-4 hover:border-rose-400">
+                        <div class="text-5xl mb-2">🚌</div>
+                        <p class="font-bold">bus</p>
+                    </button>
+                    <button onclick="selectAnswer(9, 'apple', false)" class="option-btn bg-white border-3 border-gray-300 rounded-2xl p-4 hover:border-rose-400">
+                        <div class="text-5xl mb-2">🍎</div>
+                        <p class="font-bold">apple</p>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Q10: Culture -->
+            <div id="q10" class="question-card rounded-3xl p-6 md:p-8 hidden">
+                <div class="flex items-start gap-4 mb-6">
+                    <div class="bg-emerald-100 text-emerald-600 rounded-2xl w-12 h-12 flex items-center justify-center font-bold text-xl">10</div>
+                    <div class="flex-1">
+                        <h3 class="text-xl md:text-2xl font-bold text-gray-800 mb-2">قيمتنا الجميلة</h3>
+                        <p class="text-gray-600">الصورة دي بتعبر عن إيه؟</p>
+                    </div>
+                <div class="bg-emerald-50 rounded-2xl p-6 mb-6 text-center">
+                    <div class="text-7xl mb-4">👧👦🌸🌸</div>
+                    <p class="text-lg font-semibold text-emerald-800">أطفال بيزرعوا ورد مع بعض</p>
+                </div>
+                <div class="grid gap-3">
+                    <button onclick="selectAnswer(10, 'nature', true)" class="option-btn bg-white border-3 border-gray-300 rounded-2xl p-5 text-lg font-bold hover:border-emerald-400">
+                        حب الطبيعة + التعاون 💚
+                    </button>
+                    <button onclick="selectAnswer(10, 'play', false)" class="option-btn bg-white border-3 border-gray-300 rounded-2xl p-5 text-lg font-bold hover:border-emerald-400">
+                        اللعب بس
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div id="navigation" class="hidden fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md shadow-2xl border-t-4 border-amber-200">
+        <div class="max-w-3xl mx-auto p-4 flex gap-4">
+            <button id="prevBtn" onclick="prevQuestion()" class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold text-lg py-4 px-6 rounded-2xl flex-1 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                <i class="fas fa-arrow-right ml-2"></i>
+                السابق
+            </button>
+            <button id="nextBtn" onclick="nextQuestion()" class="btn-primary text-white font-bold text-lg py-4 px-6 rounded-2xl flex-1" disabled>
+                التالي
+                <i class="fas fa-arrow-left mr-2"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Completion Screen -->
+    <div id="completionScreen" class="hidden flex-1 flex items-center justify-center p-4">
+        <div class="question-card rounded-3xl p-8 max-w-2xl w-full text-center fade-in">
+            <div class="text-8xl mb-6 animate-bounce">🎉</div>
+            <h1 class="text-4xl md:text-5xl font-extrabold text-amber-600 mb-4">عسل يا Bizzy!</h1>
+            <div class="text-6xl mb-6">⭐⭐⭐</div>
+            <p class="text-2xl font-bold text-green-600 mb-8">أحسنت يا بطل!</p>
+            
+            <div class="bg-yellow-50 rounded-2xl p-6 mb-6 border-2 border-yellow-200">
+                <p class="text-lg text-gray-700 mb-2">خلصت المغامرة بنجاح</p>
+                <p class="text-sm text-gray-500">بيتم تحويلك دلوقتي...</p>
+            </div>
+
+            <div class="flex items-center justify-center gap-2">
+                <div class="w-3 h-3 bg-amber-500 rounded-full animate-bounce"></div>
+                <div class="w-3 h-3 bg-amber-500 rounded-full animate-bounce" style="animation-delay: 0.2s"></div>
+                <div class="w-3 h-3 bg-amber-500 rounded-full animate-bounce" style="animation-delay: 0.4s"></div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+let currentQuestion = 1;
+let totalQuestions = 10;
+let answers = {};
+let timeLeft = 180; // 3 minutes in seconds
+let timerInterval;
+let startTime;
+let isRecording = false;
+
+// Audio feedback
+function playSound(type) {
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+    
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+    
+    if (type === 'buzz') {
+        oscillator.frequency.value = 200;
+        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.5);
+    } else if (type === 'b') {
+        oscillator.frequency.value = 150;
+        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.3);
+    } else if (type === 'correct') {
+        oscillator.frequency.value = 800;
+        gainNode.gain.setValueAtTime(0.2, audioContext.currentTime);
+        oscillator.start(audioContext.currentTime);
+        oscillator.stop(audioContext.currentTime + 0.2);
+    }
+}
+
+function startChallenge() {
+    document.getElementById('welcomeScreen').classList.add('hidden');
+    document.getElementById('questionsContainer').classList.remove('hidden');
+    document.getElementById('header').classList.remove('hidden');
+    document.getElementById('navigation').classList.remove('hidden');
+    startTime = Date.now();
+    startTimer();
+    showQuestion(1);
+}
+
+function startTimer() {
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        updateTimerDisplay();
+        
+        if (timeLeft <= 30) {
+            document.getElementById('timerContainer').classList.add('timer-pulse', 'bg-red-100');
+            document.getElementById('timer').classList.add('text-red-600');
+        }
+        
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            autoSubmit();
+        }
+    }, 1000);
+}
+
+function updateTimerDisplay() {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    document.getElementById('timer').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+}
+
+function showQuestion(num) {
+    // Hide all questions
+    for (let i = 1; i <= totalQuestions; i++) {
+        const q = document.getElementById(`q${i}`);
+        if (q) q.classList.add('hidden');
+    }
+    
+    // Show current question
+    const currentQ = document.getElementById(`q${num}`);
+    if (currentQ) {
+        currentQ.classList.remove('hidden');
+        currentQ.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    
+    // Update progress
+    document.getElementById('progressText').textContent = `تحدي ${num} من ${totalQuestions}`;
+    document.getElementById('progressBar').style.width = `${(num / totalQuestions) * 100}%`;
+    
+    // Update navigation buttons
+    document.getElementById('prevBtn').disabled = num === 1;
+    document.getElementById('nextBtn').disabled = !answers[num];
+    document.getElementById('nextBtn').innerHTML = num === totalQuestions ? 
+        'إنهاء التحدي <i class="fas fa-check mr-2"></i>' : 
+        'التالي <i class="fas fa-arrow-left mr-2"></i>';
+}
+
+function selectAnswer(questionNum, answer, isCorrect) {
+    answers[questionNum] = { value: answer, correct: isCorrect };
+    
+    // Visual feedback
+    const questionDiv = document.getElementById(`q${questionNum}`);
+    const buttons = questionDiv.querySelectorAll('.option-btn');
+    buttons.forEach(btn => {
+        btn.classList.remove('option-selected');
+    });
+    event.target.closest('.option-btn').classList.add('option-selected');
+    
+    document.getElementById('nextBtn').disabled = false;
+    playSound('correct');
+    
+    // Auto-advance after 500ms for better UX
+    setTimeout(() => {
+        if (questionNum < totalQuestions) {
+            nextQuestion();
+        }
+    }, 500);
+}
+
+function checkWriting(questionNum, correctText) {
+    const input = document.getElementById(`q${questionNum}input`);
+    const feedback = document.getElementById(`q${questionNum}feedback`);
+    const userText = input.value.trim();
+    
+    if (userText.toLowerCase() === correctText.toLowerCase()) {
+        answers[questionNum] = { value: userText, correct: true };
+        feedback.textContent = '✓ ممتاز!';
+        feedback.classList.remove('hidden', 'text-red-600');
+        feedback.classList.add('text-green-600');
+        input.classList.add('border-green-500');
+        document.getElementById('nextBtn').disabled = false;
+        playSound('correct');
+    } else if (userText.length > 0) {
+        answers[questionNum] = { value: userText, correct: false };
+        feedback.textContent = 'حاول تاني';
+        feedback.classList.remove('hidden', 'text-green-600');
+        feedback.classList.add('text-red-600');
+        document.getElementById('nextBtn').disabled = true;
+    }
+}
+
+function toggleRecording(questionNum) {
+    const btn = document.getElementById('recordBtn');
+    const status = document.getElementById('recordStatus');
+    const feedback = document.getElementById('q6feedback');
+    
+    if (!isRecording) {
+        isRecording = true;
+        btn.classList.add('recording');
+        btn.innerHTML = '<i class="fas fa-stop"></i>';
+        status.textContent = 'بيسجل... اضغط تاني عشان توقف';
+        
+        // Simulate recording for 2 seconds
+        setTimeout(() => {
+            if (isRecording) {
+                stopRecording(questionNum);
+            }
+        }, 2000);
+    } else {
+        stopRecording(questionNum);
+    }
+}
+
+function stopRecording(questionNum) {
+    isRecording = false;
+    const btn = document.getElementById('recordBtn');
+    const status = document.getElementById('recordStatus');
+    const feedback = document.getElementById('q6feedback');
+    
+    btn.classList.remove('recording');
+    btn.innerHTML = '<i class="fas fa-microphone"></i>';
+    status.textContent = 'تم التسجيل';
+    feedback.classList.remove('hidden');
+    
+    answers[questionNum] = { value: 'recorded', correct: true };
+    document.getElementById('nextBtn').disabled = false;
+    playSound('correct');
+}
+
+function nextQuestion() {
+    if (currentQuestion < totalQuestions) {
+        currentQuestion++;
+        showQuestion(currentQuestion);
+    } else {
+        submitChallenge();
+    }
+}
+
+function prevQuestion() {
+    if (currentQuestion > 1) {
+        currentQuestion--;
+        showQuestion(currentQuestion);
+    }
+}
+
+function calculateScore() {
+    let correctCount = 0;
+    for (let i = 1; i <= totalQuestions; i++) {
+        if (answers[i] && answers[i].correct) {
+            correctCount++;
+        }
+    }
+    return correctCount;
+}
+
+function getLevel(score) {
+    const percentage = (score / totalQuestions) * 100;
+    if (percentage >= 70) {
+        return 'proficient';
+    } else {
+        return 'developing';
+    }
+}
+
+function submitChallenge() {
+    clearInterval(timerInterval);
+    
+    const score = calculateScore();
+    const level = getLevel(score);
+    const timeSpent = Math.floor((Date.now() - startTime) / 1000);
+    
+    // Store in localStorage
+    const result = {
+        challenge: 'Bizzy the Bee',
+        score: score,
+        total: totalQuestions,
+        level: level,
+        timeSpent: timeSpent,
+        answers: answers,
+        completedAt: new Date().toISOString()
+    };
+    
+    localStorage.setItem('elh_bizzy_challenge', JSON.stringify(result));
+    
+    // Parent WhatsApp notification data
+    const parentNotification = {
+        student: 'Primary 2 Student',
+        challenge: 'تحدي Bizzy النحلة',
+        completed: true,
+        timestamp: new Date().toISOString()
+    };
+    localStorage.setItem('elh_parent_notification', JSON.stringify(parentNotification));
+    
+    // Show completion screen
+    document.getElementById('questionsContainer').classList.add('hidden');
+    document.getElementById('navigation').classList.add('hidden');
+    document.getElementById('header').classList.add('hidden');
+    document.getElementById('completionScreen').classList.remove('hidden');
+    
+    // Redirect after 3 seconds
+    setTimeout(() => {
+        window.location.href = `grades/primary2.html?level=${level}`;
+    }, 3000);
+}
+
+function autoSubmit() {
+    submitChallenge();
+}
+
+// Prevent accidental navigation
+window.addEventListener('beforeunload', (e) => {
+    if (currentQuestion > 1 && currentQuestion <= totalQuestions) {
+        e.preventDefault();
+        e.returnValue = '';
+    }
+});
+</script>
+
+<script>(function(){document.addEventListener("click",function(e){var a=e.target.closest("[data-product-id]");if(!a)return;e.preventDefault();var pid=a.getAttribute("data-product-id");if(pid)parent.postMessage({type:"ecto-artifact-link-click",productId:pid},"*")})})();</script>
+</body>
+</html>
