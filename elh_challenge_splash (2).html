@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحدي Splash الدولفين - الصف الثالث الابتدائي</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap');
+        
+        * {
+            font-family: 'Cairo', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(180deg, #87CEEB 0%, #4FC3F7 50%, #0288D1 100%);
+            min-height: 100vh;
+        }
+        
+        .bubble {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            animation: float 8s infinite ease-in-out;
+            pointer-events: none;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) translateX(0); opacity: 0; }
+            10% { opacity: 0.4; }
+            90% { opacity: 0.4; }
+            100% { transform: translateY(-100vh) translateX(20px); opacity: 0; }
+        }
+        
+        .wave {
+            animation: wave 2s ease-in-out infinite;
+        }
+        
+        @keyframes wave {
+            0%, 100% { transform: rotate(-5deg); }
+            50% { transform: rotate(5deg); }
+        }
+        
+        .recording {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+            50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+        }
+        
+        .question-card {
+            animation: slideIn 0.4s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .star-glow {
+            animation: starGlow 1s ease-in-out infinite alternate;
+        }
+        
+        @keyframes starGlow {
+            from { filter: drop-shadow(0 0 5px #FCD34D); transform: scale(1); }
+            to { filter: drop-shadow(0 0 15px #FCD34D); transform: scale(1.1); }
+        }
+        
+        .btn-option:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn-option.selected {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            color: white;
+            border-color: #059669;
+        }
+        
+        input[type="text"]:focus, textarea:focus {
+            outline: none;
+            border-color: #0288D1;
+            box-shadow: 0 0 0 3px rgba(2, 136, 209, 0.1);
+        }
+        
+        @media (max-width: 390px) {
+            .timer-badge {
+                font-size: 0.875rem;
+                padding: 0.5rem 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body class="relative overflow-x-hidden">
+    <!-- Floating Bubbles Background -->
+    <div id="bubbles-container" class="fixed inset-0 pointer-events-none"></div>
+    
+    <!-- Header -->
+    <header class="relative z-10 bg-white/20 backdrop-blur-md shadow-lg">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between flex-wrap gap-3">
+            <div class="flex items-center gap-3">
+                <div class="text-5xl wave">🐬</div>
+                <div>
+                    <h1 class="text-2xl md:text-3xl font-bold text-white">تحدي Splash الدولفين</h1>
+                    <p class="text-white/90 text-sm">مغامرة اللغة الإنجليزية - الصف الثالث</p>
+                </div>
+            </div>
+            <div id="timer-container" class="hidden">
+                <div class="timer-badge bg-white rounded-full px-6 py-3 shadow-lg flex items-center gap-2">
+                    <i class="fa-solid fa-clock text-blue-600"></i>
+                    <span id="timer" class="font-bold text-xl text-blue-800">3:00</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative z-10 max-w-5xl mx-auto px-4 py-6 md:py-10">
+        
+        <!-- Welcome Screen -->
+        <div id="welcome-screen" class="bg-white/95 backdrop-blur rounded-3xl shadow-2xl p-6 md:p-10 text-center">
+            <div class="text-8xl mb-6 wave">🐬</div>
+            <h2 class="text-3xl md:text-5xl font-extrabold mb-4 text-blue-900">تحدي Splash الدولفين</h2>
+            <p class="text-xl md:text-2xl text-blue-700 mb-8 font-semibold">يلا نغطس؟</p>
+            
+            <div class="bg-gradient-to-r from-cyan-50 to-blue-50 rounded-2xl p-6 mb-8 border-2 border-blue-200">
+                <h3 class="text-lg font-bold text-blue-900 mb-4 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-circle-info text-blue-600"></i>
+                    تعليمات المغامرة
+                </h3>
+                <ul class="text-right space-y-2 text-blue-800">
+                    <li class="flex items-start gap-2">
+                        <i class="fa-solid fa-check text-green-600 mt-1"></i>
+                        <span>لديك 3 دقائق لإكمال 10 أنشطة ممتعة</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <i class="fa-solid fa-check text-green-600 mt-1"></i>
+                        <span>اقرأ السؤال جيداً واختر الإجابة الصحيحة</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <i class="fa-solid fa-check text-green-600 mt-1"></i>
+                        <span>يمكنك استخدام الميكروفون في نشاط التحدث</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <i class="fa-solid fa-check text-green-600 mt-1"></i>
+                        <span>استمتع وجمع النجوم! ⭐</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <button id="start-btn" class="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-bold text-xl px-10 py-4 rounded-full shadow-xl transform hover:scale-105 transition-all duration-300">
+                <i class="fa-solid fa-play ml-2"></i>
+                ابدأ المغامرة
+            </button>
+        </div>
+
+        <!-- Challenge Screen -->
+        <div id="challenge-screen" class="hidden">
+            <!-- Progress Bar -->
+            <div class="bg-white/95 backdrop-blur rounded-2xl shadow-xl p-4 mb-6">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-semibold text-blue-900">التقدم</span>
+                    <span class="text-sm font-bold text-blue-900">النشاط <span id="current-q">1</span> من 10</span>
+                </div>
+                <div class="w-full bg-blue-100 rounded-full h-3 overflow-hidden">
+                    <div id="progress-bar" class="h-full bg-gradient-to-r from-cyan-400 to-blue-500 transition-all duration-500" style="width: 10%"></div>
+                </div>
+            </div>
+
+            <!-- Question Card -->
+            <div id="question-container" class="bg-white/95 backdrop-blur rounded-3xl shadow-2xl p-6 md:p-8 question-card"></div>
+
+            <!-- Navigation Buttons -->
+            <div class="flex justify-between gap-4 mt-6">
+                <button id="prev-btn" class="hidden bg-white text-blue-600 font-bold px-6 py-3 rounded-full shadow-lg hover:bg-blue-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i class="fa-solid fa-arrow-right ml-2"></i>السابق
+                </button>
+                <button id="next-btn" class="flex-1 bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white font-bold px-6 py-3 rounded-full shadow-lg transform hover:scale-105 transition-all">
+                    التالي <i class="fa-solid fa-arrow-left mr-2"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Completion Screen -->
+        <div id="completion-screen" class="hidden bg-white/95 backdrop-blur rounded-3xl shadow-2xl p-6 md:p-10 text-center">
+            <div class="text-8xl mb-6 star-glow">⭐⭐⭐</div>
+            <h2 class="text-3xl md:text-5xl font-extrabold mb-4 text-blue-900">غطسة رائعة يا Splash!</h2>
+            <p class="text-xl md:text-2xl text-blue-700 mb-8">لقد أنهيت المغامرة بنجاح</p>
+            
+            <div class="bg-gradient-to-r from-yellow-50 to-orange-50 rounded-2xl p-6 mb-6 border-2 border-yellow-300">
+                <div class="flex justify-center gap-2 mb-4" id="stars-display">
+                    <i class="fa-solid fa-star text-4xl text-yellow-400"></i>
+                    <i class="fa-solid fa-star text-4xl text-yellow-400"></i>
+                    <i class="fa-solid fa-star text-4xl text-yellow-400"></i>
+                </div>
+                <p class="text-lg font-semibold text-gray-700">أحسنت! لقد جمعت كل النجوم</p>
+                <p class="text-sm text-gray-600 mt-2">سيتم تحويلك خلال <span id="countdown">3</span> ثواني...</p>
+            </div>
+
+            <button id="share-whatsapp" class="bg-green-500 hover:bg-green-600 text-white font-bold px-8 py-4 rounded-full shadow-xl transform hover:scale-105 transition-all">
+                <i class="fa-brands fa-whatsapp ml-2 text-xl"></i>
+                مشاركة مع ولي الأمر
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="relative z-10 text-center py-6 text-white/80 text-sm">
+        <p>© 2024 تحدي Splash الدولفين - مغامرة تعليمية ممتعة</p>
+    </footer>
+
+    <script>
+        // State Management
+        const state = {
+            currentQuestion: 0,
+            answers: {},
+            timeRemaining: 180,
+            timerInterval: null,
+            startTime: null,
+            mediaRecorder: null,
+            audioChunks: []
+        };
+
+        // Questions Data - CEFR A1+ for age 9
+        const questions = [
+            {
+                id: 1,
+                type: 'grammar',
+                title: 'أكمل الجملة',
+                question: 'The dolphin ___ swimming in the sea.',
+                options: ['is', 'are', 'am'],
+                correct: 'is',
+                skill: 'قواعد اللغة'
+            },
+            {
+                id: 2,
+                type: 'reading',
+                title: 'اقرأ النص ثم أجب',
+                passage: 'Last Friday, Sara and Omar went to Alexandria beach. They saw many fish and shells. They helped clean the beach. They collected plastic bags. The sea looked beautiful and clean. They were very happy.',
+                questions: [
+                    { q: 'Where did Sara and Omar go?', options: ['The park', 'Alexandria beach', 'The mall'], correct: 'Alexandria beach' },
+                    { q: 'What did they collect?', options: ['Fish', 'Plastic bags', 'Toys'], correct: 'Plastic bags' }
+                ],
+                skill: 'القراءة والفهم'
+            },
+            {
+                id: 3,
+                type: 'writing',
+                title: 'اكتب جملة',
+                question: 'Write one sentence: "I like the sea"',
+                placeholder: 'اكتب هنا...',
+                skill: 'الكتابة'
+            },
+            {
+                id: 4,
+                type: 'listening',
+                title: 'استمع واختر الصورة',
+                question: 'Splash says: "Water is fun"',
+                audioText: 'Water is fun',
+                options: [
+                    { emoji: '🌊', text: 'Sea waves', correct: true },
+                    { emoji: '🏜️', text: 'Desert', correct: false },
+                    { emoji: '🏔️', text: 'Mountain', correct: false }
+                ],
+                skill: 'الاستماع'
+            },
+            {
+                id: 5,
+                type: 'vocabulary',
+                title: 'اختر الكلمة المناسبة',
+                question: 'What do we call this? 🐟',
+                options: ['Fish', 'Boat', 'Shell'],
+                correct: 'Fish',
+                skill: 'المفردات'
+            },
+            {
+                id: 6,
+                type: 'speaking',
+                title: 'سجل صوتك',
+                question: 'Say: "Hello, I am happy"',
+                skill: 'التحدث'
+            },
+            {
+                id: 7,
+                type: 'function',
+                title: 'كيف تحيي شخصاً؟',
+                question: 'How do you greet someone in the morning?',
+                options: ['Good morning', 'Good night', 'Goodbye'],
+                correct: 'Good morning',
+                skill: 'وظائف اللغة'
+            },
+            {
+                id: 8,
+                type: 'conversation',
+                title: 'المحادثة',
+                question: 'Your friend asks: "Want to play?" You answer:',
+                options: ['Yes, let\'s play', 'No water', 'I am fish'],
+                correct: 'Yes, let\'s play',
+                skill: 'المحادثة'
+            },
+            {
+                id: 9,
+                type: 'phonics',
+                title: 'اختر الكلمة بصوت sh',
+                question: 'Which word has the \'sh\' sound?',
+                options: ['fish', 'cat', 'dog'],
+                correct: 'fish',
+                skill: 'الصوتيات'
+            },
+            {
+                id: 10,
+                type: 'culture',
+                title: 'القيم والسلوك',
+                question: 'The image shows: Kids sharing toys at the beach',
+                subtitle: '👦🧒 sharing toys 🏖️',
+                options: ['التعاون والمشاركة', 'اللعب وحدي', 'المنافسة'],
+                correct: 'التعاون والمشاركة',
+                skill: 'الثقافة والقيم'
+            }
+        ];
+
+        // Initialize Bubbles
+        function initBubbles() {
+            const container = document.getElementById('bubbles-container');
+            for (let i = 0; i < 15; i++) {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+                const size = Math.random() * 40 + 10;
+                bubble.style.width = size + 'px';
+                bubble.style.height = size + 'px';
+                bubble.style.left = Math.random() * 100 + '%';
+                bubble.style.animationDelay = Math.random() * 8 + 's';
+                bubble.style.animationDuration = Math.random() * 4 + 6 + 's';
+                container.appendChild(bubble);
+            }
+        }
+
+        // Timer Functions
+        function startTimer() {
+            state.startTime = Date.now();
+            state.timerInterval = setInterval(() => {
+                state.timeRemaining--;
+                updateTimerDisplay();
+                if (state.timeRemaining <= 0) {
+                    autoSubmit();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(state.timeRemaining / 60);
+            const seconds = state.timeRemaining % 60;
+            document.getElementById('timer').textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            if (state.timeRemaining <= 30) {
+                document.getElementById('timer').classList.add('text-red-600');
+            }
+        }
+
+        // Render Question
+        function renderQuestion() {
+            const q = questions[state.currentQuestion];
+            const container = document.getElementById('question-container');
+            let html = `
+                <div class="mb-4 flex items-center justify-between flex-wrap gap-2">
+                    <span class="inline-block bg-blue-100 text-blue-800 px-4 py-1 rounded-full text-sm font-semibold">
+                        ${q.skill}
+                    </span>
+                    <span class="text-gray-500 text-sm">نشاط ${q.id}</span>
+                </div>
+                <h3 class="text-xl md:text-2xl font-bold text-blue-900 mb-6">${q.title}</h3>
+            `;
+
+            if (q.type === 'reading') {
+                html += `
+                    <div class="bg-cyan-50 border-r-4 border-cyan-500 p-4 rounded-lg mb-6 text-left" dir="ltr">
+                        <p class="text-gray-800 leading-relaxed">${q.passage}</p>
+                    </div>
+                `;
+                q.questions.forEach((subQ, idx) => {
+                    html += `
+                        <div class="mb-6">
+                            <p class="font-semibold text-gray-800 mb-3" dir="ltr">${idx + 1}. ${subQ.q}</p>
+                            <div class="space-y-2">
+                                ${subQ.options.map(opt => `
+                                    <button class="btn-option w-full text-right border-2 border-blue-200 bg-white p-4 rounded-xl hover:border-blue-400 transition-all font-medium ${state.answers[`${q.id}_${idx}`] === opt ? 'selected' : ''}" 
+                                            onclick="selectAnswer('${q.id}_${idx}', '${opt}')">
+                                        ${opt}
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                });
+            } else if (q.type === 'writing') {
+                html += `
+                    <p class="text-lg text-gray-700 mb-4" dir="ltr">${q.question}</p>
+                    <textarea id="writing-answer" class="w-full border-2 border-blue-200 rounded-xl p-4 text-lg" 
+                              rows="3" placeholder="${q.placeholder}" dir="ltr"
+                              onchange="state.answers[${q.id}] = this.value">${state.answers[q.id] || ''}</textarea>
+                `;
+            } else if (q.type === 'listening') {
+                html += `
+                    <p class="text-lg text-gray-700 mb-4">استمع للجملة:</p>
+                    <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold px-6 py-3 rounded-full mb-6" onclick="speakText('${q.audioText}')">
+                        <i class="fa-solid fa-volume-high ml-2"></i>
+                        استمع
+                    </button>
+                    <p class="text-lg text-gray-700 mb-4">اختر الصورة المناسبة:</p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        ${q.options.map((opt, idx) => `
+                            <button class="btn-option border-2 border-blue-200 bg-white p-6 rounded-xl hover:border-blue-400 transition-all ${state.answers[q.id] === idx ? 'selected' : ''}" 
+                                    onclick="selectAnswer(${q.id}, ${idx})">
+                                <div class="text-6xl mb-2">${opt.emoji}</div>
+                                <div class="font-semibold" dir="ltr">${opt.text}</div>
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+            } else if (q.type === 'speaking') {
+                html += `
+                    <p class="text-lg text-gray-700 mb-4" dir="ltr">${q.question}</p>
+                    <div class="bg-yellow-50 border-2 border-yellow-300 rounded-xl p-6 text-center">
+                        <button id="record-btn" class="bg-red-500 hover:bg-red-600 text-white font-bold w-20 h-20 rounded-full shadow-lg mb-4" onclick="toggleRecording()">
+                            <i class="fa-solid fa-microphone text-2xl"></i>
+                        </button>
+                        <p id="record-status" class="text-gray-700 font-semibold">اضغط للتسجيل</p>
+                        <div id="audio-playback" class="hidden mt-4"></div>
+                    </div>
+                    <p class="text-sm text-gray-500 mt-4">* التسجيل اختياري - يمكنك المتابعة بدون تسجيل</p>
+                `;
+            } else {
+                if (q.subtitle) {
+                    html += `<p class="text-4xl text-center mb-4">${q.subtitle}</p>`;
+                }
+                html += `<p class="text-lg text-gray-700 mb-6 text-center" dir="ltr">${q.question}</p>`;
+                html += `<div class="space-y-3">`;
+                q.options.forEach((opt, idx) => {
+                    const value = q.type === 'listening' ? idx : opt;
+                    html += `
+                        <button class="btn-option w-full text-right border-2 border-blue-200 bg-white p-4 rounded-xl hover:border-blue-400 transition-all font-medium ${state.answers[q.id] === value ? 'selected' : ''}" 
+                                onclick="selectAnswer(${q.id}, '${opt.replace(/'/g, "\\'")}')">
+                            ${opt}
+                        </button>
+                    `;
+                });
+                html += `</div>`;
+            }
+
+            container.innerHTML = html;
+            updateProgress();
+            updateNavButtons();
+        }
+
+        // Select Answer
+        function selectAnswer(qId, answer) {
+            state.answers[qId] = answer;
+            renderQuestion();
+        }
+
+        // Navigation
+        function updateProgress() {
+            document.getElementById('current-q').textContent = state.currentQuestion + 1;
+            document.getElementById('progress-bar').style.width = ((state.currentQuestion + 1) / 10 * 100) + '%';
+        }
+
+        function updateNavButtons() {
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            
+            prevBtn.classList.toggle('hidden', state.currentQuestion === 0);
+            
+            if (state.currentQuestion === 9) {
+                nextBtn.innerHTML = 'إنهاء المغامرة <i class="fa-solid fa-flag-checkered mr-2"></i>';
+            } else {
+                nextBtn.innerHTML = 'التالي <i class="fa-solid fa-arrow-left mr-2"></i>';
+            }
+        }
+
+        document.getElementById('next-btn').addEventListener('click', () => {
+            if (state.currentQuestion < 9) {
+                state.currentQuestion++;
+                renderQuestion();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            } else {
+                submitChallenge();
+            }
+        });
+
+        document.getElementById('prev-btn').addEventListener('click', () => {
+            if (state.currentQuestion > 0) {
+                state.currentQuestion--;
+                renderQuestion();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        });
+
+        // Speech Synthesis
+        function speakText(text) {
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'en-US';
+                utterance.rate = 0.9;
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        // Recording Functions
+        async function toggleRecording() {
+            const recordBtn = document.getElementById('record-btn');
+            const recordStatus = document.getElementById('record-status');
+            
+            if (!state.mediaRecorder || state.mediaRecorder.state === 'inactive') {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    state.mediaRecorder = new MediaRecorder(stream);
+                    state.audioChunks = [];
+                    
+                    state.mediaRecorder.ondataavailable = e => state.audioChunks.push(e.data);
+                    state.mediaRecorder.onstop = () => {
+                        const audioBlob = new Blob(state.audioChunks, { type: 'audio/webm' });
+                        const audioUrl = URL.createObjectURL(audioBlob);
+                        document.getElementById('audio-playback').innerHTML = `
+                            <audio controls class="w-full">
+                                <source src="${audioUrl}" type="audio/webm">
+                            </audio>
+                        `;
+                        document.getElementById('audio-playback').classList.remove('hidden');
+                        state.answers[6] = 'recorded';
+                    };
+                    
+                    state.mediaRecorder.start();
+                    recordBtn.innerHTML = '<i class="fa-solid fa-stop text-2xl"></i>';
+                    recordBtn.classList.add('recording');
+                    recordStatus.textContent = 'جاري التسجيل... اضغط للإيقاف';
+                } catch (err) {
+                    recordStatus.textContent = 'لا يمكن الوصول للميكروفون';
+                }
+            } else {
+                state.mediaRecorder.stop();
+                state.mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                recordBtn.innerHTML = '<i class="fa-solid fa-microphone text-2xl"></i>';
+                recordBtn.classList.remove('recording');
+                recordStatus.textContent = 'تم التسجيل بنجاح!';
+            }
+        }
+
+        // Calculate Score & Level
+        function calculateResults() {
+            let correctCount = 0;
+            let totalChecks = 0;
+            
+            questions.forEach(q => {
+                if (q.type === 'reading') {
+                    q.questions.forEach((subQ, idx) => {
+                        totalChecks++;
+                        if (state.answers[`${q.id}_${idx}`] === subQ.correct) correctCount++;
+                    });
+                } else if (q.type === 'writing') {
+                    totalChecks++;
+                    const answer = (state.answers[q.id] || '').toLowerCase().trim();
+                    if (answer.includes('i like the sea') || answer.includes('i like sea')) correctCount++;
+                } else if (q.type === 'speaking') {
+                    totalChecks++;
+                    if (state.answers[q.id] === 'recorded') correctCount++;
+                } else if (q.type === 'listening') {
+                    totalChecks++;
+                    const selectedIdx = state.answers[q.id];
+                    if (q.options[selectedIdx]?.correct) correctCount++;
+                } else {
+                    totalChecks++;
+                    if (state.answers[q.id] === q.correct) correctCount++;
+                }
+            });
+            
+            const percentage = (correctCount / totalChecks) * 100;
+            const level = percentage >= 70 ? 'proficient' : 'developing';
+            
+            return { correctCount, totalChecks, percentage, level };
+        }
+
+        // Submit Challenge
+        function submitChallenge() {
+            clearInterval(state.timerInterval);
+            const results = calculateResults();
+            
+            // Store in localStorage
+            const challengeData = {
+                date: new Date().toISOString(),
+                score: results.correctCount,
+                total: results.totalChecks,
+                percentage: results.percentage.toFixed(1),
+                level: results.level,
+                timeSpent: 180 - state.timeRemaining,
+                answers: state.answers
+            };
+            localStorage.setItem('splashChallenge', JSON.stringify(challengeData));
+            
+            // Show completion screen
+            document.getElementById('challenge-screen').classList.add('hidden');
+            document.getElementById('timer-container').classList.add('hidden');
+            document.getElementById('completion-screen').classList.remove('hidden');
+            
+            // Update stars based on performance
+            const starsDisplay = document.getElementById('stars-display');
+            const starCount = results.percentage >= 90 ? 3 : results.percentage >= 70 ? 2 : 1;
+            starsDisplay.innerHTML = Array(starCount).fill('<i class="fa-solid fa-star text-4xl text-yellow-400 star-glow"></i>').join('') +
+                                     Array(3 - starCount).fill('<i class="fa-regular fa-star text-4xl text-gray-300"></i>').join('');
+            
+            // Countdown and redirect
+            let countdown = 3;
+            const countdownEl = document.getElementById('countdown');
+            const countdownInterval = setInterval(() => {
+                countdown--;
+                countdownEl.textContent = countdown;
+                if (countdown <= 0) {
+                    clearInterval(countdownInterval);
+                    window.location.href = `grades/primary3.html?level=${results.level}`;
+                }
+            }, 1000);
+        }
+
+        function autoSubmit() {
+            submitChallenge();
+        }
+
+        // WhatsApp Share
+        document.getElementById('share-whatsapp').addEventListener('click', () => {
+            const data = JSON.parse(localStorage.getItem('splashChallenge') || '{}');
+            const message = `🐬 تحدي Splash الدولفين 🐬\n\n` +
+                          `أنهى ابني/ابنتي المغامرة بنجاح!\n` +
+                          `النجوم: ⭐⭐⭐\n` +
+                          `الوقت: ${Math.floor(data.timeSpent / 60)}:${(data.timeSpent % 60).toString().padStart(2, '0')}\n\n` +
+                          `غطسة رائعة يا Splash!`;
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        });
+
+        // Start Challenge
+        document.getElementById('start-btn').addEventListener('click', () => {
+            document.getElementById('welcome-screen').classList.add('hidden');
+            document.getElementById('challenge-screen').classList.remove('hidden');
+            document.getElementById('timer-container').classList.remove('hidden');
+            startTimer();
+            renderQuestion();
+        });
+
+        // Initialize
+        initBubbles();
+    </script>
+<script>(function(){document.addEventListener("click",function(e){var a=e.target.closest("[data-product-id]");if(!a)return;e.preventDefault();var pid=a.getAttribute("data-product-id");if(pid)parent.postMessage({type:"ecto-artifact-link-click",productId:pid},"*")})})();</script>
+</body>
+</html>
